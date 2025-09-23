@@ -24,6 +24,10 @@ public class App {
                 case "help":
                     helpMenu();
                     break;
+                case "prod":
+                    break;
+                case "ticket":
+                    break;
             }
         }
 

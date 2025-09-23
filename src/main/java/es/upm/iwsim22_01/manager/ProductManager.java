@@ -26,4 +26,6 @@ public class ProductManager {
     public Optional<Product> getProduct(int id) {
         return products.stream().filter(p -> p.getId() == id).findFirst();
     }
+
+
 }

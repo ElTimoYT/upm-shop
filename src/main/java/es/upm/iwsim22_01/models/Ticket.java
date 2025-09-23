@@ -25,8 +25,9 @@ public class Ticket {
         int[] contador = new int[Category.values().length];
         for (Product product : products) {
             int pos = product.getCategory().ordinal();
-
+            contador[pos]++;
         }
+        if()
         return discount;
     }
 
@@ -55,13 +56,6 @@ public class Ticket {
         this.products = products;
     }
 
-    public boolean addProduct(int id, int quantity) {
-        ArrayList newProducts = prod
-
-
-
-        products.add(product);
-    }
 
     public boolean removeProduct(Product product) {
         removeProduct(product);

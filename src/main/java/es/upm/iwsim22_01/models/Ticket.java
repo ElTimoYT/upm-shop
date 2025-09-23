@@ -6,36 +6,50 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Ticket {
-   private ArrayList<Product> products;
+    private ArrayList<Product> products;
 
     public Ticket() {
         this.products = new ArrayList<>();
     }
 
-    public int TotalPrice() {
-        int total = 0;
+    public double TotalPrice() {
+        double total = 0;
         for (Product product : products) {
             total += product.getPrice();
         }
         return total;
     }
 
-    public int DiscountPrice() {
-        int discount = 0;
+    public double DiscountPrice() {
+        double discount = 0;
         int[] contador = new int[Category.values().length];
+
         for (Product product : products) {
-            int pos = product.getCategory().ordinal();
+            int pos  = product.getCategory().ordinal();
             contador[pos]++;
         }
-        if()
+
+        for (int i = 0; i < Category.values().length; i++) {
+            if(contador[i] >= 2){
+                Category category = Category.values()[i];
+                double percentage = category.getDiscount();
+                for (Product p : products) {
+                    if (p.getCategory() == category) {
+                        discount += (double) (p.getPrice() * percentage);
+                    }
+                }
+
+            }
+
+        }
         return discount;
     }
 
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        int totalPrice = TotalPrice();
-        int discountPrice = DiscountPrice();
+        double totalPrice = TotalPrice();
+        double discountPrice = DiscountPrice();
         for (Product product : products) {
             str.append(product.toString());
             str.append("\n");
@@ -46,18 +60,6 @@ public class Ticket {
         str.append("\n");
         str.append("Final price: " + TotalPrice() + discountPrice);
         return str.toString();
-    }
+}
 
-    public ArrayList <Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(ArrayList <Product> products) {
-        this.products = products;
-    }
-
-
-    public boolean removeProduct(Product product) {
-        removeProduct(product);
-    }
 }

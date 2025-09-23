@@ -1,12 +1,16 @@
 package es.upm.iwsim22_01.models;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Ticket {
-    private ArrayList <Product> products;
+    private Map<Integer, Product> products;
+    private ProductManager productManager;
 
-    public Ticket() {
-        products = new ArrayList();
+    public Ticket(ProductManager productManager) {
+        this.products = productManager;
     }
 
     public int TotalPrice() {
@@ -50,11 +54,15 @@ public class Ticket {
         this.products = products;
     }
 
-    public void addProduct(Product product, int quantity) {
+    public boolean addProduct(int id, int quantity) {
+        ArrayList newProducts = pro
+
+
+
         products.add(product);
     }
 
-    public void removeProduct(Product product) {
+    public boolean removeProduct(Product product) {
         removeProduct(product);
     }
 }

@@ -22,7 +22,7 @@ public class Product {
     }
 
     public boolean setName(String name) {
-        if (name.isEmpty() || name.isBlank() || name.length() >= Product.MAX_NAME_LENGTH) {
+        if (name == null || name.isEmpty() || name.isBlank() || name.length() >= Product.MAX_NAME_LENGTH) {
             return false;
         }
 
@@ -58,6 +58,17 @@ public class Product {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "class: " + this.getClass() +
+                "id:" + id +
+                ",name:'" + name + '\'' +
+                ",category:" + category +
+                ",price:" + price +
+                '}';
     }
 
     public static Product createNewProduct(int id, String name, Category category, double price) {

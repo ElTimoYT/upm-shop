@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Ticket {
-    private Map<Integer, Product> products;
-    private ProductManager productManager;
+   private ArrayList<Product> products;
 
-    public Ticket(ProductManager productManager) {
-        this.products = productManager;
+    public Ticket() {
+        this.products = new ArrayList<>();
     }
 
     public int TotalPrice() {
@@ -23,7 +22,9 @@ public class Ticket {
 
     public int DiscountPrice() {
         int discount = 0;
+        int[] contador = new int[Category.values().length];
         for (Product product : products) {
+            int pos = product.getCategory().ordinal();
 
         }
         return discount;
@@ -55,7 +56,7 @@ public class Ticket {
     }
 
     public boolean addProduct(int id, int quantity) {
-        ArrayList newProducts = pro
+        ArrayList newProducts = prod
 
 
 

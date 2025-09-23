@@ -11,7 +11,7 @@ public class ProductManager {
     private Set<Product> products = new HashSet<>();
 
     public boolean addProduct(Product product) {
-        if (products.size() >= ProductManager.MAX_PRODUCTS) {
+        if (product == null || products.size() >= ProductManager.MAX_PRODUCTS) {
             return false;
         }
 

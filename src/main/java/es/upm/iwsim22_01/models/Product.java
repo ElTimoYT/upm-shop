@@ -1,5 +1,7 @@
 package es.upm.iwsim22_01.models;
 
+import java.util.Objects;
+
 public class Product {
     private static final int MAX_NAME_LENGTH = 100;
 
@@ -58,6 +60,11 @@ public class Product {
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.getId());
     }
 
     @Override

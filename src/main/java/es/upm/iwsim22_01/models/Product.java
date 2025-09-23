@@ -79,6 +79,10 @@ public class Product {
     }
 
     public static Product createNewProduct(int id, String name, Category category, double price) {
+        if (id < 0) {
+            return null;
+        }
+
         Product newProduct = new Product(id, category);
 
         if (newProduct.setName(name) && newProduct.setPrice(price)) {

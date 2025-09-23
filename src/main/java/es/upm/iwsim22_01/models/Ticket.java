@@ -58,7 +58,7 @@ public class Ticket {
         str.append("\n");
         str.append("Total Discount: " + discountPrice);
         str.append("\n");
-        str.append("Final price: " + TotalPrice() + discountPrice);
+        str.append("Final price: " + (TotalPrice() - discountPrice));
         return str.toString();
     }
 

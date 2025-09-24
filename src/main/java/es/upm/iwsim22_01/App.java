@@ -1,8 +1,14 @@
 package es.upm.iwsim22_01;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+import es.upm.iwsim22_01.models.Category;
+import es.upm.iwsim22_01.models.Product;
+
 import java.util.Scanner;
 
 public class App {
+    private final static ProductManager PRODUCT_MANAGER = new ProductManager();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -25,6 +31,20 @@ public class App {
                     helpMenu();
                     break;
                 case "prod":
+                    switch (command[1]) {
+                        case "add":
+                            System.out.println("prod add: " + (addProductCommand(command)?"ok":"fail"));
+                            break;
+                        case "list":
+                            System.out.println("prod list: " + (listProductsCommand(command)?"ok":"fail"));
+                            break;
+                        case "update":
+                            updateProductCommand(command);
+                            break;
+                        case "remove":
+                            removeProductCommand(command);
+                            break;
+                    }
                     break;
                 case "ticket":
                     break;
@@ -35,6 +55,53 @@ public class App {
                 Closing application.
                 Goodbye!
                 """);
+    }
+
+    private static void removeProductCommand(String[] command) {
+    }
+
+    private static void updateProductCommand(String[] command) {
+
+    }
+
+    private static boolean listProductsCommand(String[] command) {
+        System.out.println("Catalog:");
+        App.PRODUCT_MANAGER.getProducts().forEach(p -> {
+            System.out.println("\t" + p);
+        });
+
+        return true;
+    }
+
+    private static boolean addProductCommand(String[] command) {
+        int id = stringToInt(command[2]);
+        if (id == Integer.MIN_VALUE) {
+            return false;
+        }
+
+        int index = 3;
+        StringBuilder productName = new StringBuilder();
+        do {
+            productName.append(command[index++]).append(" ");
+        } while (productName.charAt(productName.length() -2) != '\"');
+        productName.delete(productName.length() -1, productName.length());
+
+        Category productCategory = stringToCategory(command[index++]);
+        if (productCategory == null) {
+            return false;
+        }
+
+        double productPrice = stringToDouble(command[index]);
+        if (productPrice == Double.MIN_VALUE) {
+            return false;
+        }
+
+        Product product = Product.createNewProduct(id, productName.toString().replace("\"", ""), productCategory, productPrice);
+        if (product == null) {
+            return false;
+        }
+
+        return App.PRODUCT_MANAGER.addProduct(product);
     }
 
     public static void echoMenu(String[] args) {
@@ -67,4 +134,33 @@ public class App {
                 """);
     }
 
+    private static int stringToInt(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException exception) {
+            System.err.println("No se ha podido convertir '" + string + "'a número entero.");
+        }
+
+        return Integer.MIN_VALUE;
+    }
+
+    private static double stringToDouble(String string) {
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException exception) {
+            System.err.println("No se ha podido convertir '" + string + "'a número decimal.");
+        }
+
+        return Double.MIN_VALUE;
+    }
+
+    private static Category stringToCategory(String string) {
+        try {
+            return Category.valueOf(string);
+        } catch (IllegalArgumentException exception) {
+            System.err.println("No se ha podido convertir '" + string + "'a categoria.");
+        }
+
+        return null;
+    }
 }

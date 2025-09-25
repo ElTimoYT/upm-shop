@@ -1,16 +1,25 @@
 package es.upm.iwsim22_01;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+import es.upm.iwsim22_01.models.Product;
+import es.upm.iwsim22_01.models.Ticket;
+
+import java.util.Optional;
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ProductManager manager = new ProductManager();
+        Ticket ticket = new Ticket();
 
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");
 
         boolean menu = true;
         String[] command;
+        int id = 0;
+        int quantity = 0;
         while (menu) {
             command = scanner.nextLine().split(" ");
 
@@ -27,6 +36,51 @@ public class App {
                 case "prod":
                     break;
                 case "ticket":
+                    if (command.length < 2) {
+                        System.out.println("Use: ticket <add|remove|new|print>");
+                        break;
+                    }
+                    switch (command[1]) {
+                        case "add":
+                            if (command.length < 3) {
+                                System.out.println("Use: ticket add <ProdID> <Quantity>");
+                                break;
+                            }
+                            id = Integer.parseInt(command[2]);
+                            quantity = Integer.parseInt(command[3]);
+                            if(addTicket(id, quantity, manager, ticket)){
+                                System.out.println(ticket.toString());
+                                System.out.println("Ticket add: ok");
+                            }
+                            break;
+
+                        case "remove":
+                            if (command.length < 3) {
+                                System.out.println("Use: ticket remove <ProdID>");
+                                break;
+                            }
+
+                            id = Integer.parseInt(command[2]);
+
+                            if (idExists(id, manager)) {
+                                ticket.removeProductById(id);
+                                System.out.println(ticket.toString());
+                                System.out.println("Ticket remove: ok");
+                            } else {
+                                System.out.println("Product not found");
+                            }
+                            break;
+
+                        case "new":
+                            ticket = new Ticket();
+                            System.out.println("Ticket new: ok");
+                            break;
+
+                        case "print":
+                            System.out.println(ticket.toString());
+                            System.out.println("Ticket print: ok");
+                            break;
+                    }
                     break;
             }
         }
@@ -67,4 +121,23 @@ public class App {
                 """);
     }
 
+    public static boolean addTicket(int id, int quantity, ProductManager productManager, Ticket ticket) {
+        boolean exists = idExists(id,  productManager);
+        Optional<Product> product = productManager.getProduct(id);
+
+        if (exists) {
+            return ticket.addProduct(product.get(), quantity);
+        } else {
+            System.out.println("ticket add: error - product id " + id + " does not exist.");
+            return false;
+        }
+    }
+
+    public static boolean idExists(int id, ProductManager productManager) {
+        Optional<Product> p = productManager.getProduct(id);
+       return p.isPresent();
+    }
+
+
 }
+

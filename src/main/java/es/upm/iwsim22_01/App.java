@@ -49,7 +49,7 @@ public class App {
                             id = Integer.parseInt(command[2]);
                             quantity = Integer.parseInt(command[3]);
                             if(addTicket(id, quantity, manager, ticket)){
-                                System.out.println(ticket.toString());
+                                System.out.println(ticket);
                                 System.out.println("Ticket add: ok");
                             }
                             break;
@@ -64,7 +64,7 @@ public class App {
 
                             if (idExists(id, manager)) {
                                 ticket.removeProductById(id);
-                                System.out.println(ticket.toString());
+                                System.out.println(ticket);
                                 System.out.println("Ticket remove: ok");
                             } else {
                                 System.out.println("Product not found");
@@ -77,7 +77,7 @@ public class App {
                             break;
 
                         case "print":
-                            System.out.println(ticket.toString());
+                            System.out.println(ticket);
                             System.out.println("Ticket print: ok");
                             break;
                     }

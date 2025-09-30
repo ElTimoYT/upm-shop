@@ -3,7 +3,6 @@ package es.upm.iwsim22_01;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
-
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -123,9 +122,9 @@ public class App {
 
     public static boolean addTicket(int id, int quantity, ProductManager productManager, Ticket ticket) {
         boolean exists = idExists(id,  productManager);
-        Optional<Product> product = productManager.getProduct(id);
 
         if (exists) {
+            Optional<Product> product = productManager.getProduct(id);
             return ticket.addProduct(product.get(), quantity);
         } else {
             System.out.println("ticket add: error - product id " + id + " does not exist.");

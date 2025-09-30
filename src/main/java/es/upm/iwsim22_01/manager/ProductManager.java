@@ -19,13 +19,16 @@ public class ProductManager {
         return products.add(product);
     }
 
-    public void removeProduct(Product product) {
-        products.remove(product);
+    public boolean removeProduct(int id) {
+        return products.removeIf(p -> p.getId() == id);
     }
 
     public Optional<Product> getProduct(int id) {
         return products.stream().filter(p -> p.getId() == id).findFirst();
     }
 
+    public Set<Product> getProducts() {
+        return new HashSet<>(this.products);
+    }
 
 }

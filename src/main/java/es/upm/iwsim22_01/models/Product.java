@@ -70,8 +70,8 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "class: " + this.getClass() +
-                "id:" + id +
+                "class:" + this.getClass().getSimpleName() +
+                ",id:" + id +
                 ",name:'" + name + '\'' +
                 ",category:" + category +
                 ",price:" + price +

@@ -1,6 +1,6 @@
 package es.upm.iwsim22_01.models;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 
 public class Ticket {
     private ArrayList<Product> products;
@@ -32,7 +32,7 @@ public class Ticket {
                 double percentage = category.getDiscount();
                 for (Product p : products) {
                     if (p.getCategory() == category) {
-                        discount += (double) (p.getPrice() * percentage);
+                        discount += (p.getPrice() * percentage);
                     }
                 }
 
@@ -68,11 +68,11 @@ public class Ticket {
             str.append(product.toString());
             str.append("\n");
         }
-        str.append("Total Price: " + totalPrice);
+        str.append("Total Price: ").append(totalPrice);
         str.append("\n");
-        str.append("Total Discount: " + discountPrice);
+        str.append("Total Discount: ").append(discountPrice);
         str.append("\n");
-        str.append("Final price: " + (TotalPrice() - discountPrice));
+        str.append("Final price: ").append(TotalPrice() - discountPrice);
         return str.toString();
     }
 

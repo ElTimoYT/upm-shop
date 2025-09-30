@@ -1,18 +1,20 @@
 package es.upm.iwsim22_01;
 
+import es.upm.iwsim22_01.command.CommandStatus;
 import es.upm.iwsim22_01.manager.ProductManager;
 
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App {
     private final static ProductManager PRODUCT_MANAGER = new ProductManager();
+    private static boolean menu = true;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -22,81 +24,16 @@ public class App {
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");
 
-        boolean menu = true;
-        String[] command;
+        Iterator<String> tokens;
+
         int id = 0;
         int quantity = 0;
         while (menu) {
-            command = scanner.nextLine().split(" ");
+            tokens = tokenizeCommand(scanner.nextLine());
 
-            switch (command[0]) {
-                case "exit":
-                    menu = false;
-                    break;
-                case "echo":
-                    echoMenu(command);
-                    break;
-                case "help":
-                    helpMenu();
-                    break;
-                case "prod":
-                    switch (command[1]) {
-                        case "add":
-                            System.out.println("prod add: " + (addProductCommand(command)?"ok":"fail"));
-                            break;
-                        case "list":
-                            System.out.println("prod list: " + (listProductsCommand(command)?"ok":"fail"));
-                            break;
-                        case "update":
-                            System.out.println("prod update: " + (updateProductCommand(command)?"ok":"fail"));
-                            break;
-                        case "remove":
-                            System.out.println("prod remove: " + (removeProductCommand(command)?"ok":"fail"));
-                            break;
-                    }
-                    break;
-                case "ticket":
-                    if (command.length < 2) {
-                        System.out.println("Use: ticket <add|remove|new|print>");
-                        break;
-                    }
-                    switch (command[1]) {
-                        case "add":
-                            if (command.length < 3) {
-                                System.out.println("Use: ticket add <ProdID> <Quantity>");
-                                break;
-                            }
-                            if(addTicket(command, manager, ticket)){
-                                System.out.println(ticket);
-                                System.out.println("Ticket add: ok");
-                            }
-                            break;
-
-                        case "remove":
-                            if (command.length < 3) {
-                                System.out.println("Use: ticket remove <ProdID>");
-                                break;
-                            }
-                            if (idExists(command, manager)) {
-                                ticket.removeProductById(id);
-                                System.out.println(ticket);
-                                System.out.println("Ticket remove: ok");
-                            } else {
-                                System.out.println("Product not found");
-                            }
-                            break;
-
-                        case "new":
-                            ticket = new Ticket();
-                            System.out.println("Ticket new: ok");
-                            break;
-
-                        case "print":
-                            System.out.println(ticket);
-                            System.out.println("Ticket print: ok");
-                            break;
-                    }
-                    break;
+            CommandStatus commandStatus = executeCommand(tokens);
+            if (!commandStatus.getStatus()) {
+                System.err.println(commandStatus.getMessage());
             }
         }
 
@@ -106,13 +43,71 @@ public class App {
                 """);
     }
 
-    private static boolean removeProductCommand(String[] command) {
-        int id = stringToInt(command[2]);
-        if (id == Integer.MIN_VALUE) {
-            return false;
+    private static Iterator<String> tokenizeCommand(String command) {
+        Pattern pattern = Pattern.compile("\"([^\"]+)\"|\\S+"); //Dividimos por espacios o comillas
+        Matcher matcher = pattern.matcher(command);
+
+        List<String> tokens = new ArrayList<>();
+
+        while (matcher.find()) {
+            tokens.add(matcher.group().replaceAll("^\"|\"$", "")); //Quitar las comillas del principio y final
         }
 
-        return App.PRODUCT_MANAGER.removeProduct(id);
+        return tokens.iterator();
+    }
+
+    private static CommandStatus executeCommand(Iterator<String> tokens) {
+        if (!tokens.hasNext()) {
+            return new CommandStatus(false, "No command detected");
+        }
+
+        switch (tokens.next()) {
+            case "exit" -> {
+                menu = false;
+
+                return new CommandStatus(true);
+            }
+            case "echo" -> {
+                if (!tokens.hasNext()) {
+                    return new CommandStatus(false, "Incorrect use: echo \"<message>\"");
+                }
+
+                System.out.println(tokens.next());
+                return new CommandStatus(true);
+            }
+            case "help" -> {
+                helpMenu();
+
+                return new CommandStatus(true);
+            }
+            case "prod" -> {
+                return productCommand(tokens);
+            }
+            case "ticket" -> {
+                return ticketCommand(tokens);
+            }
+            default -> {
+                return new CommandStatus(false, "Unknown command");
+            }
+        }
+    }
+
+    private static CommandStatus productCommand(Iterator<String> tokens) {
+        return null;
+    }
+
+    private static CommandStatus ticketCommand(Iterator<String> tokens) {
+        return null;
+    }
+
+    /*private static CommandStatus removeProductCommand(String[] command) {
+        int id = stringToInt(command[2]);
+        if (id == Integer.MIN_VALUE) {
+            return new CommandStatus(false, "No se ha podido convertir el numero");
+        }
+
+        App.PRODUCT_MANAGER.removeProduct(id)
+        return new CommandStatus(true, "");
     }
 
     private static boolean updateProductCommand(String[] command) {
@@ -194,16 +189,7 @@ public class App {
         }
 
         return App.PRODUCT_MANAGER.addProduct(product);
-    }
-
-    public static void echoMenu(String[] args) {
-        for (int i = 1; i < args.length; i++) {
-            System.out.print(args[i]);
-            System.out.print(" ");
-        }
-
-        System.out.println();
-    }
+    }*/
 
     public static void helpMenu() {
         System.out.println("""
@@ -226,37 +212,6 @@ public class App {
                 """);
     }
 
-
-    private static int stringToInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException exception) {
-            System.err.println("No se ha podido convertir '" + string + "'a número entero.");
-        }
-
-        return Integer.MIN_VALUE;
-    }
-
-    private static double stringToDouble(String string) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException exception) {
-            System.err.println("No se ha podido convertir '" + string + "'a número decimal.");
-        }
-
-        return Double.MIN_VALUE;
-    }
-
-    private static Category stringToCategory(String string) {
-        try {
-            return Category.valueOf(string);
-        } catch (IllegalArgumentException exception) {
-            System.err.println("No se ha podido convertir '" + string + "'a categoria.");
-        }
-
-        return null;
-    }
-
     public static boolean addTicket(String[] command, ProductManager productManager, Ticket ticket) {
 
         int id = Integer.parseInt(command[2]);
@@ -274,7 +229,6 @@ public class App {
     }
 
     public static boolean idExists(String[] command, ProductManager productManager) {
-
         int id = Integer.parseInt(command[2]);
         Optional<Product> p = productManager.getProduct(id);
        return p.isPresent();

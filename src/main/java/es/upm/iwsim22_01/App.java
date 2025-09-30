@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 public class App {
     private static boolean menu = true;
+    private static Ticket ticket = null;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -260,7 +261,92 @@ public class App {
     }
 
     private static CommandStatus ticketCommand(Iterator<String> tokens) {
-        return null;
+        if (!tokens.hasNext()) {
+            return new CommandStatus(false, "Incorrect use: ticket new|add|remove|print");
+        }
+
+        switch (tokens.next()) {
+            case "new" -> {
+                return newTickedCommand(tokens);
+            }
+            case "add" -> {
+                return addTicketCommand(tokens);
+            }
+            case "remove" -> {
+                return removeTicketCommand(tokens);
+            }
+            case "print" -> {
+                return printTicketCommand(tokens);
+            }
+            default -> {
+                return new CommandStatus(false, "Incorrect use: prod add|list|update|remove");
+            }
+        }
+    }
+
+    private static CommandStatus printTicketCommand(Iterator<String> tokens) {
+        if (ticket == null) {
+            return new CommandStatus(false, "No ticket created");
+        }
+        System.out.println(ticket);
+
+        return new CommandStatus(true, "ticket print: ok");
+    }
+
+    private static CommandStatus removeTicketCommand(Iterator<String> tokens) {
+        //Id
+        if (!tokens.hasNext()) {
+            return new CommandStatus(false, "Incorrect use: ticket remove <prodId>");
+        }
+        OptionalInt productId = Converter.stringToInt(tokens.next());
+        if (productId.isEmpty()) {
+            return new CommandStatus(false, "Invalid id");
+        }
+
+
+        if (ticket == null) {
+            return new CommandStatus(false, "No ticket created");
+        }
+        ticket.removeProductById(productId.getAsInt());
+        return new CommandStatus(true, "ticket remove: ok");
+    }
+
+    private static CommandStatus addTicketCommand(Iterator<String> tokens) {
+        CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: ticket add <prodId> <amount>");
+
+        //Id
+        if (!tokens.hasNext()) {
+            return incorrectUse;
+        }
+        OptionalInt productId = Converter.stringToInt(tokens.next());
+        if (productId.isEmpty()) {
+            return new CommandStatus(false, "Invalid id");
+        }
+
+        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(productId.getAsInt());
+        if (optionalProduct.isEmpty()) {
+            return new CommandStatus(false, "Product not found");
+        }
+
+        //Amount
+        if (!tokens.hasNext()) {
+            return incorrectUse;
+        }
+        OptionalInt amount = Converter.stringToInt(tokens.next());
+        if (amount.isEmpty() || amount.getAsInt() <= 0) {
+            return new CommandStatus(false, "Invalid amount");
+        }
+
+        if (ticket == null) {
+            return new CommandStatus(false, "No ticket created");
+        }
+        ticket.addProduct(optionalProduct.get(), amount.getAsInt());
+        return new CommandStatus(true, "ticket add: ok");
+    }
+
+    private static CommandStatus newTickedCommand(Iterator<String> tokens) {
+        ticket = new Ticket();
+        return new CommandStatus(true, "ticket new: ok");
     }
 
     public static void helpMenu() {

@@ -45,6 +45,23 @@ public class Ticket {
         return discount;
     }
 
+    public boolean addProduct(Product product, int quantity) {
+        if (products.size() >= 100 || product == null || quantity <= 0) {
+            return false;
+        }
+        int remainingSpaceT = 100 - products.size();
+        int Insert = Math.min(quantity, remainingSpaceT);
+        for (int i = 0; i < Insert; i++) {
+            products.add(product);
+        }
+       return quantity == remainingSpaceT;
+    }
+
+    public boolean removeProductById(int id) {
+        return products.removeIf(p -> p.getId() == id);
+    }
+
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -61,5 +78,9 @@ public class Ticket {
         str.append("Final price: " + (TotalPrice() - discountPrice));
         return str.toString();
     }
+
+
+
+
 
 }

@@ -16,7 +16,6 @@ public class App {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ProductManager manager = new ProductManager();
         Ticket ticket = new Ticket();
 
         System.out.println("Welcome to the ticket module App.");

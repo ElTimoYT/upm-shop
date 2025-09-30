@@ -1,9 +1,6 @@
 package es.upm.iwsim22_01.models;
 
-import es.upm.iwsim22_01.manager.ProductManager;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Ticket {
     private ArrayList<Product> products;

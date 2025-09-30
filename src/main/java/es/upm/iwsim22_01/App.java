@@ -7,6 +7,7 @@ import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 import java.util.Scanner;
@@ -48,10 +49,10 @@ public class App {
                             System.out.println("prod list: " + (listProductsCommand(command)?"ok":"fail"));
                             break;
                         case "update":
-                            updateProductCommand(command);
+                            System.out.println("prod update: " + (updateProductCommand(command)?"ok":"fail"));
                             break;
                         case "remove":
-                            removeProductCommand(command);
+                            System.out.println("prod remove: " + (removeProductCommand(command)?"ok":"fail"));
                             break;
                     }
                     break;
@@ -111,11 +112,54 @@ public class App {
                 """);
     }
 
-    private static void removeProductCommand(String[] command) {
+    private static boolean removeProductCommand(String[] command) {
+        int id = stringToInt(command[2]);
+        if (id == Integer.MIN_VALUE) {
+            return false;
+        }
+
+        return App.PRODUCT_MANAGER.removeProduct(id);
     }
 
-    private static void updateProductCommand(String[] command) {
+    private static boolean updateProductCommand(String[] command) {
+        int id = stringToInt(command[2]);
+        if (id == Integer.MIN_VALUE) {
+            return false;
+        }
 
+        Optional<Product> optionalProduct = App.PRODUCT_MANAGER.getProduct(id);
+        if (optionalProduct.isEmpty()) {
+            return false;
+        }
+        switch (command[3]) {
+            case "NAME":
+                int index = 4;
+                StringBuilder productName = new StringBuilder();
+                do {
+                    productName.append(command[index++]).append(" ");
+                } while (productName.charAt(productName.length() -2) != '\"');
+                productName.delete(productName.length() -1, productName.length());
+
+                return optionalProduct.get().setName(productName.toString());
+            case "CATEGORY":
+                Category category = stringToCategory(command[4]);
+                if (category == null) {
+                    return false;
+                }
+
+                optionalProduct.get().setCategory(category);
+                return true;
+            case "PRICE":
+                double price = stringToDouble(command[4]);
+                if (price == Double.MIN_VALUE) {
+                    return false;
+                }
+
+                optionalProduct.get().setPrice(price);
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static boolean listProductsCommand(String[] command) {

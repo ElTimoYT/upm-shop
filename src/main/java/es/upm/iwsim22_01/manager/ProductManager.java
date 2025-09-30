@@ -20,8 +20,8 @@ public class ProductManager {
         return products.add(product);
     }
 
-    public void removeProduct(Product product) {
-        products.remove(product);
+    public boolean removeProduct(int id) {
+        return products.removeIf(p -> p.getId() == id);
     }
 
     public Optional<Product> getProduct(int id) {

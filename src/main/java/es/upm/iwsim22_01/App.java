@@ -66,9 +66,7 @@ public class App {
                                 System.out.println("Use: ticket add <ProdID> <Quantity>");
                                 break;
                             }
-                            id = Integer.parseInt(command[2]);
-                            quantity = Integer.parseInt(command[3]);
-                            if(addTicket(id, quantity, manager, ticket)){
+                            if(addTicket(command, manager, ticket)){
                                 System.out.println(ticket);
                                 System.out.println("Ticket add: ok");
                             }
@@ -79,10 +77,7 @@ public class App {
                                 System.out.println("Use: ticket remove <ProdID>");
                                 break;
                             }
-
-                            id = Integer.parseInt(command[2]);
-
-                            if (idExists(id, manager)) {
+                            if (idExists(command, manager)) {
                                 ticket.removeProductById(id);
                                 System.out.println(ticket);
                                 System.out.println("Ticket remove: ok");
@@ -219,8 +214,12 @@ public class App {
         return null;
     }
 
-    public static boolean addTicket(int id, int quantity, ProductManager productManager, Ticket ticket) {
-        boolean exists = idExists(id,  productManager);
+    public static boolean addTicket(String[] command, ProductManager productManager, Ticket ticket) {
+
+        int id = Integer.parseInt(command[2]);
+        int quantity = Integer.parseInt(command[3]);
+
+        boolean exists = idExists(command, productManager);
         Optional<Product> product = productManager.getProduct(id);
 
         if (exists) {
@@ -231,7 +230,9 @@ public class App {
         }
     }
 
-    public static boolean idExists(int id, ProductManager productManager) {
+    public static boolean idExists(String[] command, ProductManager productManager) {
+
+        int id = Integer.parseInt(command[2]);
         Optional<Product> p = productManager.getProduct(id);
        return p.isPresent();
     }

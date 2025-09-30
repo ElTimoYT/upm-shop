@@ -1,6 +1,10 @@
 package es.upm.iwsim22_01.models;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+
 import java.util.Objects;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 public class Product {
     private static final int MAX_NAME_LENGTH = 100;
@@ -10,9 +14,23 @@ public class Product {
     private Category category;
     private double price;
 
-    private Product(int id, Category category) {
+    public Product(int id, String name, Category category, double price) {
+        if (!checkId(id)) {
+            throw new IllegalArgumentException("Invalid id");
+        }
+
+        if (!checkName(name)) {
+            throw new IllegalArgumentException("Invalid name");
+        }
+
+        if (!checkPrice(price)) {
+            throw new IllegalArgumentException("Invalid price");
+        }
+
         this.id = id;
+        this.name = name;
         this.category = category;
+        this.price = price;
     }
 
     public int getId() {
@@ -23,13 +41,12 @@ public class Product {
         return name;
     }
 
-    public boolean setName(String name) {
-        if (name == null || name.isEmpty() || name.isBlank() || name.length() >= Product.MAX_NAME_LENGTH) {
-            return false;
-        }
+    public void setName(String name) {
+       if (!checkName(name)) {
+           throw new IllegalArgumentException("Invalid name");
+       }
 
         this.name = name;
-        return true;
     }
 
     public Category getCategory() {
@@ -44,13 +61,12 @@ public class Product {
         return price;
     }
 
-    public boolean setPrice(double price) {
-        if (price <= 0) {
-            return false;
+    public void setPrice(double price) {
+        if (!checkPrice(price)) {
+            throw new IllegalArgumentException("Invalid price");
         }
 
         this.price = price;
-        return true;
     }
 
     @Override
@@ -78,20 +94,24 @@ public class Product {
                 '}';
     }
 
-    public static Product createNewProduct(int id, String name, Category category, double price) {
-        if (id < 0) {
-            return null;
-        }
+    public static boolean checkId(int id) {
+        return !ProductManager.getProductManager().existId(id);
+    }
 
-        Product newProduct = new Product(id, category);
-
-        if (newProduct.setName(name) && newProduct.setPrice(price)) {
-            return newProduct;
-        }
-
-        return null;
+    public static boolean checkId(OptionalInt id) {
+        return id.isPresent() && checkId(id.getAsInt());
     }
 
 
+    public static boolean checkName(String name) {
+        return name != null && !name.isBlank() && name.length() < Product.MAX_NAME_LENGTH;
+    }
 
+    public static boolean checkPrice(double price) {
+        return price > 0;
+    }
+
+    public static boolean checkPrice(OptionalDouble price) {
+        return price.isPresent() && checkPrice(price.getAsDouble());
+    }
 }

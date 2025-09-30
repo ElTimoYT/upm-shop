@@ -25,7 +25,7 @@ public class Converter {
 
     public static Optional<Category> stringToCategory(String string) {
         try {
-            return Optional.of(Category.valueOf(string));
+            return Optional.of(Category.valueOf(string.toUpperCase()));
         } catch (IllegalArgumentException exception) {
             return Optional.empty();
         }

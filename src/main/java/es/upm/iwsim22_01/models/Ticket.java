@@ -51,7 +51,7 @@ public class Ticket {
         for (int i = 0; i < Insert; i++) {
             products.add(product);
         }
-       return quantity == remainingSpaceT;
+       return quantity != remainingSpaceT;
     }
 
     public boolean removeProductById(int id) {

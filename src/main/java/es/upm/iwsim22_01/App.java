@@ -66,7 +66,7 @@ public class App {
                                 System.out.println("Use: ticket add <ProdID> <Quantity>");
                                 break;
                             }
-                            if(addTicket(command, manager, ticket)){
+                            if(addTicket(command, PRODUCT_MANAGER, ticket)){
                                 System.out.println(ticket);
                                 System.out.println("Ticket add: ok");
                             }
@@ -77,7 +77,7 @@ public class App {
                                 System.out.println("Use: ticket remove <ProdID>");
                                 break;
                             }
-                            if (idExists(command, manager)) {
+                            if (idExists(command, PRODUCT_MANAGER)) {
                                 ticket.removeProductById(id);
                                 System.out.println(ticket);
                                 System.out.println("Ticket remove: ok");
@@ -262,10 +262,8 @@ public class App {
         int id = Integer.parseInt(command[2]);
         int quantity = Integer.parseInt(command[3]);
 
-        boolean exists = idExists(command, productManager);
         Optional<Product> product = productManager.getProduct(id);
-
-        if (exists) {
+        if (product.isPresent()) {
             return ticket.addProduct(product.get(), quantity);
         } else {
             System.out.println("ticket add: error - product id " + id + " does not exist.");
@@ -276,8 +274,7 @@ public class App {
     public static boolean idExists(String[] command, ProductManager productManager) {
 
         int id = Integer.parseInt(command[2]);
-        Optional<Product> p = productManager.getProduct(id);
-       return p.isPresent();
+       return productManager.getProduct(id).isPresent();
     }
 
 }

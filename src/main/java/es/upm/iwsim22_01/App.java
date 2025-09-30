@@ -4,7 +4,6 @@ import es.upm.iwsim22_01.manager.ProductManager;
 
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
-import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.Optional;

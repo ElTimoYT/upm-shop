@@ -3,7 +3,6 @@ package es.upm.iwsim22_01.manager;
 import es.upm.iwsim22_01.models.Product;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 

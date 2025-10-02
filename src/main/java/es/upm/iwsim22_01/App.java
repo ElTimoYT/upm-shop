@@ -57,7 +57,7 @@ public class App {
                 case "ticket":
                     if (command.length < 2) {
                         System.out.println("Use: ticket <add|remove|new|print>");
-                        break;
+                        break; // REVISAR BREAK DENTRO DE IF CUIDADIN
                     }
                     switch (command[1]) {
                         case "add":
@@ -271,7 +271,6 @@ public class App {
     }
 
     public static boolean idExists(String[] command, ProductManager productManager) {
-
         int id = Integer.parseInt(command[2]);
        return productManager.getProduct(id).isPresent();
     }

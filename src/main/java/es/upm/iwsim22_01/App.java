@@ -16,12 +16,12 @@ public class App {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Ticket ticket = new Ticket();
 
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");
 
         while (menu) {
+            System.out.print("tUPM> ");
             CommandStatus commandStatus = CommandHandler.runCommand(scanner.nextLine());
             if (!commandStatus.getStatus()) {
                 System.err.println(commandStatus.getMessage());

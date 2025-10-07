@@ -47,5 +47,9 @@ public class App {
     public static void resetTicket() {
         ticket = new Ticket();
     }
+
+    public static boolean existsTicket() {
+        return ticket != null;
+    }
 }
 

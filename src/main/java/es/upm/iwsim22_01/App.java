@@ -13,7 +13,7 @@ import java.util.*;
 
 public class App {
     private static boolean menu = true;
-    private static Ticket ticket = null;
+    private static Ticket ticket = new Ticket();
 
     public static void main(String[] args) {
         Scanner scanner;

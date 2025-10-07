@@ -9,9 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class App {
     private static boolean menu = true;
     private static Ticket ticket = null;

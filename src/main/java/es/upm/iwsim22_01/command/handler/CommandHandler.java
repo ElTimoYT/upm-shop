@@ -2,6 +2,7 @@ package es.upm.iwsim22_01.command.handler;
 
 import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.command.CommandStatus;
+import es.upm.iwsim22_01.models.Category;
 
 import java.util.*;
 import java.util.function.Function;
@@ -51,7 +52,7 @@ public class CommandHandler {
      * @return Iterador con todos los tokens.
      */
     private static Iterator<String> tokenizeCommand(String command) {
-        Pattern pattern = Pattern.compile("\"([^\"]+)\"|\\S+"); //Dividimos por espacios o comillas
+        Pattern pattern = Pattern.compile("\"([^\"]+)\"|\\S+"); //Dividimos por espacios o comillas: "([^"]+)"|\S+
         Matcher matcher = pattern.matcher(command);
 
         List<String> tokens = new ArrayList<>();
@@ -84,7 +85,7 @@ public class CommandHandler {
     }
 
     private static CommandStatus helpCommand(Iterator<String> tokens) {
-        System.out.println("""
+        System.out.print("""
                 Commands:
                  prod add <id> "<name>" <category> <price>
                  prod list
@@ -98,10 +99,26 @@ public class CommandHandler {
                  help
                  exit
                 
-                Categories: MERCH, STATIONERY, CLOTHES, BOOK, ELECTRONICS
-                Discounts if there are ≥2 units in the category: MERCH 0%, STATIONERY 5%, CLOTHES 7%, BOOK 10%,
-                ELECTRONICS 3%.
-                """);
+                Categories:\s""");
+
+
+
+        Category[] categories = Category.values();
+        for (int i = 0; i < categories.length; i++) {
+            System.out.print(categories[i]);
+            if (i < categories.length - 1) System.out.print(", ");
+
+        }
+
+        System.out.print("\nDiscounts if there are ≥2 units in the category: ");
+
+        for (int i = 0; i < categories.length; i++) {
+            System.out.print(categories[i] + " " + (int)(categories[i].getDiscount() * 100) + "%");
+            if (i < categories.length - 1) System.out.print(", ");
+            else System.out.print(".");
+        }
+
+        System.out.println();
 
         return new CommandStatus(true);
     }

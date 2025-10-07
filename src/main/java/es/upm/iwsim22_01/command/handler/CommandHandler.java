@@ -52,7 +52,7 @@ public class CommandHandler {
      * @return Iterador con todos los tokens.
      */
     private static Iterator<String> tokenizeCommand(String command) {
-        Pattern pattern = Pattern.compile("\"([^\"]+)\"|\\S+"); //Dividimos por espacios o comillas
+        Pattern pattern = Pattern.compile("\"([^\"]+)\"|\\S+"); //Dividimos por espacios o comillas: "([^"]+)"|\S+
         Matcher matcher = pattern.matcher(command);
 
         List<String> tokens = new ArrayList<>();

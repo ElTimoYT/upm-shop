@@ -3,6 +3,8 @@ package es.upm.iwsim22_01;
 import es.upm.iwsim22_01.command.CommandStatus;
 import es.upm.iwsim22_01.command.handler.CommandHandler;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.*;

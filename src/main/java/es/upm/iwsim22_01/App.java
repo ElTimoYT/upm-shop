@@ -5,6 +5,8 @@ import es.upm.iwsim22_01.command.handler.CommandHandler;
 
 import es.upm.iwsim22_01.models.Ticket;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
 import java.util.regex.Matcher;
@@ -15,7 +17,17 @@ public class App {
     private static Ticket ticket = null;
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner;
+        if (args.length >= 1) {
+            try {
+                scanner = new Scanner(new FileReader(args[0]));
+            } catch (FileNotFoundException e) {
+                System.err.println("Fichero " + args[0] + " no encontrado.");
+                scanner = new Scanner(System.in);
+            }
+        } else {
+            scanner = new Scanner(System.in);
+        }
 
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");

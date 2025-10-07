@@ -47,24 +47,5 @@ public class App {
     public static void resetTicket() {
         ticket = new Ticket();
     }
-
-    public static boolean addTicket(String[] command, ProductManager productManager, Ticket ticket) {
-
-        int id = Integer.parseInt(command[2]);
-        int quantity = Integer.parseInt(command[3]);
-
-        Optional<Product> product = productManager.getProduct(id);
-        if (product.isPresent()) {
-            return ticket.addProduct(product.get(), quantity);
-        } else {
-            System.out.println("ticket add: error - product id " + id + " does not exist.");
-            return false;
-        }
-    }
-
-    public static boolean idExists(String[] command, ProductManager productManager) {
-        int id = Integer.parseInt(command[2]);
-       return productManager.getProduct(id).isPresent();
-    }
 }
 

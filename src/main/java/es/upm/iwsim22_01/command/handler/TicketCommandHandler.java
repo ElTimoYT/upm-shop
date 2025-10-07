@@ -55,6 +55,7 @@ public class TicketCommandHandler {
         }
 
         if (App.getCurrentTicket().removeProductById(productId.getAsInt())) {
+            System.out.println(App.getCurrentTicket());
             return new CommandStatus(true, "ticket remove: ok");
         } else {
             return new CommandStatus(false, "Unable to remove the product");
@@ -92,6 +93,7 @@ public class TicketCommandHandler {
         }
 
         if (App.getCurrentTicket().addProduct(optionalProduct.get(), amount.getAsInt())) {
+            System.out.println(App.getCurrentTicket());
             return new CommandStatus(true, "ticket add: ok");
         } else {
             return new CommandStatus(false, "Unable to add the product");

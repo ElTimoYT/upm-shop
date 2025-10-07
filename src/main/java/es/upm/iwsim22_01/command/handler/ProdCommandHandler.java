@@ -77,6 +77,7 @@ public class ProdCommandHandler {
         );
 
         if (ProductManager.getProductManager().addProduct(product)) {
+            System.out.println(product);
             return new CommandStatus(true, "prod add: ok");
         } else {
             return new CommandStatus(false, "Unknown error");
@@ -108,6 +109,7 @@ public class ProdCommandHandler {
         if (optionalProduct.isEmpty()) {
             return new CommandStatus(false, "Product not found");
         }
+        Product product = optionalProduct.get();
 
         //Parametro a cambiar
         if (!tokens.hasNext()) {
@@ -123,7 +125,8 @@ public class ProdCommandHandler {
                     return new CommandStatus(false, "Invalid name");
                 }
 
-                optionalProduct.get().setName(productName);
+                product.setName(productName);
+                System.out.println(product);
                 return new CommandStatus(true, "prod update: ok");
             }
             case "category" -> {
@@ -135,7 +138,8 @@ public class ProdCommandHandler {
                     return new CommandStatus(false, "Invalid category");
                 }
 
-                optionalProduct.get().setCategory(productCategory.get());
+                product.setCategory(productCategory.get());
+                System.out.println(product);
                 return new CommandStatus(true, "prod update: ok");
             }
             case "price" -> {
@@ -147,7 +151,8 @@ public class ProdCommandHandler {
                     return new CommandStatus(false, "Invalid price");
                 }
 
-                optionalProduct.get().setPrice(productPrice.getAsDouble());
+                product.setPrice(productPrice.getAsDouble());
+                System.out.println(product);
                 return new CommandStatus(true, "prod update: ok");
             }
             default -> {
@@ -166,7 +171,14 @@ public class ProdCommandHandler {
             return new CommandStatus(false, "Invalid id");
         }
 
-        ProductManager.getProductManager().removeProduct(productId.getAsInt());
+        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(productId.getAsInt());
+        if (optionalProduct.isEmpty()) {
+            return new CommandStatus(false, "Product not found");
+        }
+        Product product = optionalProduct.get();
+
+        ProductManager.getProductManager().removeProduct(product.getId());
+        System.out.println(product);
         return new CommandStatus(true, "prod remove: ok");
     }
 }

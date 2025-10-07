@@ -1,18 +1,18 @@
 package es.upm.iwsim22_01;
 
-import es.upm.iwsim22_01.manager.ProductManager;
+import es.upm.iwsim22_01.command.CommandStatus;
+import es.upm.iwsim22_01.command.handler.CommandHandler;
 
-import es.upm.iwsim22_01.models.Category;
-import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App {
-    private final static ProductManager PRODUCT_MANAGER = new ProductManager();
+    private static boolean menu = true;
+    private static Ticket ticket = null;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -21,10 +21,6 @@ public class App {
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");
 
-        boolean menu = true;
-        String[] command;
-        int id = 0;
-        int quantity = 0;
         while (menu) {
             command = scanner.nextLine().split(" ");
 
@@ -105,155 +101,16 @@ public class App {
                 """);
     }
 
-    private static boolean removeProductCommand(String[] command) {
-        int id = stringToInt(command[2]);
-        if (id == Integer.MIN_VALUE) {
-            return false;
-        }
-
-        return App.PRODUCT_MANAGER.removeProduct(id);
+    public static void exitMenu() {
+        menu = false;
     }
 
-    private static boolean updateProductCommand(String[] command) {
-        int id = stringToInt(command[2]);
-        if (id == Integer.MIN_VALUE) {
-            return false;
-        }
-
-        Optional<Product> optionalProduct = App.PRODUCT_MANAGER.getProduct(id);
-        if (optionalProduct.isEmpty()) {
-            return false;
-        }
-        switch (command[3]) {
-            case "NAME":
-                int index = 4;
-                StringBuilder productName = new StringBuilder();
-                do {
-                    productName.append(command[index++]).append(" ");
-                } while (productName.charAt(productName.length() -2) != '\"');
-                productName.delete(productName.length() -1, productName.length());
-
-                return optionalProduct.get().setName(productName.toString());
-            case "CATEGORY":
-                Category category = stringToCategory(command[4]);
-                if (category == null) {
-                    return false;
-                }
-
-                optionalProduct.get().setCategory(category);
-                return true;
-            case "PRICE":
-                double price = stringToDouble(command[4]);
-                if (price == Double.MIN_VALUE) {
-                    return false;
-                }
-
-                optionalProduct.get().setPrice(price);
-                return true;
-            default:
-                return false;
-        }
+    public static Ticket getCurrentTicket() {
+        return ticket;
     }
 
-    private static boolean listProductsCommand(String[] command) {
-        System.out.println("Catalog:");
-        App.PRODUCT_MANAGER.getProducts().forEach(p -> {
-            System.out.println("\t" + p);
-        });
-
-        return true;
-    }
-
-    private static boolean addProductCommand(String[] command) {
-        int id = stringToInt(command[2]);
-        if (id == Integer.MIN_VALUE) {
-            return false;
-        }
-
-        int index = 3;
-        StringBuilder productName = new StringBuilder();
-        do {
-            productName.append(command[index++]).append(" ");
-        } while (productName.charAt(productName.length() -2) != '\"');
-        productName.delete(productName.length() -1, productName.length());
-
-        Category productCategory = stringToCategory(command[index++]);
-        if (productCategory == null) {
-            return false;
-        }
-
-        double productPrice = stringToDouble(command[index]);
-        if (productPrice == Double.MIN_VALUE) {
-            return false;
-        }
-
-        Product product = Product.createNewProduct(id, productName.toString().replace("\"", ""), productCategory, productPrice);
-        if (product == null) {
-            return false;
-        }
-
-        return App.PRODUCT_MANAGER.addProduct(product);
-    }
-
-    public static void echoMenu(String[] args) {
-        for (int i = 1; i < args.length; i++) {
-            System.out.print(args[i]);
-            System.out.print(" ");
-        }
-
-        System.out.println();
-    }
-
-    public static void helpMenu() {
-        System.out.println("""
-                Commands:
-                 prod add <id> "<name>" <category> <price>
-                 prod list
-                 prod update <id> NAME|CATEGORY|PRICE <value>
-                 prod remove <id>
-                 ticket new
-                 ticket add <prodId> <quantity>
-                 ticket remove <prodId>
-                 ticket print
-                 echo "<texto>"
-                 help
-                 exit
-                 
-                Categories: MERCH, STATIONERY, CLOTHES, BOOK, ELECTRONICS
-                Discounts if there are ≥2 units in the category: MERCH 0%, STATIONERY 5%, CLOTHES 7%, BOOK 10%,
-                ELECTRONICS 3%.
-                """);
-    }
-
-
-    private static int stringToInt(String string) {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException exception) {
-            System.err.println("No se ha podido convertir '" + string + "'a número entero.");
-        }
-
-        return Integer.MIN_VALUE;
-    }
-
-    private static double stringToDouble(String string) {
-        try {
-            return Double.parseDouble(string);
-        } catch (NumberFormatException exception) {
-            System.err.println("No se ha podido convertir '" + string + "'a número decimal.");
-        }
-
-        return Double.MIN_VALUE;
-    }
-
-    private static Category stringToCategory(String string) {
-        try {
-            return Category.valueOf(string);
-        } catch (IllegalArgumentException exception) {
-            System.err.println("No se ha podido convertir '" + string + "'a categoria.");
-        }
-
-        return null;
+    public static void resetTicket() {
+        ticket = new Ticket();
     }
 
     public static boolean addTicket(String[] command, ProductManager productManager, Ticket ticket) {
@@ -274,6 +131,5 @@ public class App {
         int id = Integer.parseInt(command[2]);
        return productManager.getProduct(id).isPresent();
     }
-
 }
 

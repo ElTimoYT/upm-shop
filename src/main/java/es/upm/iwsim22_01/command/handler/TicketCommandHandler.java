@@ -53,8 +53,12 @@ public class TicketCommandHandler {
         if (!App.existsTicket()) {
             return new CommandStatus(false, "No ticket created");
         }
-        App.getCurrentTicket().removeProductById(productId.getAsInt());
-        return new CommandStatus(true, "ticket remove: ok");
+
+        if (App.getCurrentTicket().removeProductById(productId.getAsInt())) {
+            return new CommandStatus(true, "ticket remove: ok");
+        } else {
+            return new CommandStatus(false, "Unable to remove the product");
+        }
     }
 
     private static CommandStatus addTicketCommand(Iterator<String> tokens) {
@@ -86,8 +90,12 @@ public class TicketCommandHandler {
         if (!App.existsTicket()) {
             return new CommandStatus(false, "No ticket created");
         }
-        App.getCurrentTicket().addProduct(optionalProduct.get(), amount.getAsInt());
-        return new CommandStatus(true, "ticket add: ok");
+
+        if (App.getCurrentTicket().addProduct(optionalProduct.get(), amount.getAsInt())) {
+            return new CommandStatus(true, "ticket add: ok");
+        } else {
+            return new CommandStatus(false, "Unable to add the product");
+        }
     }
 
     private static CommandStatus newTickedCommand(Iterator<String> tokens) {

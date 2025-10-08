@@ -1,12 +1,38 @@
 package es.upm.iwsim22_01.models;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class Ticket {
     private ArrayList<Product> products;
 
     public Ticket() {
         this.products = new ArrayList<>();
+    }
+    private Map<Category, Integer> countCategory() {
+        Map<Category, Integer> num = new EnumMap<>(Category.class);
+        for (Category category : Category.values()) {
+            num.put(category, 0); //inicializamos a 0
+        }
+        for (Product p : products) { //contamos cuantos productos de que categoria hay en cada uno.
+            num.put(p.getCategory(), num.get(p.getCategory()) + 1);
+        }
+        return num;
+    }
+
+    private double perItemDiscount(Product p, Map<Category, Integer> counts) {
+        int n = counts.getOrDefault(p.getCategory(), 0);
+        double resultDiscount = 0.0;
+        if (n >= 2) {
+            double discount = p.getCategory().getDiscount();
+            resultDiscount= p.getPrice() * discount;
+        }
+        return resultDiscount;
+    }
+
+    private static double round1(double v) {
+        return Math.round(v * 10.0) / 10.0; // si quieres un decimal (ej: -3.0)
     }
 
     public double TotalPrice() {
@@ -19,27 +45,11 @@ public class Ticket {
 
     public double DiscountPrice() {
         double discount = 0;
-        int[] contador = new int[Category.values().length];
-
-        for (Product product : products) {
-            int pos  = product.getCategory().ordinal();
-            contador[pos]++;
+        Map<Category, Integer> counts = countCategory();
+        for (Product p : products) {
+            discount += perItemDiscount(p, counts);
         }
-
-        for (int i = 0; i < Category.values().length; i++) {
-            if(contador[i] >= 2){
-                Category category = Category.values()[i];
-                double percentage = category.getDiscount();
-                for (Product p : products) {
-                    if (p.getCategory() == category) {
-                        discount += (p.getPrice() * percentage);
-                    }
-                }
-
-            }
-
-        }
-        return discount;
+        return round1(discount);
     }
 
     public boolean addProduct(Product product, int quantity) {
@@ -62,10 +72,15 @@ public class Ticket {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
+        Map<Category, Integer> counts = countCategory();
         double totalPrice = TotalPrice();
         double discountPrice = DiscountPrice();
-        for (Product product : products) {
-            str.append(product.toString());
+        for (Product p : products) {
+            str.append(p.toString());
+            double d = perItemDiscount(p, counts);
+            if (d > 0) {
+                str.append(" **discount -").append(round1(d));
+            }
             str.append("\n");
         }
         str.append("Total Price: ").append(totalPrice);

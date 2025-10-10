@@ -8,9 +8,9 @@ import es.upm.iwsim22_01.models.Product;
 
 import java.util.*;
 
-public class TicketCommand implements Command {
+public class TicketCommandHandler implements CommandHandler {
     @Override
-    public CommandStatus execute(Iterator<String> tokens) {
+    public CommandStatus runCommand(Iterator<String> tokens) {
         CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: ticket new|add|remove|print");
 
         if (!tokens.hasNext()) {

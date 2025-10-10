@@ -5,9 +5,9 @@ import es.upm.iwsim22_01.commands.CommandStatus;
 
 import java.util.Iterator;
 
-public class ExitCommand implements Command {
+public class ExitCommandHandler implements CommandHandler {
     @Override
-    public CommandStatus execute(Iterator<String> tokens) {
+    public CommandStatus runCommand(Iterator<String> tokens) {
         App.exitMenu();
 
         return new CommandStatus(true);

@@ -16,11 +16,11 @@ public class App {
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
     public static void main(String[] args) {
-        dispatcher.addCommand("exit", new ExitCommand());
-        dispatcher.addCommand("help", new HelpCommand());
-        dispatcher.addCommand("echo", new EchoCommand());
-        dispatcher.addCommand("prod", new ProdCommand());
-        dispatcher.addCommand("ticket", new TicketCommand());
+        dispatcher.addCommand("exit", new ExitCommandHandler());
+        dispatcher.addCommand("help", new HelpCommandHandler());
+        dispatcher.addCommand("echo", new EchoCommandHandler());
+        dispatcher.addCommand("prod", new ProdCommandHandler());
+        dispatcher.addCommand("ticket", new TicketCommandHandler());
 
         Scanner scanner;
         if (args.length >= 1) {
@@ -39,7 +39,7 @@ public class App {
 
         while (menu) {
             System.out.print("tUPM> ");
-            CommandStatus commandStatus = dispatcher.runCommand(scanner.nextLine());
+            CommandStatus commandStatus = dispatcher.processCommand(scanner.nextLine());
             if (!commandStatus.getStatus()) {
                 System.err.println(commandStatus.getMessage());
             } else if (commandStatus.getMessage() != null) {

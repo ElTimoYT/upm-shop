@@ -4,9 +4,9 @@ import es.upm.iwsim22_01.commands.CommandStatus;
 
 import java.util.Iterator;
 
-public class EchoCommand implements Command {
+public class EchoCommandHandler implements CommandHandler {
     @Override
-    public CommandStatus execute(Iterator<String> tokens) {
+    public CommandStatus runCommand(Iterator<String> tokens) {
         if (!tokens.hasNext()) {
             return new CommandStatus(false, "Incorrect use: echo \"<message>\"");
         }

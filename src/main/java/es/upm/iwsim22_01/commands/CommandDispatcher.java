@@ -1,6 +1,6 @@
 package es.upm.iwsim22_01.commands;
 
-import es.upm.iwsim22_01.commands.commands.Command;
+import es.upm.iwsim22_01.commands.commands.CommandHandler;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -17,15 +17,16 @@ import java.util.regex.Pattern;
  * </ul>
  * <br>
  * @see CommandStatus
+ * @see CommandHandler
  */
 public class CommandDispatcher {
-    private final Map<String, Command> COMMANDS = new TreeMap<>();
+    private final Map<String, CommandHandler> COMMANDS = new TreeMap<>();
 
-    public void addCommand(String name, Command command) {
-        COMMANDS.put(name, command);
+    public void addCommand(String name, CommandHandler commandHandler) {
+        COMMANDS.put(name, commandHandler);
     }
 
-    public CommandStatus runCommand(String command) {
+    public CommandStatus processCommand(String command) {
         Iterator<String> tokens = tokenizeCommand(command);
 
         if (!tokens.hasNext()) {
@@ -35,7 +36,7 @@ public class CommandDispatcher {
         return COMMANDS.getOrDefault(
                 tokens.next(),
                 stringIterator -> new CommandStatus(false, "Unknown command")
-        ).execute(tokens);
+        ).runCommand(tokens);
     }
 
     /**

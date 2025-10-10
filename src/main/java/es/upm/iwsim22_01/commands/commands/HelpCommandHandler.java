@@ -5,10 +5,10 @@ import es.upm.iwsim22_01.models.Category;
 
 import java.util.Iterator;
 
-public class HelpCommand implements Command {
+public class HelpCommandHandler implements CommandHandler {
 
     @Override
-    public CommandStatus execute(Iterator<String> tokens) {
+    public CommandStatus runCommand(Iterator<String> tokens) {
         System.out.print("""
                 Commands:
                  prod add <id> "<name>" <category> <price>

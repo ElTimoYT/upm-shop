@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.command;
+package es.upm.iwsim22_01.commands;
 
 public class CommandStatus {
     private boolean status;

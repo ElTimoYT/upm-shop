@@ -1,36 +1,32 @@
-package es.upm.iwsim22_01.command.handler;
+package es.upm.iwsim22_01.commands.commands;
 
-import es.upm.iwsim22_01.command.CommandStatus;
-import es.upm.iwsim22_01.command.Converter;
+import es.upm.iwsim22_01.commands.CommandStatus;
+import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
 
 import java.util.*;
-import java.util.function.Function;
 
-public class ProdCommandHandler {
-    private static final Map<String, Function<Iterator<String>, CommandStatus>> PROD_SUBCOMMANDS = Map.of(
-        "add", ProdCommandHandler::addProductCommand,
-        "list", ProdCommandHandler::listProductCommand,
-        "remove", ProdCommandHandler::removeProductCommand,
-        "update", ProdCommandHandler::updateProductCommand
-    );
-
-    public static CommandStatus runCommand(Iterator<String> tokens) {
+public class ProdCommand implements Command {
+    @Override
+    public CommandStatus execute(Iterator<String> tokens) {
         CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: prod add|list|update|remove");
 
         if (!tokens.hasNext()) {
             return incorrectUsage;
         }
 
-        return PROD_SUBCOMMANDS.getOrDefault(
-                tokens.next(),
-                stringIterator -> incorrectUsage
-        ).apply(tokens);
+        return switch (tokens.next()) {
+            case "add" -> addProductCommand(tokens);
+            case "list" -> listProductCommand(tokens);
+            case "remove" -> removeProductCommand(tokens);
+            case "update" -> updateProductCommand(tokens);
+            default -> incorrectUsage;
+        };
     }
 
-    private static CommandStatus addProductCommand(Iterator<String> tokens) {
+    private CommandStatus addProductCommand(Iterator<String> tokens) {
         CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: prod add <id> \"<name>\" <category> <price>");
 
         //Id
@@ -84,7 +80,7 @@ public class ProdCommandHandler {
         }
     }
 
-    private static CommandStatus listProductCommand(Iterator<String> tokens) {
+    private CommandStatus listProductCommand(Iterator<String> tokens) {
         System.out.println("Catalog:");
         ProductManager.getProductManager().getProducts().forEach(p -> {
             System.out.println("\t" + p);
@@ -93,7 +89,7 @@ public class ProdCommandHandler {
         return new CommandStatus(true, "prod list: ok");
     }
 
-    private static CommandStatus updateProductCommand(Iterator<String> tokens) {
+    private CommandStatus updateProductCommand(Iterator<String> tokens) {
         CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: prod update <id> name|category|price <value>");
 
         //Id
@@ -161,7 +157,7 @@ public class ProdCommandHandler {
         }
     }
 
-    private static CommandStatus removeProductCommand(Iterator<String> tokens) {
+    private CommandStatus removeProductCommand(Iterator<String> tokens) {
         //Id
         if (!tokens.hasNext()) {
             return new CommandStatus(false, "Incorrect use: prod remove <id>");

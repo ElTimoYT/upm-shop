@@ -102,7 +102,6 @@ public class Product {
         return id.isPresent() && checkId(id.getAsInt());
     }
 
-
     public static boolean checkName(String name) {
         return name != null && !name.isBlank() && name.length() < Product.MAX_NAME_LENGTH;
     }

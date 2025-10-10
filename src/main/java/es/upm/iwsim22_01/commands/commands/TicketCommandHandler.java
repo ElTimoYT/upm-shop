@@ -1,45 +1,43 @@
-package es.upm.iwsim22_01.command.handler;
+package es.upm.iwsim22_01.commands.commands;
 
 import es.upm.iwsim22_01.App;
-import es.upm.iwsim22_01.command.CommandStatus;
-import es.upm.iwsim22_01.command.Converter;
+import es.upm.iwsim22_01.commands.CommandStatus;
+import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Product;
 
 import java.util.*;
-import java.util.function.Function;
 
-public class TicketCommandHandler {
-    private static final Map<String, Function<Iterator<String>, CommandStatus>> TICKET_SUBCOMMANDS = Map.of(
-        "new", TicketCommandHandler::newTickedCommand,
-        "add", TicketCommandHandler::addTicketCommand,
-        "remove", TicketCommandHandler::removeTicketCommand,
-        "print", TicketCommandHandler::printTicketCommand
-    );
-
-    public static CommandStatus runCommand(Iterator<String> tokens) {
+public class TicketCommandHandler implements CommandHandler {
+    @Override
+    public CommandStatus runCommand(Iterator<String> tokens) {
         CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: ticket new|add|remove|print");
 
         if (!tokens.hasNext()) {
             return incorrectUsage;
         }
 
-        return TICKET_SUBCOMMANDS.getOrDefault(
-                tokens.next(),
-                stringIterator -> incorrectUsage
-        ).apply(tokens);
+        return switch (tokens.next()) {
+            case "new" -> newTickedCommand(tokens);
+            case "add" -> addTicketCommand(tokens);
+            case "remove" -> removeTicketCommand(tokens);
+            case "print" -> printTicketCommand(tokens);
+            default -> incorrectUsage;
+        };
     }
 
-    private static CommandStatus printTicketCommand(Iterator<String> tokens) {
+    private CommandStatus printTicketCommand(Iterator<String> tokens) {
         if (!App.existsTicket()) {
             return new CommandStatus(false, "No ticket created");
         }
         System.out.println(App.getCurrentTicket());
 
+        App.resetTicket();
+
         return new CommandStatus(true, "ticket print: ok");
     }
 
-    private static CommandStatus removeTicketCommand(Iterator<String> tokens) {
+    private CommandStatus removeTicketCommand(Iterator<String> tokens) {
         //Id
         if (!tokens.hasNext()) {
             return new CommandStatus(false, "Incorrect use: ticket remove <prodId>");
@@ -62,7 +60,7 @@ public class TicketCommandHandler {
         }
     }
 
-    private static CommandStatus addTicketCommand(Iterator<String> tokens) {
+    private CommandStatus addTicketCommand(Iterator<String> tokens) {
         CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: ticket add <prodId> <amount>");
 
         //Id
@@ -100,7 +98,7 @@ public class TicketCommandHandler {
         }
     }
 
-    private static CommandStatus newTickedCommand(Iterator<String> tokens) {
+    private CommandStatus newTickedCommand(Iterator<String> tokens) {
         App.resetTicket();
         return new CommandStatus(true, "ticket new: ok");
     }

@@ -1,6 +1,6 @@
 # 🛒 UPM SHOP - Product & Ticket CLI
 
-Welcome to **UPM SHOP**, your simple and fast command-line tool to manage products and create tickets with automatic discounts! 🚀
+Welcome to **UPM SHOP**, your simple and fast commandHandler-line tool to manage products and create tickets with automatic discounts! 🚀
 
 ## ✨ What can you do?
 - **Add, list, update, and remove products** from your in-memory catalog.

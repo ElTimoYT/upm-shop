@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.command;
+package es.upm.iwsim22_01.commands;
 
 import es.upm.iwsim22_01.models.Category;
 

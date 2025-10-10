@@ -1,10 +1,9 @@
 package es.upm.iwsim22_01;
 
-import es.upm.iwsim22_01.command.CommandStatus;
-import es.upm.iwsim22_01.command.handler.CommandHandler;
+import es.upm.iwsim22_01.commands.CommandStatus;
+import es.upm.iwsim22_01.commands.commands.*;
+import es.upm.iwsim22_01.commands.CommandDispatcher;
 
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.io.FileNotFoundException;
@@ -14,8 +13,15 @@ import java.util.*;
 public class App {
     private static boolean menu = true;
     private static Ticket ticket = new Ticket();
+    private static CommandDispatcher dispatcher = new CommandDispatcher();
 
     public static void main(String[] args) {
+        dispatcher.addCommand("exit", new ExitCommandHandler());
+        dispatcher.addCommand("help", new HelpCommandHandler());
+        dispatcher.addCommand("echo", new EchoCommandHandler());
+        dispatcher.addCommand("prod", new ProdCommandHandler());
+        dispatcher.addCommand("ticket", new TicketCommandHandler());
+
         Scanner scanner;
         if (args.length >= 1) {
             try {
@@ -33,7 +39,7 @@ public class App {
 
         while (menu) {
             System.out.print("tUPM> ");
-            CommandStatus commandStatus = CommandHandler.runCommand(scanner.nextLine());
+            CommandStatus commandStatus = dispatcher.processCommand(scanner.nextLine());
             if (!commandStatus.getStatus()) {
                 System.err.println(commandStatus.getMessage());
             } else if (commandStatus.getMessage() != null) {

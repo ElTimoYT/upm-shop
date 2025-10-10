@@ -10,6 +10,7 @@ public class Ticket {
     public Ticket() {
         this.products = new ArrayList<>();
     }
+
     private Map<Category, Integer> countCategory() {
         Map<Category, Integer> num = new EnumMap<>(Category.class);
         for (Category category : Category.values()) {
@@ -31,11 +32,11 @@ public class Ticket {
         return resultDiscount;
     }
 
-    private static double round1(double v) {
+    private static double round(double v) {
         return Math.round(v * 10.0) / 10.0; // si quieres un decimal (ej: -3.0)
     }
 
-    public double TotalPrice() {
+    public double totalPrice() {
         double total = 0;
         for (Product product : products) {
             total += product.getPrice();
@@ -43,13 +44,13 @@ public class Ticket {
         return total;
     }
 
-    public double DiscountPrice() {
+    public double discountPrice() {
         double discount = 0;
         Map<Category, Integer> counts = countCategory();
         for (Product p : products) {
             discount += perItemDiscount(p, counts);
         }
-        return round1(discount);
+        return round(discount);
     }
 
     public boolean addProduct(Product product, int quantity) {
@@ -68,18 +69,17 @@ public class Ticket {
         return products.removeIf(p -> p.getId() == id);
     }
 
-
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
         Map<Category, Integer> counts = countCategory();
-        double totalPrice = TotalPrice();
-        double discountPrice = DiscountPrice();
+        double totalPrice = totalPrice();
+        double discountPrice = discountPrice();
         for (Product p : products) {
             str.append(p.toString());
             double d = perItemDiscount(p, counts);
             if (d > 0) {
-                str.append(" **discount -").append(round1(d));
+                str.append(" **discount -").append(round(d));
             }
             str.append("\n");
         }
@@ -87,12 +87,7 @@ public class Ticket {
         str.append("\n");
         str.append("Total Discount: ").append(discountPrice);
         str.append("\n");
-        str.append("Final price: ").append(TotalPrice() - discountPrice);
+        str.append("Final price: ").append(totalPrice() - discountPrice);
         return str.toString();
     }
-
-
-
-
-
 }

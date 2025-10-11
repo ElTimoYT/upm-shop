@@ -1,159 +1,130 @@
 package es.upm.iwsim22_01.models;
 
 import java.util.*;
+import java.util.Map.Entry;
 
-/**
- * Representa un ticket de compra en el sistema de tienda.
- * <p>
- * Un ticket contiene una lista de productos y calcula automáticamente
- * los descuentos aplicables según las categorías de los productos.
- * Los descuentos se aplican cuando hay 2 o más productos de la misma categoría.
- * </p>
- */
 public class Ticket {
     private static final int MAX_PRODUCTS = 100;
-    private ArrayList<Product> products;
+    private final Map<Product, Integer> items = new LinkedHashMap<>();
 
-    /**
-     * Constructor de la clase Ticket.
-     * Inicializa una lista vacía de productos.
-     */
-    public Ticket() {
-        this.products = new ArrayList<>();
+    public Ticket() {}
+
+    private int totalUnits() {
+        //cantidad totales de productos en el ticket
+        int n = 0;
+        for (int q : items.values()) n += q;
+        return n;
     }
 
-    /**
-     * Cuenta el número de productos por cada categoría en el ticket.
-     * 
-     * @return mapa con el conteo de productos por categoría
-     */
+    // Conteo por categoría (cuenta unidades, no productos distintos)
     private Map<Category, Integer> countCategory() {
+        //creamos mapa para las categorias
         Map<Category, Integer> num = new EnumMap<>(Category.class);
-        for (Category category : Category.values()) {
-            num.put(category, 0); //inicializamos a 0
-        }
-        for (Product p : products) { //contamos cuantos productos de que categoria hay en cada uno.
-            num.put(p.getCategory(), num.get(p.getCategory()) + 1);
+        //inicializamos cada categoria a 0 para evitar los nulls
+        for (Category c : Category.values()) num.put(c, 0);
+        //recorremos mapa guardamos category y añadimos la cantidad de ese producto a su categoria
+        for (Entry<Product, Integer> e : items.entrySet()) {
+            Category cat = e.getKey().getCategory();
+            num.put(cat, num.get(cat) + e.getValue());
         }
         return num;
     }
 
-    /**
-     * Calcula el descuento aplicable a un producto específico.
-     * El descuento se aplica solo si hay 2 o más productos de la misma categoría.
-     * 
-     * @param product producto al que calcular el descuento
-     * @param counts mapa con el conteo de productos por categoría
-     * @return descuento aplicable al producto
-     */
-    private double perItemDiscount(Product product, Map<Category, Integer> counts) {
-        int n = counts.getOrDefault(product.getCategory(), 0);
-        double resultDiscount = 0.0;
+    // Descuento POR ÍTEM para un producto dado (no multiplica por cantidad)
+    private double perItemDiscount(Product p, Map<Category, Integer> counts) {
+        int n = counts.getOrDefault(p.getCategory(), 0);
         if (n >= 2) {
-            double discount = product.getCategory().getDiscount();
-            resultDiscount= product.getPrice() * discount;
+            double rate = p.getCategory().getDiscount();
+            return p.getPrice() * rate;
         }
-        return resultDiscount;
+        return 0.0;
     }
 
-    /**
-     * Redondea un valor a un decimal.
-     * 
-     * @param value valor a redondear
-     * @return valor redondeado a un decimal
-     */
-    private static double round(double value) {
-        return Math.round(value * 10.0) / 10.0; // si quieres un decimal (ej: -3.0)
+    private static double round1(double v) {
+        return Math.round(v * 10.0) / 10.0;
     }
 
-    /**
-     * Calcula el precio total del ticket sin descuentos.
-     * 
-     * @return precio total de todos los productos
-     */
     private double totalPrice() {
-        double total = 0;
-        for (Product product : products) {
-            total += product.getPrice();
+        double total = 0.0;
+        for (Entry<Product, Integer> e : items.entrySet()) {
+            total += e.getKey().getPrice() * e.getValue();
         }
         return total;
     }
 
-    /**
-     * Calcula el descuento total aplicable al ticket.
-     * 
-     * @return descuento total redondeado a un decimal
-     */
     private double discountPrice() {
-        double discount = 0;
         Map<Category, Integer> counts = countCategory();
-        for (Product p : products) {
-            discount += perItemDiscount(p, counts);
+        double discount = 0.0;
+        for (Entry<Product, Integer> e : items.entrySet()) {
+            double perItem = perItemDiscount(e.getKey(), counts);
+            discount += perItem * e.getValue(); // multiplicamos por cantidad de ese producto
         }
-        return round(discount);
+        return round1(discount);
     }
 
-    /**
-     * Añade productos al ticket.
-     *
-     * @param product producto a añadir
-     * @param quantity cantidad de productos a añadir
-     * @return true si se añadieron todos los productos solicitados, false si no se añadió ninguno
-     */
+
     public boolean addProduct(Product product, int quantity) {
-        if (product == null || quantity <= 0) {
-            return false;
-        }
+        if (product == null || quantity <= 0) return false;
 
-        int remainingSpace = MAX_PRODUCTS - products.size();
-        if (quantity > remainingSpace) {
-            // No hay espacio suficiente para todos -> no añadir nada
-            return false;
-        }
+        int remaining = MAX_PRODUCTS - totalUnits();
+        if (quantity > remaining) return false;
 
-        for (int i = 0; i < quantity; i++) {
-            products.add(product);
-        }
-
+        items.put(product, items.getOrDefault(product, 0) + quantity);
         return true;
     }
 
-    /**
-     * Elimina todos los productos con el identificador especificado del ticket.
-     * 
-     * @param id identificador del producto a eliminar
-     * @return true si se eliminó al menos un producto, false en caso contrario
-     */
     public boolean removeProductById(int id) {
-        return products.removeIf(p -> p.getId() == id);
+        Product productToRemove = null;
+        boolean removed = false;
+        // Recorremos mapa buscando id para guardar el producto
+        for (Product p : items.keySet()) {
+            if (p.getId() == id) {
+                productToRemove = p; 
+            }
+        }
+
+        // Al salir del bucle, comprobamos si encontramos algo
+        if (productToRemove != null) {
+            items.remove(productToRemove); // eliminamos la entrada del mapa
+            removed = true;                 // devolvemos true si se eliminó
+        }
+        // Si no se encontró ningún producto con ese id, devolvemos false
+        return removed;
     }
 
-    /**
-     * Devuelve una representación detallada del ticket.
-     * Incluye todos los productos con sus descuentos aplicables y los totales.
-     * 
-     * @return cadena que representa el ticket completo
-     */
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        // Precomputamos conteo por categoría
         Map<Category, Integer> counts = countCategory();
-        double totalPrice = totalPrice();
-        double discountPrice = discountPrice();
-        products.sort(Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER));
-        for (Product p : products) {
-            str.append(p.toString());
-            double d = perItemDiscount(p, counts);
-            if (d > 0) {
-                str.append(" **discount -").append(round(d));
+
+        // Orden por nombre (ignorando mayúsculas)
+        List<Entry<Product, Integer>> ordenados = new ArrayList<>(items.entrySet());
+        ordenados.sort(Comparator.comparing(e -> e.getKey().getName(),
+                String.CASE_INSENSITIVE_ORDER
+        ));
+
+        // Línea por producto (sin repetirlo N veces)
+        for (Entry<Product, Integer> e : ordenados) {
+            Product p = e.getKey();
+            int qty = e.getValue();
+            double dPerItem = perItemDiscount(p, counts);
+            for (int i = 0; i < qty; i++) {
+                sb.append(p.toString());
+                if (dPerItem > 0) {
+                    sb.append(" **discount -").append(round1(dPerItem));
+                }
+                sb.append("\n");
             }
-            str.append("\n");
+            sb.append("\n");
         }
-        str.append("Total price: ").append(totalPrice);
-        str.append("\n");
-        str.append("Total discount: ").append(discountPrice);
-        str.append("\n");
-        str.append("Final Price: ").append(totalPrice() - discountPrice);
-        return str.toString();
+
+        double total = totalPrice();
+        double discount = discountPrice();
+        sb.append("Total price: ").append(total).append("\n");
+        sb.append("Total discount: ").append(discount).append("\n");
+        sb.append("Final Price: ").append(round1(total - discount));
+
+        return sb.toString();
     }
 }

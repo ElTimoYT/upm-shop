@@ -1,8 +1,6 @@
 package es.upm.iwsim22_01.models;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Representa un ticket de compra en el sistema de tienda.
@@ -14,7 +12,6 @@ import java.util.Map;
  */
 public class Ticket {
     private static final int MAX_PRODUCTS = 100;
-
     private ArrayList<Product> products;
 
     /**
@@ -74,7 +71,7 @@ public class Ticket {
      * 
      * @return precio total de todos los productos
      */
-    public double totalPrice() {
+    private double totalPrice() {
         double total = 0;
         for (Product product : products) {
             total += product.getPrice();
@@ -87,7 +84,7 @@ public class Ticket {
      * 
      * @return descuento total redondeado a un decimal
      */
-    public double discountPrice() {
+    private double discountPrice() {
         double discount = 0;
         Map<Category, Integer> counts = countCategory();
         for (Product p : products) {
@@ -103,7 +100,7 @@ public class Ticket {
      * @param quantity cantidad de productos a añadir
      * @return true si se añadieron todos los productos solicitados, false si no se añadió ninguno
      */
-    public boolean addProduct(Product product, int quantity) {
+    private boolean addProduct(Product product, int quantity) {
         if (product == null || quantity <= 0) {
             return false;
         }
@@ -143,6 +140,7 @@ public class Ticket {
         Map<Category, Integer> counts = countCategory();
         double totalPrice = totalPrice();
         double discountPrice = discountPrice();
+        products.sort(Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER));
         for (Product p : products) {
             str.append(p.toString());
             double d = perItemDiscount(p, counts);

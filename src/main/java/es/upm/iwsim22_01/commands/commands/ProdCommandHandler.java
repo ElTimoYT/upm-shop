@@ -1,14 +1,31 @@
 package es.upm.iwsim22_01.commands.commands;
 
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+
 import es.upm.iwsim22_01.commands.CommandStatus;
 import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
 
-import java.util.*;
-
+/**
+ * Manejador del comando 'prod' para gestionar productos.
+ * <p>
+ * Este comando permite realizar operaciones CRUD sobre productos:
+ * añadir, listar, actualizar y eliminar productos del catálogo.
+ * </p>
+ */
 public class ProdCommandHandler implements CommandHandler {
+    
+    /**
+     * Ejecuta el comando prod delegando a la suboperación correspondiente.
+     * 
+     * @param tokens iterador con los tokens del comando
+     * @return CommandStatus con el resultado de la operación
+     */
     @Override
     public CommandStatus runCommand(Iterator<String> tokens) {
         CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: prod add|list|update|remove");
@@ -26,6 +43,13 @@ public class ProdCommandHandler implements CommandHandler {
         };
     }
 
+    /**
+     * Maneja la suboperación 'add' del comando prod.
+     * Añade un nuevo producto al catálogo.
+     * 
+     * @param tokens iterador con los tokens del comando
+     * @return CommandStatus con el resultado de la operación
+     */
     private CommandStatus addProductCommand(Iterator<String> tokens) {
         CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: prod add <id> \"<name>\" <category> <price>");
 
@@ -80,6 +104,13 @@ public class ProdCommandHandler implements CommandHandler {
         }
     }
 
+    /**
+     * Maneja la suboperación 'list' del comando prod.
+     * Lista todos los productos del catálogo.
+     * 
+     * @param tokens iterador con los tokens del comando
+     * @return CommandStatus con el resultado de la operación
+     */
     private CommandStatus listProductCommand(Iterator<String> tokens) {
         System.out.println("Catalog:");
         ProductManager.getProductManager().getProducts().forEach(p -> {
@@ -89,6 +120,13 @@ public class ProdCommandHandler implements CommandHandler {
         return new CommandStatus(true, "prod list: ok");
     }
 
+    /**
+     * Maneja la suboperación 'update' del comando prod.
+     * Actualiza un producto existente en el catálogo.
+     * 
+     * @param tokens iterador con los tokens del comando
+     * @return CommandStatus con el resultado de la operación
+     */
     private CommandStatus updateProductCommand(Iterator<String> tokens) {
         CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: prod update <id> name|category|price <value>");
 
@@ -157,6 +195,13 @@ public class ProdCommandHandler implements CommandHandler {
         }
     }
 
+    /**
+     * Maneja la suboperación 'remove' del comando prod.
+     * Elimina un producto del catálogo.
+     * 
+     * @param tokens iterador con los tokens del comando
+     * @return CommandStatus con el resultado de la operación
+     */
     private CommandStatus removeProductCommand(Iterator<String> tokens) {
         //Id
         if (!tokens.hasNext()) {

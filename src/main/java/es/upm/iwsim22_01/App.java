@@ -61,10 +61,12 @@ public class App {
             System.out.print("tUPM> ");
             CommandStatus commandStatus = dispatcher.processCommand(scanner.nextLine());
             if (!commandStatus.getStatus()) {
-                System.err.println(commandStatus.getMessage());
+                System.out.println(commandStatus.getMessage());
             } else if (commandStatus.getMessage() != null) {
                 System.out.println(commandStatus.getMessage());
             }
+
+            System.out.println();
         }
 
         System.out.println("""

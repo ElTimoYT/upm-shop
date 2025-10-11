@@ -23,7 +23,7 @@ public class EchoCommandHandler implements CommandHandler {
             return new CommandStatus(false, "Incorrect use: echo \"<message>\"");
         }
 
-        System.out.println(tokens.next());
+        System.out.println("echo \"" + tokens.next() + "\"");
         return new CommandStatus(true);
     }
 }

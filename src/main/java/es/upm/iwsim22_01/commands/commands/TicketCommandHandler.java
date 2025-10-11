@@ -131,7 +131,7 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(App.getCurrentTicket());
             return new CommandStatus(true, "ticket add: ok");
         } else {
-            return new CommandStatus(false, "Unable to add the product");
+            return new CommandStatus(false, "Unable to add the products");
         }
     }
 

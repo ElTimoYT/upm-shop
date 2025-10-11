@@ -134,3 +134,17 @@
 {"ts":1760176583959,"action":"IDE_ACTIVATED"}
 {"ts":1760176596251,"action":"IDE_DEACTIVATED"}
 {"ts":1760176646786,"action":"IDE_ACTIVATED"}
+{"ts":1760176683646,"action":"IDE_DEACTIVATED"}
+{"ts":1760176827122,"action":"IDE_ACTIVATED"}
+{"ts":1760176841120,"action":"IDE_DEACTIVATED"}
+{"ts":1760176872838,"action":"IDE_ACTIVATED"}
+{"ts":1760176891376,"action":"IDE_DEACTIVATED"}
+{"ts":1760176900120,"action":"IDE_ACTIVATED"}
+{"ts":1760176954635,"action":"IDE_DEACTIVATED"}
+{"ts":1760177126512,"action":"IDE_ACTIVATED"}
+{"ts":1760177126911,"action":"FILE_CLOSED","file":"/src/main/java/es/upm/iwsim22_01/models/Ticket.java","tags":{"FILE_LINE_OF_CODE":"156"}}
+{"ts":1760177126911,"action":"FILE_OPENED","file":"/src/main/java/es/upm/iwsim22_01/commands/commands/TicketCommandHandler.java","tags":{"FILE_LINE_OF_CODE":"150"}}
+{"ts":1760177142697,"action":"FILE_CLOSED","file":"/src/main/java/es/upm/iwsim22_01/commands/commands/TicketCommandHandler.java","tags":{"FILE_LINE_OF_CODE":"150"}}
+{"ts":1760177142697,"action":"FILE_OPENED","file":"/src/main/java/es/upm/iwsim22_01/models/Ticket.java","tags":{"FILE_LINE_OF_CODE":"156"}}
+{"ts":1760177147082,"action":"IDE_DEACTIVATED"}
+{"ts":1760177232740,"action":"IDE_ACTIVATED"}

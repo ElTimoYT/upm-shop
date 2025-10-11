@@ -11,12 +11,10 @@ import java.util.Map;
  * los descuentos aplicables según las categorías de los productos.
  * Los descuentos se aplican cuando hay 2 o más productos de la misma categoría.
  * </p>
- * 
- * @author Sistema de Tienda UPM
- * @version 1.0
  */
 public class Ticket {
-    /** Lista de productos en el ticket */
+    private static final int MAX_PRODUCTS = 100;
+
     private ArrayList<Product> products;
 
     /**
@@ -100,21 +98,27 @@ public class Ticket {
 
     /**
      * Añade productos al ticket.
-     * 
+     *
      * @param product producto a añadir
      * @param quantity cantidad de productos a añadir
-     * @return true si se añadieron todos los productos solicitados, false si solo se añadieron algunos
+     * @return true si se añadieron todos los productos solicitados, false si no se añadió ninguno
      */
     public boolean addProduct(Product product, int quantity) {
-        if (products.size() >= 100 || product == null || quantity <= 0) {
+        if (product == null || quantity <= 0) {
             return false;
         }
-        int remainingSpaceT = 100 - products.size();
-        int Insert = Math.min(quantity, remainingSpaceT);
-        for (int i = 0; i < Insert; i++) {
+
+        int remainingSpace = MAX_PRODUCTS - products.size();
+        if (quantity > remainingSpace) {
+            // No hay espacio suficiente para todos -> no añadir nada
+            return false;
+        }
+
+        for (int i = 0; i < quantity; i++) {
             products.add(product);
         }
-       return quantity != remainingSpaceT;
+
+        return true;
     }
 
     /**

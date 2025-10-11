@@ -4,13 +4,34 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Representa un ticket de compra en el sistema de tienda.
+ * <p>
+ * Un ticket contiene una lista de productos y calcula automáticamente
+ * los descuentos aplicables según las categorías de los productos.
+ * Los descuentos se aplican cuando hay 2 o más productos de la misma categoría.
+ * </p>
+ * 
+ * @author Sistema de Tienda UPM
+ * @version 1.0
+ */
 public class Ticket {
+    /** Lista de productos en el ticket */
     private ArrayList<Product> products;
 
+    /**
+     * Constructor de la clase Ticket.
+     * Inicializa una lista vacía de productos.
+     */
     public Ticket() {
         this.products = new ArrayList<>();
     }
 
+    /**
+     * Cuenta el número de productos por cada categoría en el ticket.
+     * 
+     * @return mapa con el conteo de productos por categoría
+     */
     private Map<Category, Integer> countCategory() {
         Map<Category, Integer> num = new EnumMap<>(Category.class);
         for (Category category : Category.values()) {
@@ -22,20 +43,39 @@ public class Ticket {
         return num;
     }
 
-    private double perItemDiscount(Product p, Map<Category, Integer> counts) {
-        int n = counts.getOrDefault(p.getCategory(), 0);
+    /**
+     * Calcula el descuento aplicable a un producto específico.
+     * El descuento se aplica solo si hay 2 o más productos de la misma categoría.
+     * 
+     * @param product producto al que calcular el descuento
+     * @param counts mapa con el conteo de productos por categoría
+     * @return descuento aplicable al producto
+     */
+    private double perItemDiscount(Product product, Map<Category, Integer> counts) {
+        int n = counts.getOrDefault(product.getCategory(), 0);
         double resultDiscount = 0.0;
         if (n >= 2) {
-            double discount = p.getCategory().getDiscount();
-            resultDiscount= p.getPrice() * discount;
+            double discount = product.getCategory().getDiscount();
+            resultDiscount= product.getPrice() * discount;
         }
         return resultDiscount;
     }
 
-    private static double round(double v) {
-        return Math.round(v * 10.0) / 10.0; // si quieres un decimal (ej: -3.0)
+    /**
+     * Redondea un valor a un decimal.
+     * 
+     * @param value valor a redondear
+     * @return valor redondeado a un decimal
+     */
+    private static double round(double value) {
+        return Math.round(value * 10.0) / 10.0; // si quieres un decimal (ej: -3.0)
     }
 
+    /**
+     * Calcula el precio total del ticket sin descuentos.
+     * 
+     * @return precio total de todos los productos
+     */
     public double totalPrice() {
         double total = 0;
         for (Product product : products) {
@@ -44,6 +84,11 @@ public class Ticket {
         return total;
     }
 
+    /**
+     * Calcula el descuento total aplicable al ticket.
+     * 
+     * @return descuento total redondeado a un decimal
+     */
     public double discountPrice() {
         double discount = 0;
         Map<Category, Integer> counts = countCategory();
@@ -53,6 +98,13 @@ public class Ticket {
         return round(discount);
     }
 
+    /**
+     * Añade productos al ticket.
+     * 
+     * @param product producto a añadir
+     * @param quantity cantidad de productos a añadir
+     * @return true si se añadieron todos los productos solicitados, false si solo se añadieron algunos
+     */
     public boolean addProduct(Product product, int quantity) {
         if (products.size() >= 100 || product == null || quantity <= 0) {
             return false;
@@ -65,10 +117,22 @@ public class Ticket {
        return quantity != remainingSpaceT;
     }
 
+    /**
+     * Elimina todos los productos con el identificador especificado del ticket.
+     * 
+     * @param id identificador del producto a eliminar
+     * @return true si se eliminó al menos un producto, false en caso contrario
+     */
     public boolean removeProductById(int id) {
         return products.removeIf(p -> p.getId() == id);
     }
 
+    /**
+     * Devuelve una representación detallada del ticket.
+     * Incluye todos los productos con sus descuentos aplicables y los totales.
+     * 
+     * @return cadena que representa el ticket completo
+     */
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -83,11 +147,11 @@ public class Ticket {
             }
             str.append("\n");
         }
-        str.append("Total Price: ").append(totalPrice);
+        str.append("Total price: ").append(totalPrice);
         str.append("\n");
-        str.append("Total Discount: ").append(discountPrice);
+        str.append("Total discount: ").append(discountPrice);
         str.append("\n");
-        str.append("Final price: ").append(totalPrice() - discountPrice);
+        str.append("Final Price: ").append(totalPrice() - discountPrice);
         return str.toString();
     }
 }

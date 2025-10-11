@@ -100,7 +100,7 @@ public class Ticket {
      * @param quantity cantidad de productos a añadir
      * @return true si se añadieron todos los productos solicitados, false si no se añadió ninguno
      */
-    private boolean addProduct(Product product, int quantity) {
+    public boolean addProduct(Product product, int quantity) {
         if (product == null || quantity <= 0) {
             return false;
         }

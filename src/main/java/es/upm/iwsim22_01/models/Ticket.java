@@ -1,7 +1,10 @@
 package es.upm.iwsim22_01.models;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+
 import java.util.*;
 import java.util.Map.Entry;
+
 /**
  * Representa un ticket de compra que contiene un conjunto de productos
  * y sus cantidades asociadas. Permite calcular el precio total,
@@ -13,24 +16,20 @@ import java.util.Map.Entry;
  * Si se añaden varios productos de la misma categoría, se aplican descuentos
  * según las reglas definidas en la clase {@link Category}.</p>
  */
-
 public class Ticket {
-    /** Número máximo total de unidades permitidas en el ticket. */
     private static final int MAX_PRODUCTS = 100;
-    /** Mapa que almacena los productos y sus cantidades correspondientes. */
+
     private final Map<Product, Integer> items = new LinkedHashMap<>();
 
     /**
      * Constructor del ticket, creo uno nuevo vacio.
      */
-
     public Ticket() {}
 
     /**
      * Calcula la cantidad total de productos que hay en el ticket.
      * @return devuelve la cantidad total.
      */
-
     private int totalUnits() {
         //cantidad totales de productos en el ticket
         int n = 0;
@@ -81,7 +80,6 @@ public class Ticket {
      * @param v valor a redondear
      * @return valor redondeado con una cifra decimal
      */
-
     private static double round1(double v) {
         return Math.round(v * 10.0) / 10.0;
     }
@@ -91,7 +89,6 @@ public class Ticket {
      *
      * @return devuelve precio total.
      */
-
     private double totalPrice() {
         double total = 0.0;
         for (Entry<Product, Integer> e : items.entrySet()) {
@@ -106,7 +103,6 @@ public class Ticket {
      *
      * @return devuelve descuento total redondeado.
      */
-
     private double discountPrice() {
         Map<Category, Integer> counts = countCategory();
         double discount = 0.0;
@@ -126,9 +122,6 @@ public class Ticket {
      * @param quantity cantidad del producto a añador.
      * @return devuelve estado del proceso, true si se ha podido añadir false si no
      */
-
-
-
     public boolean addProduct(Product product, int quantity) {
         boolean result = true;
         if (product == null || quantity <= 0) result = false;
@@ -147,25 +140,17 @@ public class Ticket {
      * @param id identificador del producto
      * @return devuelve si se pudo eleminar o no ese producto.
      */
-
     public boolean removeProductById(int id) {
-        Product productToRemove = null;
-        boolean removed = false;
-        // Recorremos mapa buscando id para guardar el producto
-        for (Product p : items.keySet()) {
-            if (p.getId() == id) {
-                productToRemove = p; 
-            }
+        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(id);
+
+        if (optionalProduct.isEmpty()) {
+            return false;
         }
 
-        // Al salir del bucle, comprobamos si encontramos algo
-        if (productToRemove != null) {
-            items.remove(productToRemove); // eliminamos la entrada del mapa
-            removed = true;                 // devolvemos true si se eliminó
-        }
-        // Si no se encontró ningún producto con ese id, devolvemos false
-        return removed;
+        items.remove(optionalProduct.get());
+        return true;
     }
+
     /**
      * Devuelve una representación textual del ticket,
      * mostrando los productos ordenados alfabéticamente por nombre.
@@ -176,7 +161,6 @@ public class Ticket {
      *
      * @return una cadena de texto que representa el contenido completo del ticket.
      */
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -195,13 +179,12 @@ public class Ticket {
             int qty = e.getValue();
             double dPerItem = perItemDiscount(p, counts);
             for (int i = 0; i < qty; i++) {
-                sb.append(p.toString());
+                sb.append(p);
                 if (dPerItem > 0) {
                     sb.append(" **discount -").append(round1(dPerItem));
                 }
                 sb.append("\n");
             }
-            sb.append("\n");
         }
 
         double total = totalPrice();

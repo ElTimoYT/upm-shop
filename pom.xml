@@ -5,7 +5,7 @@
 
   <groupId>es.upm.iwsim22_01</groupId>
   <artifactId>upm-shop</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>upm-shop</name>
   <!-- FIXME change it to the project's website -->

@@ -2,13 +2,12 @@ package es.upm.iwsim22_01.commands.commands;
 
 import java.util.Iterator;
 
-import es.upm.iwsim22_01.commands.CommandStatus;
 import es.upm.iwsim22_01.models.Category;
 
 public class HelpCommandHandler implements CommandHandler {
 
     @Override
-    public CommandStatus runCommand(Iterator<String> tokens) {
+    public void runCommand(Iterator<String> tokens) {
         System.out.print("""
                 Commands:
                  prod add <id> "<name>" <category> <price>
@@ -41,9 +40,5 @@ public class HelpCommandHandler implements CommandHandler {
             if (i < categories.length - 1) System.out.print(", ");
             else System.out.print(".");
         }
-
-        System.out.println();
-
-        return new CommandStatus(true);
     }
 }

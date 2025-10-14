@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 import es.upm.iwsim22_01.commands.CommandDispatcher;
-import es.upm.iwsim22_01.commands.CommandStatus;
 import es.upm.iwsim22_01.commands.commands.EchoCommandHandler;
 import es.upm.iwsim22_01.commands.commands.ExitCommandHandler;
 import es.upm.iwsim22_01.commands.commands.HelpCommandHandler;

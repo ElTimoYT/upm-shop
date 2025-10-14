@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import es.upm.iwsim22_01.App;
-import es.upm.iwsim22_01.commands.CommandStatus;
 import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Product;
@@ -13,96 +12,107 @@ import es.upm.iwsim22_01.models.Product;
 public class TicketCommandHandler implements CommandHandler {
 
     @Override
-    public CommandStatus runCommand(Iterator<String> tokens) {
-        CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: ticket new|add|remove|print");
+    public void runCommand(Iterator<String> tokens) {
+        String incorrectUsage = "Incorrect use: ticket new|add|remove|print";
 
         if (!tokens.hasNext()) {
-            return incorrectUsage;
+            System.out.println(incorrectUsage);
+            return;
         }
 
-        return switch (tokens.next()) {
+        switch (tokens.next()) {
             case "new" -> newTickedCommand(tokens);
             case "add" -> addTicketCommand(tokens);
             case "remove" -> removeTicketCommand(tokens);
             case "print" -> printTicketCommand(tokens);
-            default -> incorrectUsage;
+            default -> System.out.println(incorrectUsage);
         };
     }
 
-    private CommandStatus printTicketCommand(Iterator<String> tokens) {
+    private void printTicketCommand(Iterator<String> tokens) {
         if (!App.existsTicket()) {
-            return new CommandStatus(false, "No ticket created");
+            System.out.println("No ticket created");
+            return;
         }
         System.out.println(App.getCurrentTicket());
 
         App.resetTicket();
 
-        return new CommandStatus(true, "ticket print: ok");
+        System.out.println("ticket print: ok");
     }
 
-    private CommandStatus removeTicketCommand(Iterator<String> tokens) {
+    private void removeTicketCommand(Iterator<String> tokens) {
         //Id
         if (!tokens.hasNext()) {
-            return new CommandStatus(false, "Incorrect use: ticket remove <prodId>");
+            System.out.println("Incorrect use: ticket remove <prodId>");
+            return;
         }
         OptionalInt productId = Converter.stringToInt(tokens.next());
         if (productId.isEmpty()) {
-            return new CommandStatus(false, "Invalid id");
+            System.out.println("Invalid id");
+            return;
         }
 
 
         if (!App.existsTicket()) {
-            return new CommandStatus(false, "No ticket created");
+            System.out.println("No ticket created");
+            return;
         }
 
         if (App.getCurrentTicket().removeProductById(productId.getAsInt())) {
             System.out.println(App.getCurrentTicket());
-            return new CommandStatus(true, "ticket remove: ok");
+            System.out.println("ticket remove: ok");
         } else {
-            return new CommandStatus(false, "Unable to remove the product");
+            System.out.println("Unable to remove the product");
         }
     }
 
-    private CommandStatus addTicketCommand(Iterator<String> tokens) {
-        CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: ticket add <prodId> <amount>");
+    private void addTicketCommand(Iterator<String> tokens) {
+        String incorrectUse = "Incorrect use: ticket add <prodId> <amount>";
 
         //Id
         if (!tokens.hasNext()) {
-            return incorrectUse;
+            System.out.println("Unable to remove the product");
+            return;
         }
         OptionalInt productId = Converter.stringToInt(tokens.next());
         if (productId.isEmpty()) {
-            return new CommandStatus(false, "Invalid id");
+            System.out.println("Invalid id");
+            return;
         }
 
         Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(productId.getAsInt());
         if (optionalProduct.isEmpty()) {
-            return new CommandStatus(false, "Product not found");
+            System.out.println("Product not found");
+            return;
         }
 
         //Amount
         if (!tokens.hasNext()) {
-            return incorrectUse;
+            System.out.println(incorrectUse);
+            return;
         }
         OptionalInt amount = Converter.stringToInt(tokens.next());
         if (amount.isEmpty() || amount.getAsInt() <= 0) {
-            return new CommandStatus(false, "Invalid amount");
+            System.out.println("Invalid amount");
+            return;
         }
 
         if (!App.existsTicket()) {
-            return new CommandStatus(false, "No ticket created");
+            System.out.println("No ticket created");
+            return;
         }
 
         if (App.getCurrentTicket().addProduct(optionalProduct.get(), amount.getAsInt())) {
             System.out.println(App.getCurrentTicket());
-            return new CommandStatus(true, "ticket add: ok");
+            System.out.println("ticket add: ok");
         } else {
-            return new CommandStatus(false, "Unable to add the products");
+            System.out.println("Unable to add the products");
         }
     }
 
-    private CommandStatus newTickedCommand(Iterator<String> tokens) {
+    private void newTickedCommand(Iterator<String> tokens) {
         App.resetTicket();
-        return new CommandStatus(true, "ticket new: ok");
+        System.out.println("ticket new: ok");
     }
 }

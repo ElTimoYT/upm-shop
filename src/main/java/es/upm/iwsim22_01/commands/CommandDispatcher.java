@@ -17,17 +17,21 @@ public class CommandDispatcher {
         COMMANDS.put(name, commandHandler);
     }
 
-    public CommandStatus processCommand(String command) {
+    public void processCommand(String command) {
         Iterator<String> tokens = tokenizeCommand(command);
 
         if (!tokens.hasNext()) {
-            return new CommandStatus(false, "No command detected");
+            System.out.println("No command detected");
+            return;
         }
 
-        return COMMANDS.getOrDefault(
-                tokens.next(),
-                stringIterator -> new CommandStatus(false, "Unknown command")
-        ).runCommand(tokens);
+        String commandName = tokens.next();
+        if (!COMMANDS.containsKey(command)) {
+            System.out.println("Unknown command");
+            return;
+        }
+
+        COMMANDS.get(commandName).runCommand(tokens);
     }
 
     private Iterator<String> tokenizeCommand(String command) {

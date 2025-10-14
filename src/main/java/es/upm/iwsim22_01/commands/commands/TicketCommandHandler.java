@@ -10,21 +10,8 @@ import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Product;
 
-/**
- * Manejador del comando 'ticket' para gestionar tickets de compra.
- * <p>
- * Este comando permite crear nuevos tickets, añadir productos,
- * eliminar productos e imprimir el ticket con los descuentos aplicados.
- * </p>
- */
 public class TicketCommandHandler implements CommandHandler {
-    
-    /**
-     * Ejecuta el comando ticket delegando a la suboperación correspondiente.
-     * 
-     * @param tokens iterador con los tokens del comando
-     * @return CommandStatus con el resultado de la operación
-     */
+
     @Override
     public CommandStatus runCommand(Iterator<String> tokens) {
         CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: ticket new|add|remove|print");
@@ -42,13 +29,6 @@ public class TicketCommandHandler implements CommandHandler {
         };
     }
 
-    /**
-     * Maneja la suboperación 'print' del comando ticket.
-     * Imprime el ticket actual y lo resetea.
-     * 
-     * @param tokens iterador con los tokens del comando
-     * @return CommandStatus con el resultado de la operación
-     */
     private CommandStatus printTicketCommand(Iterator<String> tokens) {
         if (!App.existsTicket()) {
             return new CommandStatus(false, "No ticket created");
@@ -60,13 +40,6 @@ public class TicketCommandHandler implements CommandHandler {
         return new CommandStatus(true, "ticket print: ok");
     }
 
-    /**
-     * Maneja la suboperación 'remove' del comando ticket.
-     * Elimina productos del ticket actual.
-     * 
-     * @param tokens iterador con los tokens del comando
-     * @return CommandStatus con el resultado de la operación
-     */
     private CommandStatus removeTicketCommand(Iterator<String> tokens) {
         //Id
         if (!tokens.hasNext()) {
@@ -90,13 +63,6 @@ public class TicketCommandHandler implements CommandHandler {
         }
     }
 
-    /**
-     * Maneja la suboperación 'add' del comando ticket.
-     * Añade productos al ticket actual.
-     * 
-     * @param tokens iterador con los tokens del comando
-     * @return CommandStatus con el resultado de la operación
-     */
     private CommandStatus addTicketCommand(Iterator<String> tokens) {
         CommandStatus incorrectUse = new CommandStatus(false, "Incorrect use: ticket add <prodId> <amount>");
 
@@ -135,13 +101,6 @@ public class TicketCommandHandler implements CommandHandler {
         }
     }
 
-    /**
-     * Maneja la suboperación 'new' del comando ticket.
-     * Crea un nuevo ticket vacío.
-     * 
-     * @param tokens iterador con los tokens del comando
-     * @return CommandStatus con el resultado de la operación
-     */
     private CommandStatus newTickedCommand(Iterator<String> tokens) {
         App.resetTicket();
         return new CommandStatus(true, "ticket new: ok");

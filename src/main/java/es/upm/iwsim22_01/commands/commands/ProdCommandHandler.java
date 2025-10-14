@@ -11,21 +11,8 @@ import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
 
-/**
- * Manejador del comando 'prod' para gestionar productos.
- * <p>
- * Este comando permite realizar operaciones CRUD sobre productos:
- * añadir, listar, actualizar y eliminar productos del catálogo.
- * </p>
- */
 public class ProdCommandHandler implements CommandHandler {
-    
-    /**
-     * Ejecuta el comando prod delegando a la suboperación correspondiente.
-     * 
-     * @param tokens iterador con los tokens del comando
-     * @return CommandStatus con el resultado de la operación
-     */
+
     @Override
     public CommandStatus runCommand(Iterator<String> tokens) {
         CommandStatus incorrectUsage = new CommandStatus(false, "Incorrect use: prod add|list|update|remove");

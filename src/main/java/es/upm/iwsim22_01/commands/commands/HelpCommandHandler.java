@@ -5,20 +5,8 @@ import java.util.Iterator;
 import es.upm.iwsim22_01.commands.CommandStatus;
 import es.upm.iwsim22_01.models.Category;
 
-/**
- * Manejador del comando 'help'.
- * <p>
- * Este comando muestra información de ayuda sobre todos los comandos disponibles
- * en el sistema, incluyendo sus sintaxis y las categorías de productos con sus descuentos.
- * </p> */
 public class HelpCommandHandler implements CommandHandler {
 
-    /**
-     * Ejecuta el comando help mostrando información de ayuda.
-     * 
-     * @param tokens iterador con los tokens del comando (no utilizado)
-     * @return CommandStatus indicando éxito de la operación
-     */
     @Override
     public CommandStatus runCommand(Iterator<String> tokens) {
         System.out.print("""

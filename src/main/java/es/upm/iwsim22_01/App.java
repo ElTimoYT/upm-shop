@@ -41,12 +41,7 @@ public class App {
 
         while (menu) {
             System.out.print("tUPM> ");
-            CommandStatus commandStatus = dispatcher.processCommand(scanner.nextLine());
-            if (!commandStatus.getStatus()) {
-                System.out.println(commandStatus.getMessage());
-            } else if (commandStatus.getMessage() != null) {
-                System.out.println(commandStatus.getMessage());
-            }
+            dispatcher.processCommand(scanner.nextLine());
 
             System.out.println();
         }

@@ -64,7 +64,14 @@ public class Ticket {
         return round1(discount);
     }
 
-    public boolean addProduct(Product product, int quantity) {
+    public boolean addProduct(int id, int quantity) {
+        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(id);
+        if (optionalProduct.isEmpty()) {
+            return false;
+        }
+
+        Product product = optionalProduct.get();
+
         boolean result = true;
         if (product == null || quantity <= 0) result = false;
 

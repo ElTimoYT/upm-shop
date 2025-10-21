@@ -94,54 +94,22 @@ public class Product {
                 '}';
     }
 
-    /**
-     * Verifica si un identificador es válido (no existe ya en el sistema).
-     * 
-     * @param id identificador a verificar
-     * @return true si el identificador es válido, false en caso contrario
-     */
     public static boolean checkId(int id) {
         return !ProductManager.getProductManager().existId(id);
     }
 
-    /**
-     * Verifica si un identificador opcional es válido.
-     * 
-     * @param id identificador opcional a verificar
-     * @return true si el identificador está presente y es válido, false en caso contrario
-     */
     public static boolean checkId(OptionalInt id) {
         return id.isPresent() && checkId(id.getAsInt());
     }
 
-    /**
-     * Verifica si un nombre es válido.
-     * Un nombre es válido si no es null, no está en blanco y no excede la longitud máxima.
-     * 
-     * @param name nombre a verificar
-     * @return true si el nombre es válido, false en caso contrario
-     */
     public static boolean checkName(String name) {
         return name != null && !name.isBlank() && name.length() < Product.MAX_NAME_LENGTH;
     }
 
-    /**
-     * Verifica si un precio es válido.
-     * Un precio es válido si es mayor que 0.
-     * 
-     * @param price precio a verificar
-     * @return true si el precio es válido, false en caso contrario
-     */
     public static boolean checkPrice(double price) {
         return price > 0;
     }
 
-    /**
-     * Verifica si un precio opcional es válido.
-     * 
-     * @param price precio opcional a verificar
-     * @return true si el precio está presente y es válido, false en caso contrario
-     */
     public static boolean checkPrice(OptionalDouble price) {
         return price.isPresent() && checkPrice(price.getAsDouble());
     }

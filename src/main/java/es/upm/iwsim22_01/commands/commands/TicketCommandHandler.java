@@ -81,8 +81,7 @@ public class TicketCommandHandler implements CommandHandler {
             return;
         }
 
-        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(productId.getAsInt());
-        if (optionalProduct.isEmpty()) {
+        if (ProductManager.getProductManager().existId(productId.getAsInt())) {
             System.out.println("Product not found");
             return;
         }
@@ -103,7 +102,7 @@ public class TicketCommandHandler implements CommandHandler {
             return;
         }
 
-        if (App.getCurrentTicket().addProduct(optionalProduct.get(), amount.getAsInt())) {
+        if (App.getCurrentTicket().addProduct(productId.getAsInt(), amount.getAsInt())) {
             System.out.println(App.getCurrentTicket());
             System.out.println("ticket add: ok");
         } else {

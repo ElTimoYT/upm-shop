@@ -58,7 +58,7 @@ class App {
 package "models" {
     class Ticket {
         -MAX_PRODUCTS : int
-        +addProduct(product : Product, quantity : int) : boolean
+        +addProduct(productId : int, quantity : int) : boolean
         +removeProductById(id : int) : boolean
         +toString() : String
         -totalUnits() : int
@@ -90,6 +90,17 @@ package "models" {
         +getCategory() : Category
         +toString() : String
     }
+
+    class UnitProduct {}
+    class PersonalizableProduct {}
+    class Catering {}
+    class Reunion {}
+
+    class User {}
+    class Client {}
+    class Cashier {}
+
+
 }
 
 package "managers" {
@@ -132,4 +143,12 @@ Ticket ..> ProductManager
 Product ..> ProductManager
 
 ProductManager "0" o-- "*" Product
+
+Client <|-- User
+Cashier <|-- User
+
+UnitProduct <|-- Product
+PersonalizableProduct <|-- UnitProduct
+Catering <|-- Product
+Reunion <|-- Product
 @enduml

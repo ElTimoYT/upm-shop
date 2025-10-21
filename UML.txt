@@ -1,0 +1,135 @@
+@startuml
+package "commands" {
+    class CommandDispatcher {
+        +addCommand(name : String, handler : CommandHandler) : void
+        +processCommand(line : String) : void
+
+    }
+
+    interface CommandHandler {
+        +runCommand(tokens : Iterator<String>) : void
+    }
+
+    class EchoCommandHandler {
+        +runCommand(tokens : Iterator<String>) : void
+    }
+
+    class ExitCommandHandler {
+        +runCommand(tokens : Iterator<String>) : void
+    }
+
+    class HelpCommandHandler {
+        +runCommand(tokens : Iterator<String>) : void
+    }
+
+    class ProdCommandHandler {
+        +runCommand(tokens : Iterator<String>) : void
+        -listCommand(tokens : Iterator<String>) : void
+        -addCommand(tokens : Iterator<String>) : void
+        -removeCommand(tokens : Iterator<String>) : void
+        -showCommand(tokens : Iterator<String>) : void
+        -importCommand(tokens : Iterator<String>) : void
+    }
+
+    class TicketCommandHandler {
+        +runCommand(tokens : Iterator<String>) : void
+        -printTicketCommand(tokens : Iterator<String>) : void
+        -removeTicketCommand(tokens : Iterator<String>) : void
+        -addTicketCommand(tokens : Iterator<String>) : void
+        -newTickedCommand(tokens : Iterator<String>) : void
+    }
+
+    class Converter {
+        +stringToInt(s : String) : OptionalInt
+        +stringToDouble(s : String) : OptionalDouble
+        +stringToCategory(s : String) : Optional<Category>
+    }
+}
+
+class App {
+    -menu : boolean
+    +main(args : String[]) : void
+    +exitMenu() : void
+    +getCurrentTicket() : Ticket
+    +resetTicket() : void
+    +existsTicket() : boolean
+}
+
+package "models" {
+    class Ticket {
+        -MAX_PRODUCTS : int
+        +addProduct(product : Product, quantity : int) : boolean
+        +removeProductById(id : int) : boolean
+        +toString() : String
+        -totalUnits() : int
+        -countCategory() : Map<Category, Integer>
+        -perItemDiscount(p : Product, counts : Map<Category, Integer>) : double
+        -round1(v : double) : double
+        -totalPrice() : double
+        -discountPrice() : double
+    }
+
+    enum Category {
+        MERCH
+        STATIONARY
+        CLOTHES
+        BOOK
+        ELECTRONICS
+        -discount : double
+        +getDiscount() : double
+    }
+
+    class Product {
+        -id : int
+        -name : String
+        -price : double
+        -category : Category
+        +getId() : int
+        +getName() : String
+        +getPrice() : double
+        +getCategory() : Category
+        +toString() : String
+    }
+}
+
+package "managers" {
+    class ProductManager {
+        -instance : ProductManager
+        +getProductManager() : ProductManager
+        +getProduct(id : int) : Optional<Product>
+        +addProduct(p : Product) : void
+        +removeProduct(id : int) : boolean
+        +listProducts() : List<Product>
+    }
+}
+
+CommandHandler <|.. EchoCommandHandler
+CommandHandler <|.. ExitCommandHandler
+CommandHandler <|.. HelpCommandHandler
+CommandHandler <|.. ProdCommandHandler
+CommandHandler <|.. TicketCommandHandler
+
+ProdCommandHandler ..> Converter
+TicketCommandHandler ..> Converter
+ProdCommandHandler ..> ProductManager
+TicketCommandHandler ..> ProductManager
+ProdCommandHandler ..> Product
+TicketCommandHandler ..> App
+
+EchoCommandHandler <.. App
+ExitCommandHandler <.. App
+HelpCommandHandler <.. App
+ProdCommandHandler <.. App
+TicketCommandHandler <.. App
+
+CommandDispatcher "0" o-- "*" CommandHandler
+
+App "1" *-- "1" CommandDispatcher
+App "1" *-- "1" Ticket
+
+Ticket "0" o-- "*" Product
+Ticket ..> ProductManager
+Product ..> ProductManager
+
+ProductManager "0" o-- "*" Product
+@enduml

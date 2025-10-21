@@ -5,10 +5,7 @@ import java.util.Iterator;
 import es.upm.iwsim22_01.models.Category;
 
 public class HelpCommandHandler implements CommandHandler {
-
-    @Override
-    public void runCommand(Iterator<String> tokens) {
-        System.out.print("""
+    private static final String HELP_MESSAGE = """
                 Commands:
                  prod add <id> "<name>" <category> <price>
                  prod list
@@ -22,9 +19,12 @@ public class HelpCommandHandler implements CommandHandler {
                  help
                  exit
                 
-                Categories:\s""");
+                Categories:\s""",
+        DISCOUNT_MESSAGE = "\nDiscounts if there are ≥2 units in the category: ";
 
-
+    @Override
+    public void runCommand(Iterator<String> tokens) {
+        System.out.print(HELP_MESSAGE);
 
         Category[] categories = Category.values();
         for (int i = 0; i < categories.length; i++) {
@@ -33,7 +33,7 @@ public class HelpCommandHandler implements CommandHandler {
 
         }
 
-        System.out.print("\nDiscounts if there are ≥2 units in the category: ");
+        System.out.print(DISCOUNT_MESSAGE);
 
         for (int i = 0; i < categories.length; i++) {
             System.out.print(categories[i] + " " + (int)(categories[i].getDiscount() * 100) + "%");

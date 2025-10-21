@@ -11,6 +11,11 @@ import java.util.regex.Pattern;
 import es.upm.iwsim22_01.commands.commands.CommandHandler;
 
 public class CommandDispatcher {
+
+    private static final String ERROR_NO_COMMAND_FOUND = "No command found",
+            ERROR_UNKNOWN_COMMAND = "Unknown command";
+
+
     private final Map<String, CommandHandler> COMMANDS = new TreeMap<>();
 
     public void addCommand(String name, CommandHandler commandHandler) {
@@ -21,13 +26,13 @@ public class CommandDispatcher {
         Iterator<String> tokens = tokenizeCommand(command);
 
         if (!tokens.hasNext()) {
-            System.out.println("No command detected");
+            System.out.println(ERROR_NO_COMMAND_FOUND);
             return;
         }
 
         String commandName = tokens.next();
         if (!COMMANDS.containsKey(command)) {
-            System.out.println("Unknown command");
+            System.out.println(ERROR_UNKNOWN_COMMAND);
             return;
         }
 

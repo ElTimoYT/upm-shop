@@ -83,22 +83,51 @@ package "models" {
         -id : int
         -name : String
         -price : double
-        -category : Category
         +getId() : int
         +getName() : String
         +getPrice() : double
-        +getCategory() : Category
         +toString() : String
     }
 
-    class UnitProduct {}
-    class PersonalizableProduct {}
-    class Catering {}
-    class Reunion {}
+    class ProductUnit {
+            -category : Category
+            +getCategory() : Category
+    }
+    
+    class PersonalizableProduct {
+        -texts : List<String>
+    }
 
-    class User {}
-    class Client {}
-    class Cashier {}
+    class ProductService {
+        -MAX_PARTICIPANT : int
+        -expirationDate : Date
+        #checkDate(date : Date) : boolean
+    }
+
+    class Catering {
+           -PLANING_TIME : Date
+            #checkDate(date : Date) : boolean
+    }
+
+    class Reunion {
+        -PLANING_TIME : Date
+        #checkDate(date : Date) : boolean
+    }
+
+    class User {
+        -name : String
+        -DNI : String
+        -email : String
+        -id : String
+
+        #checkEmail(email : String) : boolean
+    }
+    class Client {
+        #checkEmail(email : String) : boolean
+    }
+    class Cashier {
+        #checkEmail(email : String) : boolean
+    }
 
 
 }
@@ -147,8 +176,9 @@ ProductManager "0" o-- "*" Product
 Client <|-- User
 Cashier <|-- User
 
-UnitProduct <|-- Product
-PersonalizableProduct <|-- UnitProduct
-Catering <|-- Product
-Reunion <|-- Product
+ProductService <|-- Product
+ProductUnit <|-- Product
+PersonalizableProduct <|-- ProductUnit
+Catering <|-- ProductService
+Reunion <|-- ProductService
 @enduml

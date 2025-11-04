@@ -8,7 +8,7 @@ import es.upm.iwsim22_01.models.Client;
 public class ClientFactory {
     private ClientManager clientManager;
 
-    private ClientFactory(ClientManager clientManager) {
+    public ClientFactory(ClientManager clientManager) {
         this.clientManager = clientManager;
     }
 
@@ -16,9 +16,6 @@ public class ClientFactory {
 
         if (clientManager.existId(DNI)) throw new  IllegalArgumentException("Client with DNI " + DNI + " already exists");
 
-        Client client = new Client(name, DNI, email, cashierWhoRegisters);
-        clientManager.add(client);
-
-        return client;
+        return new Client(name, DNI, email, cashierWhoRegisters);
     }
 }

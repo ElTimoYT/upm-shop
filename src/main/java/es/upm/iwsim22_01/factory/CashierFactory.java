@@ -13,12 +13,9 @@ public class CashierFactory {
     }
 
     public Cashier createCashier(String name, String email, String id) {
-        if (cashierManager.existId(id)) throw new  IllegalArgumentException("Cashier with id " + id + " already exists");
+        if (cashierManager.existId(id)) throw new IllegalArgumentException("Cashier with id " + id + " already exists");
 
-        Cashier cashier = new Cashier(name, email, id);
-        cashierManager.add(cashier);
-
-        return cashier;
+        return new Cashier(name, email, id);
     }
 
     public Cashier createCashier(String name, String email) {

@@ -6,6 +6,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 import es.upm.iwsim22_01.commands.Converter;
+import es.upm.iwsim22_01.factory.ProductFactory;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
@@ -25,14 +26,25 @@ public class ProdCommandHandler implements CommandHandler {
         ERROR_INVALID_CATEGORY = "Invalid category",
         ERROR_INVALID_PRICE = "Invalid price",
         ERROR_PRODUCT_NOT_FOUND = "Product not found",
-        ERROR_UNABLE_ADD_PRODUCT = "Unable to add the product",
 
         PROD_ADD_OK = "prod add: ok",
         CATALOG = "Catalog:",
         PROD_LIST_OK = "prod list: ok",
         PROD_UPDATE_OK = "prod update: ok",
-        PROD_REMOVE_OK = "prod remove: ok";
+        PROD_REMOVE_OK = "prod remove: ok",
 
+        PROD_UPDATE_PARAMETER_CATEGORY = "category",
+        PROD_UPDATE_PARAMETER_NAME = "name",
+        PROD_UPDATE_PARAMETER_PRICE = "price";
+
+    private ProductManager productManager;
+    private ProductFactory productFactory;
+    
+    public ProdCommandHandler(ProductManager productManager, ProductFactory productFactory) {
+        this.productManager = productManager;
+        this.productFactory = productFactory;
+    }
+    
     @Override
     public void runCommand(Iterator<String> tokens) {
         if (!tokens.hasNext()) {
@@ -55,8 +67,8 @@ public class ProdCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_ADD);
             return;
         }
-        OptionalInt productId = Converter.stringToInt(tokens.next());
-        if (!Product.checkId(productId)) {
+        OptionalInt optionalId = Converter.stringToInt(tokens.next());
+        if (optionalId.isEmpty() || productManager.existId(optionalId.getAsInt())) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -67,7 +79,7 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
         String productName = tokens.next();
-        if (!Product.checkName(productName)) {
+        if (!productFactory.isNameValid(productName)) {
             System.out.println(ERROR_INVALID_NAME);
             return;
         }
@@ -88,30 +100,26 @@ public class ProdCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_ADD);
             return;
         }
-        OptionalDouble productPrice = Converter.stringToDouble(tokens.next());
-        if (!Product.checkPrice(productPrice)) {
+        OptionalDouble optionalPrice = Converter.stringToDouble(tokens.next());
+        if (optionalPrice.isEmpty() || !productFactory.isPriceValid(optionalPrice.getAsDouble())) {
             System.out.println(ERROR_INVALID_PRICE);
             return;
         }
 
-        Product product = new Product(
-                productId.getAsInt(),
+        Product product = productFactory.createProduct(
+                optionalId.getAsInt(),
                 productName,
                 productCategory.get(),
-                productPrice.getAsDouble()
+                optionalPrice.getAsDouble()
         );
 
-        if (ProductManager.getProductManager().addProduct(product)) {
-            System.out.println(product);
-            System.out.println(PROD_ADD_OK);
-        } else {
-            System.out.println(ERROR_UNABLE_ADD_PRODUCT);
-        }
+        System.out.println(product);
+        System.out.println(PROD_ADD_OK);
     }
 
     private void listProductCommand(Iterator<String> tokens) {
         System.out.println(CATALOG);
-        ProductManager.getProductManager().getProducts().forEach(p -> {
+        productManager.getAll().forEach(p -> {
             System.out.println("\t" + p);
         });
 
@@ -124,18 +132,17 @@ public class ProdCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_UPDATE);
             return;
         }
-        OptionalInt productId = Converter.stringToInt(tokens.next());
-        if (productId.isEmpty()) {
+        OptionalInt optionalId = Converter.stringToInt(tokens.next());
+        if (optionalId.isEmpty()) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
 
-        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(productId.getAsInt());
+        Optional<Product> optionalProduct = productManager.get(optionalId.getAsInt());
         if (optionalProduct.isEmpty()) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
-        Product product = optionalProduct.get();
 
         //Parametro a cambiar
         if (!tokens.hasNext()) {
@@ -143,53 +150,51 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
         switch (tokens.next()) {
-            case "name" -> {
+            case PROD_UPDATE_PARAMETER_NAME -> {
                 if (!tokens.hasNext()) {
                     System.out.println(ERROR_INCORRECT_USE_UPDATE);
                     return;
                 }
                 String productName = tokens.next();
-                if (!Product.checkName(productName)) {
+                if (!productFactory.isNameValid(productName)) {
                     System.out.println(ERROR_INVALID_NAME);
                     return;
                 }
 
-                product.setName(productName);
-                System.out.println(product);
-                System.out.println(PROD_UPDATE_OK);
+                optionalProduct.get().setName(productName);
             }
-            case "category" -> {
+            case PROD_UPDATE_PARAMETER_CATEGORY -> {
                 if (!tokens.hasNext()) {
                     System.out.println(ERROR_INCORRECT_USE_UPDATE);;
                 }
-                Optional<Category> productCategory = Converter.stringToCategory(tokens.next());
-                if (productCategory.isEmpty()) {
+                Optional<Category> optionalCategory = Converter.stringToCategory(tokens.next());
+                if (optionalCategory.isEmpty()) {
                     System.out.println(ERROR_INVALID_CATEGORY);
                     return;
                 }
 
-                product.setCategory(productCategory.get());
-                System.out.println(product);
-                System.out.println(PROD_UPDATE_OK);
+                optionalProduct.get().setCategory(optionalCategory.get());
             }
-            case "price" -> {
+            case PROD_UPDATE_PARAMETER_PRICE -> {
                 if (!tokens.hasNext()) {
                     System.out.println(ERROR_INCORRECT_USE_UPDATE);;
                 }
-                OptionalDouble productPrice = Converter.stringToDouble(tokens.next());
-                if (!Product.checkPrice(productPrice)) {
+                OptionalDouble optionalPrice = Converter.stringToDouble(tokens.next());
+                if (optionalPrice.isEmpty() || !productFactory.isPriceValid(optionalPrice.getAsDouble())) {
                     System.out.println(ERROR_INVALID_PRICE);
                     return;
                 }
 
-                product.setPrice(productPrice.getAsDouble());
-                System.out.println(product);
-                System.out.println(PROD_UPDATE_OK);
+                optionalProduct.get().setPrice(optionalPrice.getAsDouble());
             }
             default -> {
-                System.out.println(ERROR_INCORRECT_USE_UPDATE);;
+                System.out.println(ERROR_INCORRECT_USE_UPDATE);
+                return;
             }
         }
+
+        System.out.println(optionalProduct.get());
+        System.out.println(PROD_UPDATE_OK);
     }
 
     private void removeProductCommand(Iterator<String> tokens) {
@@ -198,21 +203,20 @@ public class ProdCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_REMOVE);
             return;
         }
-        OptionalInt productId = Converter.stringToInt(tokens.next());
-        if (productId.isEmpty()) {
+        OptionalInt optionalId = Converter.stringToInt(tokens.next());
+        if (optionalId.isEmpty()) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
 
-        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(productId.getAsInt());
+        Optional<Product> optionalProduct = productManager.get(optionalId.getAsInt());
         if (optionalProduct.isEmpty()) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
-        Product product = optionalProduct.get();
 
-        ProductManager.getProductManager().removeProduct(product.getId());
-        System.out.println(product);
+        productManager.remove(optionalId.getAsInt());
+        System.out.println(optionalProduct.get());
         System.out.println(PROD_REMOVE_OK);
     }
 }

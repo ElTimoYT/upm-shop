@@ -5,14 +5,12 @@ import java.util.*;
 public abstract class AbstractManager<T, K> {
     private Map<K, T> elements = new HashMap<>();
 
-    public abstract boolean add(T element);
+    public abstract void add(T element);
 
-    protected boolean add(T element, K key) {
-        if (existId(key)) return false;
-        if (element == null) return false;
+    protected void add(T element, K key) {
+        if (element == null || existId(key)) return;
 
         elements.put(key, element);
-        return true;
     }
 
     public void remove(K id) {

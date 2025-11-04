@@ -6,11 +6,12 @@ import java.util.OptionalInt;
 
 import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.commands.Converter;
+import es.upm.iwsim22_01.factory.TicketFactory;
 import es.upm.iwsim22_01.manager.ProductManager;
+import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Product;
 
 public class TicketCommandHandler implements CommandHandler {
-
     private static final String
             ERROR_NO_TICKET = "No ticket created",
             ERROR_INCORRECT_USE_TICKET = "Incorrect use: ticket new|add|remove|print",
@@ -32,9 +33,18 @@ public class TicketCommandHandler implements CommandHandler {
             REMOVE = "remove",
             PRINT = "print";
 
+    private TicketManager ticketManager;
+    private ProductManager productManager;
+    private TicketFactory ticketFactory;
+
+    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager, TicketFactory ticketFactory) {
+        this.ticketManager = ticketManager;
+        this.productManager = productManager;
+        this.ticketFactory = ticketFactory;
+    }
+
     @Override
     public void runCommand(Iterator<String> tokens) {
-
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_TICKET);
             return;
@@ -50,7 +60,7 @@ public class TicketCommandHandler implements CommandHandler {
     }
 
     private void printTicketCommand(Iterator<String> tokens) {
-        if (!App.existsTicket()) {
+        /*if (!App.existsTicket()) {
             System.out.println(ERROR_NO_TICKET);
             return;
         }
@@ -58,11 +68,11 @@ public class TicketCommandHandler implements CommandHandler {
 
         App.resetTicket();
 
-        System.out.println(TICKET_PRINT_OK);
+        System.out.println(TICKET_PRINT_OK);*/
     }
 
     private void removeTicketCommand(Iterator<String> tokens) {
-        //Id
+        /*//Id
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_REMOVAL);
             return;
@@ -84,11 +94,11 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(TICKET_REMOVAL_OK);
         } else {
             System.out.println(ERROR_UNABLE_TO_REMOVE_PRODUCT);
-        }
+        }*/
     }
 
     private void addTicketCommand(Iterator<String> tokens) {
-
+    /*
         //Id
         if (!tokens.hasNext()) {
             System.out.println(ERROR_UNABLE_TO_REMOVE_PRODUCT);
@@ -100,7 +110,7 @@ public class TicketCommandHandler implements CommandHandler {
             return;
         }
 
-        if (ProductManager.getProductManager().existId(productId.getAsInt())) {
+        if (productManager.existId(productId.getAsInt())) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
@@ -126,11 +136,11 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(TICKET_ADD_OK);
         } else {
             System.out.println(ERROR_UNABLE_TO_ADD_PRODUCT);
-        }
+        }*/
     }
 
     private void newTickedCommand(Iterator<String> tokens) {
-        App.resetTicket();
-        System.out.println(TICKET_NEW_OK);
+        /*App.resetTicket();
+        System.out.println(TICKET_NEW_OK);*/
     }
 }

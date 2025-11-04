@@ -6,7 +6,6 @@ public class Client extends User {
 
     private Cashier cashierWhoRegisters;
 
-
     public Client(String name, String DNI, String email, Cashier cashierWhoRegisters) {
         super(name, email, DNI);
         this.cashierWhoRegisters = cashierWhoRegisters;

@@ -10,9 +10,9 @@ public class ProductManager extends AbstractManager<Product, Integer> {
     private final static int MAX_PRODUCTS = 200;
 
     @Override
-    public boolean add(Product product) {
-        if (getSize() >= ProductManager.MAX_PRODUCTS) return false;
+    public void add(Product product) {
+        if (getSize() >= ProductManager.MAX_PRODUCTS) return;
 
-        return add(product, product.getId());
+        add(product, product.getId());
     }
 }

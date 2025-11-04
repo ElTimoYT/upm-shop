@@ -11,12 +11,14 @@ import es.upm.iwsim22_01.commands.commands.HelpCommandHandler;
 import es.upm.iwsim22_01.commands.commands.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.commands.TicketCommandHandler;
 import es.upm.iwsim22_01.factory.CashierFactory;
+import es.upm.iwsim22_01.factory.ClientFactory;
+import es.upm.iwsim22_01.factory.ProductFactory;
+import es.upm.iwsim22_01.factory.TicketFactory;
 import es.upm.iwsim22_01.manager.*;
 import es.upm.iwsim22_01.models.Ticket;
 
 public class App {
     private static boolean menu = true;
-    private static Ticket ticket = new Ticket();
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
     private static ProductManager productManager = new ProductManager();
@@ -24,14 +26,17 @@ public class App {
     private static TicketManager ticketManager = new TicketManager();
     private static CashierManager cashierManager = new CashierManager();
 
+    private static ProductFactory productFactory = new ProductFactory(productManager);
+    private static ClientFactory clientFactory = new ClientFactory(clientManager);
+    private static TicketFactory ticketFactory = new TicketFactory(ticketManager);
     private static CashierFactory cashierFactory = new CashierFactory(cashierManager);
 
     public static void main(String[] args) {
         dispatcher.addCommand("exit", new ExitCommandHandler());
         dispatcher.addCommand("help", new HelpCommandHandler());
         dispatcher.addCommand("echo", new EchoCommandHandler());
-        dispatcher.addCommand("prod", new ProdCommandHandler());
-        dispatcher.addCommand("ticket", new TicketCommandHandler());
+        dispatcher.addCommand("prod", new ProdCommandHandler(productManager, productFactory));
+        dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, ticketFactory));
 
         Scanner scanner;
         if (args.length >= 1) {
@@ -63,18 +68,6 @@ public class App {
 
     public static void exitMenu() {
         menu = false;
-    }
-
-    public static Ticket getCurrentTicket() {
-        return ticket;
-    }
-
-    public static void resetTicket() {
-        ticket = new Ticket();
-    }
-
-    public static boolean existsTicket() {
-        return ticket != null;
     }
 }
 

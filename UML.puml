@@ -50,9 +50,6 @@ class App {
     -menu : boolean
     +main(args : String[]) : void
     +exitMenu() : void
-    +getCurrentTicket() : Ticket
-    +resetTicket() : void
-    +existsTicket() : boolean
 }
 
 package "models" {
@@ -133,13 +130,46 @@ package "models" {
 }
 
 package "managers" {
-    class ProductManager {
-        -instance : ProductManager
-        +getProductManager() : ProductManager
-        +getProduct(id : int) : Optional<Product>
-        +addProduct(p : Product) : void
-        +removeProduct(id : int) : boolean
-        +listProducts() : List<Product>
+    class AbstractManager<T, K> {
+        +add(T : element) : void
+        #add(T : element, K id) : void
+        +remove(K : id) : void
+        +get(K : id) : Optional<T>
+        +existId(K : id) : boolean
+        #getSize() : int
+    }
+
+    class ProductManager<Product, Integer> {
+    }
+
+    class ClientManager<Client, String> {
+    }
+
+    class CashierManager<Cashier, String> {
+    }
+
+    class TicketManager<Ticket, String> {
+    }
+}
+
+package "factory" {
+    class ProductFactory {
+            +createProduct(int : id, String : name, Category : category, double : price) : Product
+            +isNameValid(String : name) : boolean
+            +isPriceValid(v : double) : boolean
+    }
+
+    class ClientFactory {
+        +createClient(String : name, String : DNI, String : email, Cashier : cashierWhoRegisters) : Client
+    }
+
+    class CashierFactory {
+        +createCashier(String : name, String : email, String : id) : Cashier
+        +createCashier(String name, String email) : Cashier
+        -createID() : String
+    }
+
+    class TicketFactory {
     }
 }
 
@@ -149,29 +179,52 @@ CommandHandler <|.. HelpCommandHandler
 CommandHandler <|.. ProdCommandHandler
 CommandHandler <|.. TicketCommandHandler
 
-ProdCommandHandler ..> Converter
-TicketCommandHandler ..> Converter
-ProdCommandHandler ..> ProductManager
-TicketCommandHandler ..> ProductManager
-ProdCommandHandler ..> Product
-TicketCommandHandler ..> App
+AbstractManager <|-- ProductManager
+AbstractManager <|-- ClientManager
+AbstractManager <|-- CashierManager
+AbstractManager <|-- TicketManager
 
-EchoCommandHandler <.. App
-ExitCommandHandler <.. App
-HelpCommandHandler <.. App
-ProdCommandHandler <.. App
-TicketCommandHandler <.. App
+ProdCommandHandler ..> Converter
+ProdCommandHandler ..> Product
+TicketCommandHandler ..> Converter
+TicketCommandHandler ..> Ticket
+TicketCommandHandler ..> Product
 
 CommandDispatcher "0" o-- "*" CommandHandler
 
 App "1" *-- "1" CommandDispatcher
-App "1" *-- "1" Ticket
+App "1" *-- "1" EchoCommandHandler
+App "1" *-- "1" HelpCommandHandler
+App "1" *-- "1" ExitCommandHandler
+App "1" *-- "1" ProdCommandHandler
+App "1" *-- "1" TicketCommandHandler
 
-Ticket "0" o-- "*" Product
-Ticket ..> ProductManager
-Product ..> ProductManager
+App "1" *-- "1" "managers"
+App "1" *-- "1" "factory"
+
+ProductManager --> ProductFactory
+ClientManager --> ClientFactory
+CashierManager --> CashierFactory
+TicketManager --> TicketFactory
+
+Product <.. ProductFactory : create
+Client <.. ClientFactory : create
+Cashier <.. CashierFactory : create
+Ticket <.. TicketFactory : create
 
 ProductManager "0" o-- "*" Product
+ClientManager "0" o-- "*" Client
+CashierManager "0" o-- "*" Cashier
+TicketManager "0" o-- "*" Ticket
+
+ProdCommandHandler --> ProductManager
+ProdCommandHandler --> ProductFactory
+
+TicketCommandHandler --> TicketManager
+TicketCommandHandler --> ProductManager
+TicketCommandHandler --> TicketFactory
+
+Ticket "0" o-- "*" Product
 
 Client <|-- User
 Cashier <|-- User

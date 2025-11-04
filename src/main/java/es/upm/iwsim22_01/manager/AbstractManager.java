@@ -7,7 +7,7 @@ public abstract class AbstractManager<T, K> {
 
     public abstract void add(T element);
 
-    protected void add(T element, K key) {
+     void add(T element, K key) {
         if (element == null || existId(key)) return;
 
         elements.put(key, element);

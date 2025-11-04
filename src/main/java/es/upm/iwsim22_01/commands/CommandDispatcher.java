@@ -31,7 +31,7 @@ public class CommandDispatcher {
         }
 
         String commandName = tokens.next();
-        if (!COMMANDS.containsKey(command)) {
+        if (!COMMANDS.containsKey(commandName)) {
             System.out.println(ERROR_UNKNOWN_COMMAND);
             return;
         }

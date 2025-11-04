@@ -113,6 +113,7 @@ public class ProdCommandHandler implements CommandHandler {
                 optionalPrice.getAsDouble()
         );
 
+        productManager.add(product);
         System.out.println(product);
         System.out.println(PROD_ADD_OK);
     }

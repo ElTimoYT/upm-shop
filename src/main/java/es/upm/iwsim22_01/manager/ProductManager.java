@@ -6,44 +6,13 @@ import java.util.Set;
 
 import es.upm.iwsim22_01.models.Product;
 
-public class ProductManager {
-    private static ProductManager productManager;
+public class ProductManager extends AbstractManager<Product, Integer> {
     private final static int MAX_PRODUCTS = 200;
 
-    private Set<Product> products = new HashSet<>();
+    @Override
+    public boolean add(Product product) {
+        if (getSize() >= ProductManager.MAX_PRODUCTS) return false;
 
-    private ProductManager() {}
-
-    public static ProductManager getProductManager() {
-        if (ProductManager.productManager == null) {
-            ProductManager.productManager = new ProductManager();
-        }
-
-        return ProductManager.productManager;
+        return add(product, product.getId());
     }
-
-    public boolean addProduct(Product product) {
-        if (product == null || products.size() >= ProductManager.MAX_PRODUCTS) {
-            return false;
-        }
-
-        return products.add(product);
-    }
-
-    public boolean removeProduct(int id) {
-        return products.removeIf(p -> p.getId() == id);
-    }
-
-    public Optional<Product> getProduct(int id) {
-        return products.stream().filter(p -> p.getId() == id).findFirst();
-    }
-
-    public Set<Product> getProducts() {
-        return new HashSet<>(this.products);
-    }
-
-    public boolean existId(int id) {
-        return products.stream().anyMatch(p -> p.getId() == id);
-    }
-
 }

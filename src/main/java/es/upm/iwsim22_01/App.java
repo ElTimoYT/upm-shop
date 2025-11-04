@@ -10,12 +10,21 @@ import es.upm.iwsim22_01.commands.commands.ExitCommandHandler;
 import es.upm.iwsim22_01.commands.commands.HelpCommandHandler;
 import es.upm.iwsim22_01.commands.commands.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.commands.TicketCommandHandler;
+import es.upm.iwsim22_01.factory.CashierFactory;
+import es.upm.iwsim22_01.manager.*;
 import es.upm.iwsim22_01.models.Ticket;
 
 public class App {
     private static boolean menu = true;
     private static Ticket ticket = new Ticket();
     private static CommandDispatcher dispatcher = new CommandDispatcher();
+
+    private static ProductManager productManager = new ProductManager();
+    private static ClientManager clientManager = new ClientManager();
+    private static TicketManager ticketManager = new TicketManager();
+    private static CashierManager cashierManager = new CashierManager();
+
+    private static CashierFactory cashierFactory = new CashierFactory(cashierManager);
 
     public static void main(String[] args) {
         dispatcher.addCommand("exit", new ExitCommandHandler());

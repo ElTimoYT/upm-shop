@@ -1,5 +1,11 @@
 package es.upm.iwsim22_01.models;
 
+import es.upm.iwsim22_01.factory.CashierFactory;
+import es.upm.iwsim22_01.manager.CashierManager;
+
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Cashier extends User {
@@ -9,4 +15,9 @@ public class Cashier extends User {
     protected boolean checkEmail(String email) {
         return REGEX.matcher(email).find();
     }
+
+    public Cashier(String name, String email, String id) {
+        super(name, email , id);
+    }
+
 }

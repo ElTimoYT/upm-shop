@@ -12,6 +12,10 @@ public class Ticket {
 
     public Ticket() {}
 
+    public String getId() {
+        return "PLACEHOLDER"; //TODO: ids de  tickets
+    }
+
     private int totalUnits() {
         //cantidad totales de productos en el ticket
         int n = 0;

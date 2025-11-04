@@ -5,8 +5,8 @@ import es.upm.iwsim22_01.models.Client;
 
 public class CashierManager extends AbstractManager<Cashier, String> {
     @Override
-    public boolean add(Cashier cashier) {
-        return add(cashier, cashier.getId()); //TODO: maxima cantidad de cajeros?
+    public void add(Cashier cashier) {
+        add(cashier, cashier.getId()); //TODO: maxima cantidad de cajeros?
     }
 
 

@@ -68,14 +68,7 @@ public class Ticket {
         return round1(discount);
     }
 
-    public boolean addProduct(int id, int quantity) {
-        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(id);
-        if (optionalProduct.isEmpty()) {
-            return false;
-        }
-
-        Product product = optionalProduct.get();
-
+    public boolean addProduct(Product product, int quantity) {
         boolean result = true;
         if (product == null || quantity <= 0) result = false;
 
@@ -86,14 +79,8 @@ public class Ticket {
         return result;
     }
 
-    public boolean removeProductById(int id) {
-        Optional<Product> optionalProduct = ProductManager.getProductManager().getProduct(id);
-
-        if (optionalProduct.isEmpty()) {
-            return false;
-        }
-
-        items.remove(optionalProduct.get());
+    public boolean removeProduct(Product product) {
+        items.remove(product);
         return true;
     }
 

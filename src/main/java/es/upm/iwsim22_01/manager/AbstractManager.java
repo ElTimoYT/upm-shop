@@ -5,10 +5,9 @@ import java.util.*;
 public abstract class AbstractManager<T, K> {
     private Map<K, T> elements = new HashMap<>();
 
-    public abstract void add(T element);
-
-     void add(T element, K key) {
-        if (element == null || existId(key)) return;
+     protected void add(T element, K key) {
+        if (existId(key)) throw new IllegalArgumentException("Element with ID " + key + "already exists.");
+        if (element == null) throw new IllegalArgumentException("Element cannot be null.");
 
         elements.put(key, element);
     }

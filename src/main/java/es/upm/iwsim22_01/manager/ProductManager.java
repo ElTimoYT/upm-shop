@@ -1,18 +1,31 @@
 package es.upm.iwsim22_01.manager;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
+import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
 
 public class ProductManager extends AbstractManager<Product, Integer> {
-    private final static int MAX_PRODUCTS = 200;
+    private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
 
-    @Override
-    public void add(Product product) {
-        if (getSize() >= ProductManager.MAX_PRODUCTS) return;
+    public Product addProduct(int id, String name, Category category, double price) {
+        if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
+        if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
+        if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
 
-        add(product, product.getId());
+        Product product = new Product(id, name, category, price);
+        add(product, id);
+
+        return product;
+    }
+
+    public boolean isNameValid(String name) {
+        return name != null && !name.isBlank() && name.length() < MAX_NAME_LENGTH;
+    }
+
+    public boolean isPriceValid(double price) {
+        return price > 0;
+    }
+
+    public boolean isProductListFull() {
+        return getSize() >= ProductManager.MAX_PRODUCTS;
     }
 }

@@ -6,7 +6,6 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 import es.upm.iwsim22_01.commands.Converter;
-import es.upm.iwsim22_01.factory.ProductFactory;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
@@ -21,6 +20,7 @@ public class ProdCommandHandler implements CommandHandler {
         ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add <id> \"<name>\" <category> <price>",
         ERROR_INCORRECT_USE_UPDATE = "Incorrect use: prod update <id> name|category|price <value>",
         ERROR_INCORRECT_USE_REMOVE = "Incorrect use: prod remove <id>",
+        ERROR_MAX_PRODUCTS = "You have reached the max products amount",
         ERROR_INVALID_ID = "Invalid id",
         ERROR_INVALID_NAME = "Invalid name",
         ERROR_INVALID_CATEGORY = "Invalid category",
@@ -38,11 +38,9 @@ public class ProdCommandHandler implements CommandHandler {
         PROD_UPDATE_PARAMETER_PRICE = "price";
 
     private ProductManager productManager;
-    private ProductFactory productFactory;
     
-    public ProdCommandHandler(ProductManager productManager, ProductFactory productFactory) {
+    public ProdCommandHandler(ProductManager productManager) {
         this.productManager = productManager;
-        this.productFactory = productFactory;
     }
     
     @Override
@@ -62,6 +60,11 @@ public class ProdCommandHandler implements CommandHandler {
     }
 
     private void addProductCommand(Iterator<String> tokens) {
+        if (productManager.isProductListFull()) {
+            System.out.println(ERROR_MAX_PRODUCTS);
+            return;
+        }
+
         //Id
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADD);
@@ -79,7 +82,7 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
         String productName = tokens.next();
-        if (!productFactory.isNameValid(productName)) {
+        if (!productManager.isNameValid(productName)) {
             System.out.println(ERROR_INVALID_NAME);
             return;
         }
@@ -101,19 +104,18 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
         OptionalDouble optionalPrice = Converter.stringToDouble(tokens.next());
-        if (optionalPrice.isEmpty() || !productFactory.isPriceValid(optionalPrice.getAsDouble())) {
+        if (optionalPrice.isEmpty() || !productManager.isPriceValid(optionalPrice.getAsDouble())) {
             System.out.println(ERROR_INVALID_PRICE);
             return;
         }
 
-        Product product = productFactory.createProduct(
+        Product product = productManager.addProduct(
                 optionalId.getAsInt(),
                 productName,
                 productCategory.get(),
                 optionalPrice.getAsDouble()
         );
 
-        productManager.add(product);
         System.out.println(product);
         System.out.println(PROD_ADD_OK);
     }
@@ -157,7 +159,7 @@ public class ProdCommandHandler implements CommandHandler {
                     return;
                 }
                 String productName = tokens.next();
-                if (!productFactory.isNameValid(productName)) {
+                if (!productManager.isNameValid(productName)) {
                     System.out.println(ERROR_INVALID_NAME);
                     return;
                 }
@@ -181,7 +183,7 @@ public class ProdCommandHandler implements CommandHandler {
                     System.out.println(ERROR_INCORRECT_USE_UPDATE);;
                 }
                 OptionalDouble optionalPrice = Converter.stringToDouble(tokens.next());
-                if (optionalPrice.isEmpty() || !productFactory.isPriceValid(optionalPrice.getAsDouble())) {
+                if (optionalPrice.isEmpty() || !productManager.isPriceValid(optionalPrice.getAsDouble())) {
                     System.out.println(ERROR_INVALID_PRICE);
                     return;
                 }

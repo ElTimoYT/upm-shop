@@ -131,7 +131,6 @@ package "models" {
 
 package "managers" {
     class AbstractManager<T, K> {
-        +add(T : element) : void
         #add(T : element, K id) : void
         +remove(K : id) : void
         +get(K : id) : Optional<T>
@@ -140,36 +139,23 @@ package "managers" {
     }
 
     class ProductManager<Product, Integer> {
+        +addProduct(int : id, String : name, Category : category, double : price) : Product
+        +isNameValid(String : name) : boolean
+        +isPriceValid(v : double) : boolean
+        +isProductListFull() : boolean
     }
 
     class ClientManager<Client, String> {
+        +addClient(String : name, String : DNI, String : email, Cashier : cashierWhoRegisters) : Client
     }
 
     class CashierManager<Cashier, String> {
-    }
-
-    class TicketManager<Ticket, String> {
-    }
-}
-
-package "factory" {
-    class ProductFactory {
-            +createProduct(int : id, String : name, Category : category, double : price) : Product
-            +isNameValid(String : name) : boolean
-            +isPriceValid(v : double) : boolean
-    }
-
-    class ClientFactory {
-        +createClient(String : name, String : DNI, String : email, Cashier : cashierWhoRegisters) : Client
-    }
-
-    class CashierFactory {
-        +createCashier(String : name, String : email, String : id) : Cashier
-        +createCashier(String name, String email) : Cashier
+        +addCashier(String : name, String : email, String : id) : Cashier
+        +addCashier(String name, String email) : Cashier
         -createID() : String
     }
 
-    class TicketFactory {
+    class TicketManager<Ticket, String> {
     }
 }
 
@@ -200,17 +186,6 @@ App "1" *-- "1" ProdCommandHandler
 App "1" *-- "1" TicketCommandHandler
 
 App "1" *-- "1" "managers"
-App "1" *-- "1" "factory"
-
-ProductManager --> ProductFactory
-ClientManager --> ClientFactory
-CashierManager --> CashierFactory
-TicketManager --> TicketFactory
-
-Product <.. ProductFactory : create
-Client <.. ClientFactory : create
-Cashier <.. CashierFactory : create
-Ticket <.. TicketFactory : create
 
 ProductManager "0" o-- "*" Product
 ClientManager "0" o-- "*" Client
@@ -218,11 +193,9 @@ CashierManager "0" o-- "*" Cashier
 TicketManager "0" o-- "*" Ticket
 
 ProdCommandHandler --> ProductManager
-ProdCommandHandler --> ProductFactory
 
 TicketCommandHandler --> TicketManager
 TicketCommandHandler --> ProductManager
-TicketCommandHandler --> TicketFactory
 
 Ticket "0" o-- "*" Product
 

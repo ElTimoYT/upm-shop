@@ -6,7 +6,6 @@ import java.util.OptionalInt;
 
 import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.commands.Converter;
-import es.upm.iwsim22_01.factory.TicketFactory;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Product;
@@ -35,12 +34,10 @@ public class TicketCommandHandler implements CommandHandler {
 
     private TicketManager ticketManager;
     private ProductManager productManager;
-    private TicketFactory ticketFactory;
 
-    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager, TicketFactory ticketFactory) {
+    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager) {
         this.ticketManager = ticketManager;
         this.productManager = productManager;
-        this.ticketFactory = ticketFactory;
     }
 
     @Override

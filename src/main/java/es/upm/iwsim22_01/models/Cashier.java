@@ -1,11 +1,5 @@
 package es.upm.iwsim22_01.models;
 
-import es.upm.iwsim22_01.factory.CashierFactory;
-import es.upm.iwsim22_01.manager.CashierManager;
-
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Cashier extends User {

@@ -7,5 +7,8 @@ public class PersonalizableProduct extends Product{
         super(id, name, category, price);
         this.maxPers = maxPers;
     }
-    int getMaxPers(){return maxPers;}
+
+    int getMaxPers() {
+        return maxPers;
+    }
 }

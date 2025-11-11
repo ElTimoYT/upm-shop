@@ -1,8 +1,6 @@
 package es.upm.iwsim22_01.commands.commands;
 
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 
 import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.commands.Converter;
@@ -14,6 +12,7 @@ public class TicketCommandHandler implements CommandHandler {
     private static final String
             ERROR_NO_TICKET = "No ticket created",
             ERROR_INCORRECT_USE_TICKET = "Incorrect use: ticket new|add|remove|print",
+            ERROR_INCORRECT_USE_TICKET_NEW = "Incorrect use: ticket new [<id>] <cashId> <userId>",
             ERROR_INCORRECT_USE_TICKET_ADD = "Incorrect use: ticket add <prodId> <amount>",
             ERROR_INCORRECT_USE_TICKET_REMOVAL = "Incorrect use: ticket remove <prodId>",
             ERROR_INVALID_ID = "Invalid id",
@@ -137,7 +136,30 @@ public class TicketCommandHandler implements CommandHandler {
     }
 
     private void newTickedCommand(Iterator<String> tokens) {
-        /*App.resetTicket();
-        System.out.println(TICKET_NEW_OK);*/
+        //1º token
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_NEW);
+        }
+        String token1 = tokens.next();
+
+        //2º token
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_NEW);
+        }
+        String token2 = tokens.next();
+
+        if (!tokens.hasNext()) {
+            newTicketCommandWithoutId(token1, token2);
+        } else {
+            newTicketCommandWithId(token1, token2, tokens.next());
+        }
+    }
+
+    private void newTicketCommandWithoutId(String cashId, String productId) {
+
+    }
+
+    private void newTicketCommandWithId(String id, String cashId, String productId) {
+
     }
 }

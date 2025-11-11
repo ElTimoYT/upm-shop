@@ -1,19 +1,32 @@
 package es.upm.iwsim22_01.models;
 
-import es.upm.iwsim22_01.manager.ProductManager;
-
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
 public class Ticket {
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd-HH:mm");
     private static final int MAX_PRODUCTS = 100;
 
     private final Map<Product, Integer> items = new LinkedHashMap<>();
+    private final Map<PersonalizableProduct, String[]> personalizableTextsPerProduct = new HashMap<>();
+    private final int id;
+    private final Cashier cashier;
+    private final Client client;
+    private final Date initialDate;
+    private Date finalDate;
+    private TicketState ticketState = TicketState.EMPTY;
 
-    public Ticket() {}
+    public Ticket(int id, Cashier cashier, Client client) {
+        this.id = id;
+        this.cashier = cashier;
+        this.client = client;
 
-    public String getId() {
-        return "PLACEHOLDER"; //TODO: ids de  tickets
+        initialDate = new Date();
+    }
+
+    public int getId() {
+        return id;
     }
 
     private int totalUnits() {
@@ -68,24 +81,65 @@ public class Ticket {
         return round1(discount);
     }
 
+    public boolean addProduct(PersonalizableProduct product, int quantity, String[] personalizableTexts) {  //TODO: usar producto personaalizable
+        if (!addProduct(product, quantity)) return false;
+
+        personalizableTextsPerProduct.put(
+                product,
+                Arrays.copyOf(personalizableTexts, Math.min(personalizableTexts.length, product.getMaxPers()))
+        );
+        return true;
+    }
+
     public boolean addProduct(Product product, int quantity) {
-        boolean result = true;
-        if (product == null || quantity <= 0) result = false;
+        if (product == null || quantity <= 0) return false;
 
         int remaining = MAX_PRODUCTS - totalUnits();
-        if (quantity > remaining) result = false;
+        if (quantity > remaining) return false;
 
         items.put(product, items.getOrDefault(product, 0) + quantity);
-        return result;
+        ticketState = TicketState.ACTIVE;
+        return true;
     }
 
     public boolean removeProduct(Product product) {
         items.remove(product);
+
+        if (product instanceof PersonalizableProduct personalizableProduct) {
+            personalizableTextsPerProduct.remove(personalizableProduct);
+        }
+
         return true;
     }
 
-    @Override
-    public String toString() {
+    public void closeTicket() {
+        if (ticketState.equals(TicketState.CLOSED)) return;
+
+        finalDate = new Date();
+        ticketState = TicketState.CLOSED;
+    }
+
+    public TicketState getState() {
+        return ticketState;
+    }
+
+    public String getFormattedId() {
+        StringBuilder formattedId = new StringBuilder()
+                .append(DATE_FORMAT.format(initialDate))
+                .append("-")
+                .append(getId());
+
+        if (finalDate != null) {
+            formattedId.append("-")
+                    .append(DATE_FORMAT.format(finalDate));
+        }
+
+        return formattedId.toString();
+    }
+
+    public String getPrintedTicket() {
+        closeTicket();
+
         StringBuilder sb = new StringBuilder();
         // Precomputamos conteo por categoría
         Map<Category, Integer> counts = countCategory();
@@ -96,13 +150,22 @@ public class Ticket {
                 String.CASE_INSENSITIVE_ORDER
         ));
 
+        sb.append(getFormattedId());
+
         // Línea por producto (sin repetirlo N veces)
-        for (Entry<Product, Integer> e : ordenados) {
-            Product p = e.getKey();
-            int qty = e.getValue();
-            double dPerItem = perItemDiscount(p, counts);
-            for (int i = 0; i < qty; i++) {
-                sb.append(p);
+        for (Entry<Product, Integer> entry : ordenados) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            double dPerItem = perItemDiscount(product, counts);
+
+            for (int i = 0; i < quantity; i++) {
+                sb.append(product);
+                if (product instanceof PersonalizableProduct personalizableProduct) {
+                    for (String text : personalizableTextsPerProduct.getOrDefault(personalizableProduct, new String[0])) {
+                        sb.append("\n\t-")
+                                .append(text);
+                    }
+                }
                 if (dPerItem > 0) {
                     sb.append(" **discount -").append(round1(dPerItem));
                 }
@@ -117,5 +180,11 @@ public class Ticket {
         sb.append("Final Price: ").append(round1(total - discount));
 
         return sb.toString();
+    }
+
+    public enum TicketState {
+        EMPTY,
+        ACTIVE,
+        CLOSED;
     }
 }

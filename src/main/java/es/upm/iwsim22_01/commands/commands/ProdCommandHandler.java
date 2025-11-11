@@ -15,12 +15,16 @@ public class ProdCommandHandler implements CommandHandler {
         LIST_SUBCOMMAND = "list",
         REMOVE_SUBCOMMAND = "remove",
         UPDATE_SUBCOMMAND = "update",
-        ADD_FOOD_SUBCOMMAND = "addFood",
+        ADD_FOOD_SUBCOMMAND = "addfood",
         ADD_MEETING_SUBCOMMAND = "addMeeting",
 
 
-        ERROR_INCORRECT_USE = "Incorrect use: prod add|list|update|remove",
+        ERROR_INCORRECT_USE = "Incorrect use: prod add|list|update|remove|addFood|addMeeting",
         ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add <id> \"<name>\" <category> <price>",
+        ERROR_INCORRECT_USE_ADDFOOD = "Incorrect use: prod addFood <id> \"<name>\" <category> <price> " +
+                "<expiration: yyyy-MM-dd> <max_people>",
+        ERROR_INCORRECT_USE_ADDMEETING = "Incorrect use: prod addMeeting <id> \"<name>\" <category> <price>" +
+                "<expiration: yyyy-MM-dd> <max_people>",
         ERROR_INCORRECT_USE_UPDATE = "Incorrect use: prod update <id> name|category|price <value>",
         ERROR_INCORRECT_USE_REMOVE = "Incorrect use: prod remove <id>",
         ERROR_MAX_PRODUCTS = "You have reached the max products amount",
@@ -30,6 +34,8 @@ public class ProdCommandHandler implements CommandHandler {
         ERROR_INVALID_PRICE = "Invalid price",
         ERROR_PRODUCT_NOT_FOUND = "Product not found",
         ERROR_INVALID_MAXPERS = "Invalid number of max text",
+        ERROR_INVALID_DATE = "Invalid date",
+        ERROR_INVALID_MAX_PEOPLE="Invalid max people",
 
         PROD_ADD_OK = "prod add: ok",
         CATALOG = "Catalog:",
@@ -59,6 +65,7 @@ public class ProdCommandHandler implements CommandHandler {
             case LIST_SUBCOMMAND -> listProductCommand(tokens);
             case REMOVE_SUBCOMMAND -> removeProductCommand(tokens);
             case UPDATE_SUBCOMMAND -> updateProductCommand(tokens);
+            case ADD_FOOD_SUBCOMMAND -> addFoodCommand(tokens);
             default -> System.out.println(ERROR_INCORRECT_USE);
         };
     }
@@ -113,24 +120,31 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
 
-        Product create;
+        Product create = null;
         if (tokens.hasNext()) {
             OptionalInt optMaxPers = Converter.stringToInt(tokens.next());
             if (optMaxPers.isEmpty() || optMaxPers.getAsInt() < 1) {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             }
+            create = productManager.addCustomizableProduct(
+                    optionalId.getAsInt(),
+                    productName,
+                    productCategory.get(),
+                    optionalPrice.getAsDouble(),
+                    optMaxPers.getAsInt()
+            );
 
+        } else {
+            create = productManager.addProduct(
+                    optionalId.getAsInt(),
+                    productName,
+                    productCategory.get(),
+                    optionalPrice.getAsDouble()
+            );
         }
 
-        Product product = productManager.addProduct(
-                optionalId.getAsInt(),
-                productName,
-                productCategory.get(),
-                optionalPrice.getAsDouble()
-        );
-
-        System.out.println(product);
+        System.out.println(create);
         System.out.println(PROD_ADD_OK);
     }
 
@@ -235,6 +249,60 @@ public class ProdCommandHandler implements CommandHandler {
         productManager.remove(optionalId.getAsInt());
         System.out.println(optionalProduct.get());
         System.out.println(PROD_REMOVE_OK);
+    }
+
+    private void addFoodCommand(Iterator<String> tokens) {
+
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
+            return;
+        }
+        OptionalInt optionalId = Converter.stringToInt(tokens.next());
+        if (optionalId.isEmpty() || productManager.existId(optionalId.getAsInt())) {
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }
+
+        if(!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
+            return;
+        }
+        String name = tokens.next();
+
+        if (!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
+            return;
+        }
+        OptionalDouble optionalPrice = Converter.stringToDouble(tokens.next());
+        if (optionalPrice.isEmpty() || !productManager.isPriceValid(optionalPrice.getAsDouble())) {
+            System.out.println(ERROR_INVALID_PRICE);
+            return;
+        }
+
+        if (!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
+            return;
+        }
+        Optional<java.time.LocalDate> expiration = Converter.stringToLocal(tokens.next());
+        if (expiration.isEmpty()) {
+            System.out.println(ERROR_INVALID_DATE);
+            return;
+        }
+
+        if  (!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
+            return;
+        }
+        OptionalInt optionalMaxPeople = Converter.stringToInt(tokens.next());
+        if (optionalMaxPeople.isEmpty() || optionalMaxPeople.getAsInt() < 1) {
+            System.out.println(ERROR_INVALID_MAX_PEOPLE);
+            return;
+        }
+
+        Product food = productManager.addFoodProduct(optionalId.getAsInt(),name, optionalPrice.getAsDouble(), expiration.get(), optionalMaxPeople.getAsInt());
+        System.out.println(food);
+        System.out.println(PROD_ADD_OK);
+
     }
 
 

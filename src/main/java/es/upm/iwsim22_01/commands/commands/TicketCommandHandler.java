@@ -5,15 +5,21 @@ import java.util.*;
 import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.CashierManager;
+import es.upm.iwsim22_01.manager.ClientManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Product;
+import es.upm.iwsim22_01.models.Ticket;
 
 public class TicketCommandHandler implements CommandHandler {
     private static final String
             ERROR_NO_TICKET = "No ticket created",
             ERROR_INCORRECT_USE_TICKET = "Incorrect use: ticket new|add|remove|print",
-            ERROR_INCORRECT_USE_TICKET_NEW = "Incorrect use: ticket new [<id>] <cashId> <userId>",
+            ERROR_INCORRECT_USE_TICKET_PRINT = "Incorrect use: ticket print <ticketId> <cashId>",
+            ERROR_INCORRECT_USE_TICKET_NEW = "Incorrect use: ticket new [<ticketId>] <cashId> <userId>",
+            ERROR_CASHIER_NOT_FOUND = "Cashier not found",
+            ERROR_CLIENT_NOT_FOUND = "Client not found",
+            ERROR_TICKET_NOT_FOUND = "Ticket not found",
             ERROR_INCORRECT_USE_TICKET_ADD = "Incorrect use: ticket add <prodId> <amount>",
             ERROR_INCORRECT_USE_TICKET_REMOVAL = "Incorrect use: ticket remove <prodId>",
             ERROR_INVALID_ID = "Invalid id",
@@ -35,11 +41,13 @@ public class TicketCommandHandler implements CommandHandler {
     private TicketManager ticketManager;
     private ProductManager productManager;
     private CashierManager cashierManager;
+    private ClientManager clientManager;
 
-    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager, CashierManager cashierManager) {
+    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager, CashierManager cashierManager, ClientManager clientManager) {
         this.ticketManager = ticketManager;
         this.productManager = productManager;
         this.cashierManager = cashierManager;
+        this.clientManager = clientManager;
     }
 
     @Override
@@ -51,23 +59,45 @@ public class TicketCommandHandler implements CommandHandler {
 
         switch (tokens.next()) {
             case NEW -> newTickedCommand(tokens);
-            case ADD -> addTicketCommand(tokens);
-            case REMOVE -> removeTicketCommand(tokens);
+            /*case ADD -> addTicketCommand(tokens);
+            case REMOVE -> removeTicketCommand(tokens);*/
             case PRINT -> printTicketCommand(tokens);
             default -> System.out.println(ERROR_INCORRECT_USE_TICKET);
         };
     }
 
     private void printTicketCommand(Iterator<String> tokens) {
-        /*if (!App.existsTicket()) {
-            System.out.println(ERROR_NO_TICKET);
+        //ticketId
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);
             return;
         }
-        System.out.println(App.getCurrentTicket());
+        OptionalInt ticketId = Converter.stringToInt(tokens.next());
+        if (ticketId.isEmpty() || !ticketManager.existId(ticketId.getAsInt())) {
+            System.out.println(ERROR_TICKET_NOT_FOUND);
+            return;
+        }
 
-        App.resetTicket();
+        //cashierId
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);
+            return;
+        }
+        String cashierId = tokens.next();
+        if (!clientManager.existId(cashierId)) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
+            return;
+        }
 
-        System.out.println(TICKET_PRINT_OK);*/
+        Optional<Ticket> ticket = ticketManager.get(ticketId.getAsInt());
+        if (ticket.isEmpty()) {
+            System.out.println(ERROR_TICKET_NOT_FOUND);
+            return;
+        }
+
+        ticket.get().closeTicket();
+        System.out.println(ticket.get());
+        System.out.println(TICKET_PRINT_OK);
     }
 
     private void removeTicketCommand(Iterator<String> tokens) {
@@ -158,11 +188,31 @@ public class TicketCommandHandler implements CommandHandler {
         }
     }
 
-    private void newTicketCommandWithoutId(String cashId, String productId) {
-       
+    private void newTicketCommandWithoutId(String cashId, String clientId) {
+       if (!cashierManager.existId(cashId)) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
+            return;
+       }
+
+       if (!clientManager.existId(clientId)) {
+           System.out.println(ERROR_CLIENT_NOT_FOUND);
+           return;
+       }
+
+        Ticket ticket = ticketManager.addTicket(cashId, clientId);
+        System.out.println(ticket);
+        System.out.println(TICKET_NEW_OK);
     }
 
-    private void newTicketCommandWithId(String id, String cashId, String productId) {
+    private void newTicketCommandWithId(String stringId, String cashId, String productId) {
+        OptionalInt id = Converter.stringToInt(stringId);
+        if (id.isEmpty() || ticketManager.existId(id.getAsInt())) {{
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }}
 
+        Ticket ticket = ticketManager.addTicket(id.getAsInt(), cashId, productId);
+        System.out.println(ticket);
+        System.out.println(TICKET_NEW_OK);
     }
 }

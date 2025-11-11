@@ -18,14 +18,17 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         return product;
     }
 
-    public Product addCustomizableProduct(int id, String name, Category category, double price, int maxPers){
+    public PersonalizableProduct addCustomizableProduct(int id, String name, Category category, double price, int maxPers){
         if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
         if (maxPers < 1) throw new IllegalArgumentException("Max pers " + maxPers + " cannot be less than 1.");
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists(cannot convert basic to customizable).");
 
-        Product product = new PersonalizableProduct(id, name, category, price, maxPers);
+        PersonalizableProduct product = new PersonalizableProduct(id, name, category, price, maxPers);
+        add(product, id);
+
+        return product;
     }
 
     public boolean isNameValid(String name) {

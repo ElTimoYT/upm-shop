@@ -182,6 +182,13 @@ public class Ticket {
         return sb.toString();
     }
 
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + getFormattedId() +
+                '}';
+    }
+
     public enum TicketState {
         EMPTY,
         ACTIVE,

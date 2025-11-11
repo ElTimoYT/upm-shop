@@ -7,6 +7,7 @@ import es.upm.iwsim22_01.models.Ticket;
 import java.util.Optional;
 
 public class TicketManager extends AbstractManager<Ticket, Integer> {
+    private static final int TICKET_ID_LENGTH = 7;
 
     private final ClientManager clientManager;
     private final CashierManager cashierManager;
@@ -16,7 +17,7 @@ public class TicketManager extends AbstractManager<Ticket, Integer> {
         this.cashierManager = cashierManager;
     }
 
-    public void addTicket(int id, String cashierId, String clientId) {
+    public Ticket addTicket(int id, String cashierId, String clientId) {
         Optional<Cashier> cashier = cashierManager.get(cashierId);
         if (cashier.isEmpty()) throw new IllegalArgumentException("No cashier found with id: " + cashierId);
 
@@ -26,5 +27,20 @@ public class TicketManager extends AbstractManager<Ticket, Integer> {
         Ticket ticket = new Ticket(id, cashier.get(), client.get());
 
         add(ticket, id);
+        return ticket;
+    }
+
+    public Ticket addTicket(String cashierId, String clientId) {
+        return addTicket(createNewId(), cashierId, clientId);
+    }
+
+    private int createNewId() {
+        int id;
+
+        do {
+            id = (int) (Math.random() * Math.pow(10, TICKET_ID_LENGTH));
+        } while (existId(id));
+
+        return id;
     }
 }

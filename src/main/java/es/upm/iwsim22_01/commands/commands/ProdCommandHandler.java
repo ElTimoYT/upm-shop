@@ -15,6 +15,9 @@ public class ProdCommandHandler implements CommandHandler {
         LIST_SUBCOMMAND = "list",
         REMOVE_SUBCOMMAND = "remove",
         UPDATE_SUBCOMMAND = "update",
+        ADD_FOOD_SUBCOMMAND = "addFood",
+        ADD_MEETING_SUBCOMMAND = "addMeeting",
+
 
         ERROR_INCORRECT_USE = "Incorrect use: prod add|list|update|remove",
         ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add <id> \"<name>\" <category> <price>",
@@ -26,6 +29,7 @@ public class ProdCommandHandler implements CommandHandler {
         ERROR_INVALID_CATEGORY = "Invalid category",
         ERROR_INVALID_PRICE = "Invalid price",
         ERROR_PRODUCT_NOT_FOUND = "Product not found",
+        ERROR_INVALID_MAXPERS = "Invalid number of max text",
 
         PROD_ADD_OK = "prod add: ok",
         CATALOG = "Catalog:",
@@ -107,6 +111,16 @@ public class ProdCommandHandler implements CommandHandler {
         if (optionalPrice.isEmpty() || !productManager.isPriceValid(optionalPrice.getAsDouble())) {
             System.out.println(ERROR_INVALID_PRICE);
             return;
+        }
+
+        Product create;
+        if (tokens.hasNext()) {
+            OptionalInt optMaxPers = Converter.stringToInt(tokens.next());
+            if (optMaxPers.isEmpty() || optMaxPers.getAsInt() < 1) {
+                System.out.println(ERROR_INVALID_MAXPERS);
+                return;
+            }
+
         }
 
         Product product = productManager.addProduct(
@@ -222,4 +236,6 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(optionalProduct.get());
         System.out.println(PROD_REMOVE_OK);
     }
+
+
 }

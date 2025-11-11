@@ -13,7 +13,8 @@ import es.upm.iwsim22_01.commands.commands.CommandHandler;
 public class CommandDispatcher {
 
     private static final String ERROR_NO_COMMAND_FOUND = "No command found",
-            ERROR_UNKNOWN_COMMAND = "Unknown command";
+            ERROR_UNKNOWN_COMMAND = "Unknown command",
+            ERROR_UNEXPECTED_EXCEPTION = "Unexpected exception.";
 
 
     private final Map<String, CommandHandler> COMMANDS = new TreeMap<>();
@@ -36,7 +37,11 @@ public class CommandDispatcher {
             return;
         }
 
-        COMMANDS.get(commandName).runCommand(tokens);
+        try {
+            COMMANDS.get(commandName).runCommand(tokens);
+        } catch (Exception exception) {
+            System.out.println(ERROR_UNEXPECTED_EXCEPTION);
+        }
     }
 
     private Iterator<String> tokenizeCommand(String command) {

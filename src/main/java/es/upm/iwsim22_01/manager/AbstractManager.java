@@ -20,8 +20,8 @@ public abstract class AbstractManager<T, K> {
         return Optional.ofNullable(elements.get(id));
     }
 
-    public Collection<T> getAll() {
-        return elements.values();
+    public List<T> getAll() {
+        return new ArrayList<>(elements.values());
     }
 
     public boolean existId(K id) {

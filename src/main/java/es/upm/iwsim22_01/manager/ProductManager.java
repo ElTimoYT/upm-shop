@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.manager;
 
 import es.upm.iwsim22_01.models.Category;
+import es.upm.iwsim22_01.models.PersonalizableProduct;
 import es.upm.iwsim22_01.models.Product;
 
 public class ProductManager extends AbstractManager<Product, Integer> {
@@ -12,6 +13,19 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
 
         Product product = new Product(id, name, category, price);
+        add(product, id);
+
+        return product;
+    }
+
+    public PersonalizableProduct addCustomizableProduct(int id, String name, Category category, double price, int maxPers){
+        if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
+        if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
+        if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
+        if (maxPers < 1) throw new IllegalArgumentException("Max pers " + maxPers + " cannot be less than 1.");
+        if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists(cannot convert basic to customizable).");
+
+        PersonalizableProduct product = new PersonalizableProduct(id, name, category, price, maxPers);
         add(product, id);
 
         return product;

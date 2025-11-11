@@ -12,8 +12,8 @@ public abstract class AbstractManager<T, K> {
         elements.put(key, element);
     }
 
-    public void remove(K id) {
-        elements.remove(id);
+    public boolean remove(K id) {
+        return elements.remove(id) != null;
     }
 
     public Optional<T> get(K id) {

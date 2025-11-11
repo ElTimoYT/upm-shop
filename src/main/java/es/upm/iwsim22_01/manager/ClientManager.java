@@ -4,12 +4,6 @@ import es.upm.iwsim22_01.models.Cashier;
 import es.upm.iwsim22_01.models.Client;
 
 public class ClientManager extends AbstractManager<Client, String> {
-    private final CashierManager cashierManager;
-
-    public ClientManager(CashierManager cashierManager) {
-        this.cashierManager = cashierManager;
-    }
-
     public Client addClient(String name, String DNI, String email, Cashier cashierWhoRegisters) {
 
 

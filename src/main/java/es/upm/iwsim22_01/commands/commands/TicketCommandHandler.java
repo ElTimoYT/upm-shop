@@ -159,7 +159,7 @@ public class TicketCommandHandler implements CommandHandler {
     }
 
     private void newTicketCommandWithoutId(String cashId, String productId) {
-        if (ca)
+       
     }
 
     private void newTicketCommandWithId(String id, String cashId, String productId) {

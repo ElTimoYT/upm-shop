@@ -12,16 +12,16 @@ public abstract class AbstractManager<T, K> {
         elements.put(key, element);
     }
 
-    public void remove(K id) {
-        elements.remove(id);
+    public boolean remove(K id) {
+        return elements.remove(id) != null;
     }
 
     public Optional<T> get(K id) {
         return Optional.ofNullable(elements.get(id));
     }
 
-    public Collection<T> getAll() {
-        return elements.values();
+    public List<T> getAll() {
+        return new ArrayList<>(elements.values());
     }
 
     public boolean existId(K id) {

@@ -17,8 +17,8 @@ public class App {
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
     private static ProductManager productManager = new ProductManager();
-    private static ClientManager clientManager = new ClientManager();
     private static CashierManager cashierManager = new CashierManager();
+    private static ClientManager clientManager = new ClientManager(cashierManager);
     private static TicketManager ticketManager = new TicketManager(clientManager, cashierManager);
 
     public static void main(String[] args) {

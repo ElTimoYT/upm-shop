@@ -4,6 +4,7 @@ import java.util.*;
 
 import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.commands.Converter;
+import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Product;
@@ -33,10 +34,12 @@ public class TicketCommandHandler implements CommandHandler {
 
     private TicketManager ticketManager;
     private ProductManager productManager;
+    private CashierManager cashierManager;
 
-    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager) {
+    public TicketCommandHandler(TicketManager ticketManager, ProductManager productManager, CashierManager cashierManager) {
         this.ticketManager = ticketManager;
         this.productManager = productManager;
+        this.cashierManager = cashierManager;
     }
 
     @Override
@@ -156,7 +159,7 @@ public class TicketCommandHandler implements CommandHandler {
     }
 
     private void newTicketCommandWithoutId(String cashId, String productId) {
-
+       
     }
 
     private void newTicketCommandWithId(String id, String cashId, String productId) {

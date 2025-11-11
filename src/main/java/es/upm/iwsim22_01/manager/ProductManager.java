@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.manager;
 
 import es.upm.iwsim22_01.models.Category;
+import es.upm.iwsim22_01.models.PersonalizableProduct;
 import es.upm.iwsim22_01.models.Product;
 
 public class ProductManager extends AbstractManager<Product, Integer> {
@@ -24,7 +25,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (maxPers < 1) throw new IllegalArgumentException("Max pers " + maxPers + " cannot be less than 1.");
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists(cannot convert basic to customizable).");
 
-        Product product = new Product(id, name, category, price, maxPers);
+        Product product = new PersonalizableProduct(id, name, category, price, maxPers);
     }
 
     public boolean isNameValid(String name) {

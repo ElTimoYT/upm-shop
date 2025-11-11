@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 public class Ticket {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd-HH:mm");
-    private static final int MAX_PRODUCTS = 100;
+    public static final int MAX_PRODUCTS = 100;
 
     private final Map<Product, Integer> items = new LinkedHashMap<>();
     private final Map<PersonalizableProduct, String[]> personalizableTextsPerProduct = new HashMap<>();
@@ -121,6 +121,10 @@ public class Ticket {
 
     public TicketState getState() {
         return ticketState;
+    }
+
+    public Date getInitialDate(){
+        return initialDate;
     }
 
     public String getFormattedId() {

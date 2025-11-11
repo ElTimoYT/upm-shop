@@ -2,41 +2,42 @@ package es.upm.iwsim22_01.commands.commands;
 
 import java.util.*;
 
-import es.upm.iwsim22_01.App;
 import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ClientManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
+import es.upm.iwsim22_01.models.PersonalizableProduct;
 import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
 public class TicketCommandHandler implements CommandHandler {
     private static final String
-            ERROR_NO_TICKET = "No ticket created",
             ERROR_INCORRECT_USE_TICKET = "Incorrect use: ticket new|add|remove|print",
             ERROR_INCORRECT_USE_TICKET_PRINT = "Incorrect use: ticket print <ticketId> <cashId>",
             ERROR_INCORRECT_USE_TICKET_NEW = "Incorrect use: ticket new [<ticketId>] <cashId> <userId>",
+            ERROR_INCORRECT_USE_TICKET_ADD = "Incorrect use: ticket add <ticketId> <cashId> <prodId> <amount> [--p<txt> --p<txt>]",
+            ERROR_INCORRECT_USE_TICKET_REMOVE = "Incorrect use: ticket remove <ticketId> <cashId> <prodId>",
+            ERROR_PRODUCT_IS_NO_PERSONALIZABLE = "Product is not personalizable",
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
             ERROR_CLIENT_NOT_FOUND = "Client not found",
             ERROR_TICKET_NOT_FOUND = "Ticket not found",
-            ERROR_INCORRECT_USE_TICKET_ADD = "Incorrect use: ticket add <prodId> <amount>",
-            ERROR_INCORRECT_USE_TICKET_REMOVAL = "Incorrect use: ticket remove <prodId>",
             ERROR_INVALID_ID = "Invalid id",
             ERROR_INVALID_AMOUNT = "Invalid amount",
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
-            ERROR_UNABLE_TO_ADD_PRODUCT = "Unable to add the products",
-            ERROR_UNABLE_TO_REMOVE_PRODUCT = "Unable to remove the product",
 
             TICKET_NEW_OK = "ticket new: ok",
             TICKET_PRINT_OK = "ticket print: ok",
             TICKET_ADD_OK = "ticket add: ok",
             TICKET_REMOVAL_OK = "ticket remove: ok",
+            TICKET_LIST_OK = "ticket list: ok",
+            TICKET_LIST = "Tickets:",
 
             NEW = "new",
             ADD = "add",
             REMOVE = "remove",
-            PRINT = "print";
+            PRINT = "print",
+            LIST = "list";
 
     private TicketManager ticketManager;
     private ProductManager productManager;
@@ -59,9 +60,10 @@ public class TicketCommandHandler implements CommandHandler {
 
         switch (tokens.next()) {
             case NEW -> newTickedCommand(tokens);
-            /*case ADD -> addTicketCommand(tokens);
-            case REMOVE -> removeTicketCommand(tokens);*/
+            case ADD -> addTicketCommand(tokens);
+            case REMOVE -> removeTicketCommand(tokens);
             case PRINT -> printTicketCommand(tokens);
+            case LIST -> listTicketCommand(tokens);
             default -> System.out.println(ERROR_INCORRECT_USE_TICKET);
         };
     }
@@ -101,71 +103,110 @@ public class TicketCommandHandler implements CommandHandler {
     }
 
     private void removeTicketCommand(Iterator<String> tokens) {
-        /*//Id
+        //ticketId
         if (!tokens.hasNext()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_REMOVAL);
+            System.out.println(ERROR_INCORRECT_USE_TICKET_REMOVE);
+            return;
+        }
+        OptionalInt ticketId = Converter.stringToInt(tokens.next());
+        if (ticketId.isEmpty() || !ticketManager.existId(ticketId.getAsInt())) {
+            System.out.println(ERROR_TICKET_NOT_FOUND);
+            return;
+        }
+        Ticket ticket = ticketManager.get(ticketId.getAsInt()).get();
+
+        //cashierId
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_REMOVE);
+            return;
+        }
+        String cashierId = tokens.next();
+        if (!cashierManager.existId(cashierId)) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
+            return;
+        }
+
+        //productId
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_REMOVE);
             return;
         }
         OptionalInt productId = Converter.stringToInt(tokens.next());
-        if (productId.isEmpty()) {
-            System.out.println(ERROR_INVALID_ID);
+        if (productId.isEmpty() || !productManager.existId(productId.getAsInt())) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
+        Product product = productManager.get(productId.getAsInt()).get();
 
-
-        if (!App.existsTicket()) {
-            System.out.println(ERROR_NO_TICKET);
-            return;
-        }
-
-        if (App.getCurrentTicket().removeProductById(productId.getAsInt())) {
-            System.out.println(App.getCurrentTicket());
-            System.out.println(TICKET_REMOVAL_OK);
-        } else {
-            System.out.println(ERROR_UNABLE_TO_REMOVE_PRODUCT);
-        }*/
+        ticket.removeProduct(product);
+        System.out.println(ticket);
+        System.out.println(product);
+        System.out.println(TICKET_REMOVAL_OK);
     }
 
     private void addTicketCommand(Iterator<String> tokens) {
-    /*
-        //Id
+        //ticketId
         if (!tokens.hasNext()) {
-            System.out.println(ERROR_UNABLE_TO_REMOVE_PRODUCT);
+            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
+            return;
+        }
+        OptionalInt ticketId = Converter.stringToInt(tokens.next());
+        if (ticketId.isEmpty() || !ticketManager.existId(ticketId.getAsInt())) {
+            System.out.println(ERROR_TICKET_NOT_FOUND);
+            return;
+        }
+        Ticket ticket = ticketManager.get(ticketId.getAsInt()).get();
+
+        //cashierId
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
+            return;
+        }
+        String cashierId = tokens.next();
+        if (!cashierManager.existId(cashierId)) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
+            return;
+        }
+
+        //productId
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
             return;
         }
         OptionalInt productId = Converter.stringToInt(tokens.next());
-        if (productId.isEmpty()) {
-            System.out.println(ERROR_INVALID_ID);
+        if (productId.isEmpty() || !productManager.existId(productId.getAsInt())) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
+        Product product = productManager.get(productId.getAsInt()).get();
 
-        if (productManager.existId(productId.getAsInt())) {
-            System.out.println(ERROR_PRODUCT_NOT_FOUND);
-            return;
-        }
-
-        //Amount
+        //amount
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
             return;
         }
         OptionalInt amount = Converter.stringToInt(tokens.next());
-        if (amount.isEmpty() || amount.getAsInt() <= 0) {
+        if (amount.isEmpty() || amount.getAsInt() < 0 || amount.getAsInt() > Ticket.MAX_PRODUCTS) {
             System.out.println(ERROR_INVALID_AMOUNT);
             return;
         }
 
-        if (!App.existsTicket()) {
-            System.out.println(ERROR_NO_TICKET);
-            return;
+        //personalizableTexts
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
+            if (product instanceof PersonalizableProduct personalizableProduct) {
+                ticket.addProduct(personalizableProduct, amount.getAsInt(), tokens.next().split("--p"));
+            } else {
+                System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
+                return;
+            }
+        } else {
+            ticket.addProduct(product, amount.getAsInt());
         }
 
-        if (App.getCurrentTicket().addProduct(productId.getAsInt(), amount.getAsInt())) {
-            System.out.println(App.getCurrentTicket());
-            System.out.println(TICKET_ADD_OK);
-        } else {
-            System.out.println(ERROR_UNABLE_TO_ADD_PRODUCT);
-        }*/
+        System.out.println(ticket);
+        System.out.println(product);
+        System.out.println(TICKET_ADD_OK);
     }
 
     private void newTickedCommand(Iterator<String> tokens) {
@@ -214,5 +255,14 @@ public class TicketCommandHandler implements CommandHandler {
         Ticket ticket = ticketManager.addTicket(id.getAsInt(), cashId, productId);
         System.out.println(ticket);
         System.out.println(TICKET_NEW_OK);
+    }
+
+    private void listTicketCommand(Iterator<String> tokens) {
+        List<Ticket> allTickets = ticketManager.getAll();
+        allTickets.sort(Comparator.comparing(Ticket::getInitialDate));
+
+        System.out.println(TICKET_LIST);
+        allTickets.forEach(System.out::println);
+        System.out.println(TICKET_LIST_OK);
     }
 }

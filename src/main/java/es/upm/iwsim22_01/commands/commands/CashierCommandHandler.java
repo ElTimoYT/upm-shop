@@ -5,7 +5,6 @@ import es.upm.iwsim22_01.models.Cashier;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CashierCommandHandler implements CommandHandler {
 
@@ -42,25 +41,28 @@ public class CashierCommandHandler implements CommandHandler {
         String name;
         String email;
 
+        Cashier cashier;
+
         try {
             if (args.size() == 2) {
                 name = args.get(0);
                 email = args.get(1);
 
-                Cashier cashier = cashierManager.addCashier(name, email);
+                cashier = cashierManager.addCashier(name, email);
             } else if (args.size() == 3) {
                 id = args.get(0);
                 name = args.get(1);
                 email = args.get(2);
-                Cashier cashier = cashierManager.addCashier(id, name, email);
+                cashier = cashierManager.addCashier(id, name, email);
             } else {
                 System.out.println("Incorrect use: cashier add [<id>] \"<name>\" <email>");
                 return;
             }
-            System.out.println("cashier add: ok");
+            System.out.println(cashier);
+            System.out.println("cash add: ok");
 
         }catch (Exception e) {
-            System.out.println("Error adding cashier");
+            System.out.println("cash add: fail");
         }
     }
 
@@ -69,15 +71,13 @@ public class CashierCommandHandler implements CommandHandler {
 
         if (cashiers.isEmpty()) System.out.println("No cashiers found.");
 
-        List<Cashier> cashierList = cashiers.stream()
-                .sorted(Comparator.comparing(Cashier::getName))
-                .toList();
-
-        System.out.println("Cashiers:");
-        for (Cashier c : cashierList) {
-            System.out.printf("ID: %s | Name: %s | Email: %s%n",
-                    c.getId(), c.getName(), c.getEmail());
+        System.out.println("Cash:");
+        if (!cashiers.isEmpty()) {
+            cashiers.stream()
+                    .sorted(Comparator.comparing(Cashier::getName))
+                    .forEach(c -> System.out.println("  " + c));
         }
+        System.out.println("cash list: ok");
 
     }
 
@@ -91,25 +91,20 @@ public class CashierCommandHandler implements CommandHandler {
             Optional<Cashier> optionalCashier = cashierManager.get(id);
             optionalCashier.ifPresentOrElse(
                     cashier -> {
+                        System.out.println("Tickets: ");
                         Collection<Ticket> tickets = cashier.getTickets();
-                        if (tickets == null || tickets.isEmpty()){
-                            System.out.println("No tickets found.");
-                            return;
-                        }
 
-                        List<Ticket> sortedTickets = tickets.stream()
-                                .sorted(Comparator.comparing(Ticket::getId))
-                                .toList();
-                        System.out.println("Tickets:");
-                        for (Ticket t : sortedTickets) {
-                            System.out.printf("ID: %s | Estado: %s%n",
-                                    t.getId(), t.getState());
+                        if (tickets != null && !tickets.isEmpty()) {
+                            tickets.stream()
+                                    .sorted(Comparator.comparing(Ticket::getId))
+                                    .forEach(t -> System.out.println("  " + t.getId() + "->" + t.getState()));
                         }
+                        System.out.println("cash tickets: ok");
                     },
-                    () -> System.out.println("Cashier not found.")
+                    () -> System.out.println("cash tickets: fail")
             );
         }catch (Exception e) {
-            System.out.println("Incorrect use: cashier tickets <id>");
+            System.out.println("cash tickets: fail");
         }
     }
 
@@ -123,14 +118,15 @@ public class CashierCommandHandler implements CommandHandler {
             Optional<Cashier> optionalCashier = cashierManager.get(id);
             if (optionalCashier.isEmpty()) {
                 System.out.println("Cashier not found.");
+                System.out.println("cash remove: fail");
                 return;
             }
 
             Cashier cashier = optionalCashier.get();
             cashierManager.remove(cashier.getId());
-            System.out.println("Cashier removed: " + cashier.getId());
+            System.out.println("cash remove: ok");
         }catch (Exception e) {
-            System.out.println("Incorrect use: cashier remove <id>");
+            System.out.println("cash remove: fail");
         }
     }
 

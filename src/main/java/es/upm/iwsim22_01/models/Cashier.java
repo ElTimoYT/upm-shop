@@ -27,4 +27,22 @@ public class Cashier extends User {
         this.tickets.add(ticket);
     }
 
+    @Override
+    public String toString() {
+        return "Cash{" +
+                "identifier='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", email='" + getEmail() + '\'' +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

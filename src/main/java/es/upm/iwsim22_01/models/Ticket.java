@@ -153,50 +153,47 @@ public class Ticket {
     }
 
     public String getPrintedTicket() {
-        /*closeTicket();
+        closeTicket();
 
         StringBuilder sb = new StringBuilder();
-        // Precomputamos conteo por categoría
-        Map<Category, Integer> counts = countCategory();
+        sb.append(getFormattedId()).append("\n\n");
 
-        // Orden por nombre (ignorando mayúsculas)
-        List<Entry<Product, Integer>> ordenados = new ArrayList<>(items.entrySet());
-        ordenados.sort(Comparator.comparing(e -> e.getKey().getName(),
+        Map<Category, Integer> counts = countCategory();
+        List<TicketLine> sortedItems = new ArrayList<>(items);
+        sortedItems.sort(Comparator.comparing(
+                line -> line.product.getName(),
                 String.CASE_INSENSITIVE_ORDER
         ));
 
-        sb.append(getFormattedId());
-
-        // Línea por producto (sin repetirlo N veces)
-        for (Entry<Product, Integer> entry : ordenados) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            double dPerItem = perItemDiscount(product, counts);
+        for (TicketLine line : sortedItems) {
+            Product product = line.product;
+            int quantity = line.amount;
+            double discountPerItem = perItemDiscount(product, counts);
 
             for (int i = 0; i < quantity; i++) {
-                sb.append(product);
-                if (product instanceof PersonalizableProduct personalizableProduct) {
-                    for (String text : personalizableTextsPerProduct.getOrDefault(personalizableProduct, new String[0])) {
-                        sb.append("\n\t-")
-                                .append(text);
+                sb.append(product).append("\n");
+                if (line instanceof PersonalizableProductTicketLine persLine) {
+                    for (String text : persLine.lines) {
+                        sb.append("\t- ").append(text).append("\n");
                     }
                 }
-                if (dPerItem > 0) {
-                    sb.append(" **discount -").append(round1(dPerItem));
+
+                if (discountPerItem > 0) {
+                    sb.append(" **discount -").append(round1(discountPerItem)).append("\n");
                 }
-                sb.append("\n");
             }
         }
 
+        sb.append("\n");
+
         double total = totalPrice();
         double discount = discountPrice();
-        sb.append("Total price: ").append(total).append("\n");
-        sb.append("Total discount: ").append(discount).append("\n");
-        sb.append("Final Price: ").append(round1(total - discount));
 
-        return sb.toString();*/
+        sb.append("Total price: ").append(String.format("%.2f", total)).append("\n");
+        sb.append("Total discount: ").append(String.format("%.2f", discount)).append("\n");
+        sb.append("Final Price: ").append(String.format("%.2f", round1(total - discount)));
 
-        return "";
+        return sb.toString();
     }
 
     @Override

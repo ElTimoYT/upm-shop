@@ -33,6 +33,7 @@ public class TicketPrintCommandHandler implements CommandHandler {
         if (cashierId == null) return;
 
         Ticket ticket = ticketManager.get(ticketId);
+        System.out.println(ticket.toString());
         ticket.closeTicket();
 
         System.out.println(TICKET_PRINT_OK);

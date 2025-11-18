@@ -1,5 +1,7 @@
-package es.upm.iwsim22_01.commands.commands;
+package es.upm.iwsim22_01.commands.handlers.cashier;
 
+import es.upm.iwsim22_01.commands.CommandTokens;
+import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Cashier;
@@ -18,7 +20,7 @@ public class CashierCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(Iterator<String> tokens) {
+    public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNext()) {
             System.out.println("No command provided.");
             return;
@@ -35,7 +37,7 @@ public class CashierCommandHandler implements CommandHandler {
         };
     }
 
-    private void addCashierCommand(Iterator<String> tokens) {
+    private void addCashierCommand(CommandTokens tokens) {
 
         List<String> args = new ArrayList<>();
         tokens.forEachRemaining(args::add);
@@ -84,7 +86,7 @@ public class CashierCommandHandler implements CommandHandler {
 
     }
 
-    private void showTicketsCashierCommand(Iterator<String> tokens) {
+    private void showTicketsCashierCommand(CommandTokens tokens) {
         try {
             String id = tokens.next();
             if (tokens.hasNext()) {
@@ -111,7 +113,7 @@ public class CashierCommandHandler implements CommandHandler {
         }
     }
 
-    private void removeCashierCommand(Iterator<String> tokens) {
+    private void removeCashierCommand(CommandTokens tokens) {
             String id = tokens.next();
 
             if (tokens.hasNext()) {

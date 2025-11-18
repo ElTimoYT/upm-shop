@@ -1,13 +1,13 @@
-package es.upm.iwsim22_01.commands.commands;
+package es.upm.iwsim22_01.commands.handlers;
 
-import java.util.Iterator;
+import es.upm.iwsim22_01.commands.CommandTokens;
 
 public class EchoCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE = "Incorrect use: echo \"<message>\"",
             ECHO_MESSAGE = "echo \"%s\"";
 
     @Override
-    public void runCommand(Iterator<String> tokens) {
+    public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE);
         }

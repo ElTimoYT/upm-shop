@@ -1,14 +1,14 @@
-package es.upm.iwsim22_01.commands.commands;
+package es.upm.iwsim22_01.commands.handlers.prod;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
-import es.upm.iwsim22_01.commands.Converter;
+import es.upm.iwsim22_01.commands.CommandTokens;
+import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
@@ -58,7 +58,7 @@ public class ProdCommandHandler implements CommandHandler {
     }
     
     @Override
-    public void runCommand(Iterator<String> tokens) {
+    public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE);
             return;
@@ -75,7 +75,7 @@ public class ProdCommandHandler implements CommandHandler {
         };
     }
 
-    private void addProductCommand(Iterator<String> tokens) {
+    private void addProductCommand(CommandTokens tokens) {
         if (productManager.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
@@ -153,7 +153,7 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(PROD_ADD_OK);
     }
 
-    private void listProductCommand(Iterator<String> tokens) {
+    private void listProductCommand(CommandTokens tokens) {
         System.out.println(CATALOG);
         productManager.getAll().forEach(p -> {
             System.out.println("\t" + p);
@@ -162,7 +162,7 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(PROD_LIST_OK);
     }
 
-    private void updateProductCommand(Iterator<String> tokens) {
+    private void updateProductCommand(CommandTokens tokens) {
         //Id
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_UPDATE);
@@ -240,7 +240,7 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(PROD_UPDATE_OK);
     }
 
-    private void removeProductCommand(Iterator<String> tokens) {
+    private void removeProductCommand(CommandTokens tokens) {
         //Id
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_REMOVE);
@@ -263,7 +263,7 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(PROD_REMOVE_OK);
     }
 
-    private void addFoodCommand(Iterator<String> tokens) {
+    private void addFoodCommand(CommandTokens tokens) {
 
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
@@ -325,7 +325,7 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(PROD_ADD_OK);
 
     }
-    private void addMeetingCommand (Iterator<String> tokens) {
+    private void addMeetingCommand (CommandTokens tokens) {
 
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADDMEETING);

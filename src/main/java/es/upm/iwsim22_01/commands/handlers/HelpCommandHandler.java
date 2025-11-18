@@ -1,7 +1,6 @@
-package es.upm.iwsim22_01.commands.commands;
+package es.upm.iwsim22_01.commands.handlers;
 
-import java.util.Iterator;
-
+import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.models.Category;
 
 public class HelpCommandHandler implements CommandHandler {
@@ -23,7 +22,7 @@ public class HelpCommandHandler implements CommandHandler {
         DISCOUNT_MESSAGE = "\nDiscounts if there are ≥2 units in the category: ";
 
     @Override
-    public void runCommand(Iterator<String> tokens) {
+    public void runCommand(CommandTokens tokens) {
         System.out.print(HELP_MESSAGE);
 
         Category[] categories = Category.values();

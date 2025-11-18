@@ -1,14 +1,13 @@
 package es.upm.iwsim22_01.commands;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import es.upm.iwsim22_01.commands.commands.CommandHandler;
+import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 
 public class CommandDispatcher {
 
@@ -18,22 +17,34 @@ public class CommandDispatcher {
 
 
     private final Map<String, CommandHandler> COMMANDS = new TreeMap<>();
+    private final String noCommandFoundMessage, unknownCommandMessage;
+
+    public CommandDispatcher() {
+        this(ERROR_NO_COMMAND_FOUND, ERROR_UNKNOWN_COMMAND);
+    }
+
+    public CommandDispatcher(String noCommandFoundMessage, String unknownCommandMessage) {
+        this.noCommandFoundMessage = noCommandFoundMessage;
+        this.unknownCommandMessage = unknownCommandMessage;
+    }
 
     public void addCommand(String name, CommandHandler commandHandler) {
         COMMANDS.put(name, commandHandler);
     }
 
     public void processCommand(String command) {
-        Iterator<String> tokens = tokenizeCommand(command);
+        processCommand(tokenizeCommand(command));
+    }
 
+    public void processCommand(CommandTokens tokens) {
         if (!tokens.hasNext()) {
-            System.out.println(ERROR_NO_COMMAND_FOUND);
+            System.out.println(noCommandFoundMessage);
             return;
         }
 
         String commandName = tokens.next();
         if (!COMMANDS.containsKey(commandName)) {
-            System.out.println(ERROR_UNKNOWN_COMMAND);
+            System.out.println(unknownCommandMessage);
             return;
         }
 
@@ -44,7 +55,7 @@ public class CommandDispatcher {
         }
     }
 
-    private Iterator<String> tokenizeCommand(String command) {
+    private CommandTokens tokenizeCommand(String command) {
         Pattern pattern = Pattern.compile("\"([^\"]+)\"|\\S+"); //Dividimos por espacios o comillas: "([^"]+)"|\S+
         Matcher matcher = pattern.matcher(command);
 
@@ -59,6 +70,6 @@ public class CommandDispatcher {
             }
         }
 
-        return tokens.iterator();
+        return new CommandTokens(tokens);
     }
 }

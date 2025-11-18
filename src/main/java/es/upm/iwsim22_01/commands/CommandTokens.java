@@ -1,25 +1,118 @@
 package es.upm.iwsim22_01.commands;
 
-import java.util.Iterator;
-import java.util.List;
+import es.upm.iwsim22_01.models.Category;
+
+import java.util.*;
 
 public class CommandTokens {
-    private Iterator<String> iterator;
-    private int remainingSize;
+    private Iterator<String> tokens;
+    private String currentToken;
+    private int remainingTokens;
 
     public CommandTokens(List<String> tokens) {
-        this.iterator = tokens.iterator();
-        this.remainingSize = tokens.size();
+        this.tokens = tokens.iterator();
+        remainingTokens = tokens.size();
+
+        consumeToken();
+    }
+
+    private void consumeToken() {
+        currentToken = tokens.hasNext() ? tokens.next() : null;
+        remainingTokens--;
+    }
+
+    private void checkToken() {
+        if (currentToken == null) {
+            throw new NoSuchElementException("No more tokens available");
+        }
+    }
+
+    public int getRemainingTokens() {
+        return remainingTokens;
     }
 
     public String next() {
-        String nextToken = iterator.next();
-        remainingSize--;
+        checkToken();
 
-        return nextToken;
+        String token = currentToken;
+        consumeToken();
+
+        return token;
     }
 
     public boolean hasNext() {
-        return iterator.hasNext();
+        return currentToken != null;
+    }
+
+    private OptionalInt tryParseInt() {
+        try {
+            return OptionalInt.of(Integer.parseInt(currentToken));
+        } catch (NumberFormatException exception) {
+            return OptionalInt.empty();
+        }
+    }
+
+    public int nextInt() {
+        checkToken();
+
+        OptionalInt optionalInt = tryParseInt();
+        if (optionalInt.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not an integer: " + currentToken);
+        }
+
+        consumeToken();
+        return optionalInt.getAsInt();
+    }
+
+    public boolean hasNextInt() {
+        return hasNext() && tryParseInt().isPresent();
+    }
+
+    private OptionalDouble tryParseDouble() {
+        try {
+            return OptionalDouble.of(Double.parseDouble(currentToken));
+        } catch (NumberFormatException exception) {
+            return OptionalDouble.empty();
+        }
+    }
+
+    public double nextDouble() {
+        checkToken();
+
+        OptionalDouble optionalDouble = tryParseDouble();
+        if (optionalDouble.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a double: " + currentToken);
+        }
+
+        consumeToken();
+        return optionalDouble.getAsDouble();
+    }
+
+    public boolean hasNextDouble() {
+        return hasNext() && tryParseDouble().isPresent();
+    }
+
+    private Optional<Category> tryParseCategory() {
+        try {
+            return Optional.of(Category.valueOf(currentToken));
+        } catch (IllegalArgumentException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Category nextCategory() {
+        checkToken();
+
+        Optional<Category> optionalCategory = tryParseCategory();
+        if (optionalCategory.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a category: " + currentToken);
+        }
+
+        consumeToken();
+        return optionalCategory.get();
+    }
+
+    public boolean hasNextCategory() {
+        return hasNext() && tryParseCategory().isPresent();
     }
 }

@@ -5,11 +5,11 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 import es.upm.iwsim22_01.commands.CommandDispatcher;
-import es.upm.iwsim22_01.commands.commands.EchoCommandHandler;
-import es.upm.iwsim22_01.commands.commands.ExitCommandHandler;
-import es.upm.iwsim22_01.commands.commands.HelpCommandHandler;
-import es.upm.iwsim22_01.commands.commands.ProdCommandHandler;
-import es.upm.iwsim22_01.commands.commands.TicketCommandHandler;
+import es.upm.iwsim22_01.commands.handlers.EchoCommandHandler;
+import es.upm.iwsim22_01.commands.handlers.ExitCommandHandler;
+import es.upm.iwsim22_01.commands.handlers.HelpCommandHandler;
+import es.upm.iwsim22_01.commands.handlers.prod.ProdCommandHandler;
+import es.upm.iwsim22_01.commands.handlers.ticket.TicketCommandHandler;
 import es.upm.iwsim22_01.manager.*;
 
 public class App {

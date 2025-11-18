@@ -1,14 +1,12 @@
-package es.upm.iwsim22_01.commands.commands;
+package es.upm.iwsim22_01.commands.handlers.client;
 
-import es.upm.iwsim22_01.commands.Converter;
+import es.upm.iwsim22_01.commands.CommandTokens;
+import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ClientManager;
 import es.upm.iwsim22_01.models.Client;
 
-import java.util.Iterator;
-import java.util.OptionalInt;
-
-public class ClientCommandHandler implements CommandHandler{
+public class ClientCommandHandler implements CommandHandler {
 
     private ClientManager clientManager;
     private CashierManager cashierManager;
@@ -34,7 +32,7 @@ public class ClientCommandHandler implements CommandHandler{
     }
 
     @Override
-    public void runCommand(Iterator<String> tokens) {
+    public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE);
         }
@@ -51,7 +49,7 @@ public class ClientCommandHandler implements CommandHandler{
 
     }
 
-    private void clientAddCommand(Iterator<String> tokens) {
+    private void clientAddCommand(CommandTokens tokens) {
 
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE);
@@ -82,7 +80,7 @@ public class ClientCommandHandler implements CommandHandler{
 
     }
 
-    private void clientRemoveCommand(Iterator<String> tokens) {
+    private void clientRemoveCommand(CommandTokens tokens) {
 
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE);

@@ -25,44 +25,16 @@ public class TicketPrintCommandHandler implements CommandHandler {
     @Override
     public void runCommand(CommandTokens tokens) {
         //ticketId
-        Integer ticketId = getTicketId(tokens);
+        Integer ticketId = tokens.nextAsIntegerId(ticketManager, true, ERROR_INCORRECT_USE_TICKET_PRINT, ERROR_TICKET_NOT_FOUND);
         if (ticketId == null) return;
 
         //cashierId
-        String cashierId = getCashierId(tokens);
+        String cashierId = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_TICKET_PRINT, ERROR_CASHIER_NOT_FOUND);
         if (cashierId == null) return;
 
         Ticket ticket = ticketManager.get(ticketId);
         ticket.closeTicket();
 
         System.out.println(TICKET_PRINT_OK);
-    }
-
-    private String getCashierId(CommandTokens tokens) {
-        if (!tokens.hasNext()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);
-            return null;
-        }
-
-        String cashierId = tokens.next();
-        if (!cashierManager.existId(cashierId)) {
-            System.out.println(ERROR_CASHIER_NOT_FOUND);
-            return null;
-        }
-        return cashierId;
-    }
-
-    private Integer getTicketId(CommandTokens tokens) {
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);
-            return null;
-        }
-
-        int ticketId = tokens.nextInt();
-        if (!ticketManager.existId(ticketId)) {
-            System.out.println(ERROR_TICKET_NOT_FOUND);
-            return null;
-        }
-        return ticketId;
     }
 }

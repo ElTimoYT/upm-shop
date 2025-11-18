@@ -1,10 +1,15 @@
 package es.upm.iwsim22_01.commands;
 
+import es.upm.iwsim22_01.manager.*;
 import es.upm.iwsim22_01.models.Category;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CommandTokens {
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     private Iterator<String> tokens;
     private String currentToken;
     private int remainingTokens;
@@ -114,5 +119,73 @@ public class CommandTokens {
 
     public boolean hasNextCategory() {
         return hasNext() && tryParseCategory().isPresent();
+    }
+
+    private Optional<Date> tryParseDate() {
+        try {
+            return Optional.of(DATE_FORMAT.parse(currentToken));
+        } catch (ParseException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Date nextDate() {
+        checkToken();
+
+        Optional<Date> optionalDate = tryParseDate();
+        if (optionalDate.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a date: " + currentToken);
+        }
+
+        consumeToken();
+        return optionalDate.get();
+    }
+
+    public boolean hasNextDate() {
+        return hasNext() && tryParseDate().isPresent();
+    }
+
+    public Integer nextAsIntegerId(AbstractManager<?, Integer> manager, boolean checkIfExistsId, String messageIfDontExists, String messageIfNotValid) {
+        if (!hasNextInt()) {
+            System.out.println(messageIfDontExists);
+            return null;
+        }
+
+        int id = nextInt();
+        if (checkIfExistsId == manager.existId(id)) {
+            System.out.println(messageIfNotValid);
+            return null;
+        }
+
+        return id;
+    }
+
+    public String nextAsStringId(AbstractManager<?, String> manager, boolean checkIfExistsId, String messageIfDontExists, String messageIfNotValid) {
+        if (!hasNext()) {
+            System.out.println(messageIfDontExists);
+            return null;
+        }
+
+        String id = next();
+        if (checkIfExistsId == manager.existId(id)) {
+            System.out.println(messageIfNotValid);
+            return null;
+        }
+
+        return id;
+    }
+
+    public Integer nextInRange(int min, int max, String messageIfDontExists, String messageIfNotValid) {
+        if (!hasNextInt()) {
+            System.out.println(messageIfDontExists);
+            return null;
+        }
+
+        int val = nextInt();
+        if (val < min || val > max) {
+            System.out.println(messageIfNotValid);
+            return null;
+        }
+        return val;
     }
 }

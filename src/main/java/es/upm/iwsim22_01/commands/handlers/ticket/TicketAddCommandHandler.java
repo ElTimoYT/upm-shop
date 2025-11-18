@@ -33,19 +33,19 @@ public class TicketAddCommandHandler implements CommandHandler {
     @Override
     public void runCommand(CommandTokens tokens) {
         //ticketId
-        Integer ticketId = getTicketId(tokens);
+        Integer ticketId = tokens.nextAsIntegerId(ticketManager, true, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_TICKET_NOT_FOUND);
         if (ticketId == null) return;
 
         //cashierId
-        String cashierId = getCashierId(tokens);
+        String cashierId = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_CASHIER_NOT_FOUND);
         if (cashierId == null) return;
 
         //productId
-        Integer productId = getProductId(tokens);
+        Integer productId = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_PRODUCT_NOT_FOUND);
         if (productId == null) return;
 
         //amount
-        Integer amount = getAmount(tokens);
+        Integer amount = tokens.nextInRange(0, Ticket.MAX_PRODUCTS, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_INVALID_AMOUNT);
         if (amount == null) return;
 
         Product product = productManager.get(productId);
@@ -65,61 +65,5 @@ public class TicketAddCommandHandler implements CommandHandler {
         }
 
         System.out.println(TICKET_ADD_OK);
-    }
-
-    private String getCashierId(CommandTokens tokens) {
-        if (!tokens.hasNext()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
-            return null;
-        }
-
-        String cashierId = tokens.next();
-        if (!cashierManager.existId(cashierId)) {
-            System.out.println(ERROR_CASHIER_NOT_FOUND);
-            return null;
-        }
-        return cashierId;
-    }
-
-    private Integer getTicketId(CommandTokens tokens) {
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
-            return null;
-        }
-
-        int ticketId = tokens.nextInt();
-        if (!ticketManager.existId(ticketId)) {
-            System.out.println(ERROR_TICKET_NOT_FOUND);
-            return null;
-        }
-        return ticketId;
-    }
-
-    private Integer getProductId(CommandTokens tokens) {
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
-            return null;
-        }
-
-        int productId = tokens.nextInt();
-        if (!productManager.existId(productId)) {
-            System.out.println(ERROR_PRODUCT_NOT_FOUND);
-            return null;
-        }
-        return productId;
-    }
-
-    private static Integer getAmount(CommandTokens tokens) {
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
-            return null;
-        }
-
-        int amount = tokens.nextInt();
-        if (amount < 0 || amount > Ticket.MAX_PRODUCTS) {
-            System.out.println(ERROR_INVALID_AMOUNT);
-            return null;
-        }
-        return amount;
     }
 }

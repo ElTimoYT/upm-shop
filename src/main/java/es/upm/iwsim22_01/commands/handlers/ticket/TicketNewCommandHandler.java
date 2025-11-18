@@ -41,10 +41,10 @@ public class TicketNewCommandHandler implements CommandHandler {
     }
 
     private void newTicketCommandWithoutId(CommandTokens tokens) {
-        String cashierId = getCashierId(tokens);
+        String cashierId = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_TICKET_NEW, ERROR_CASHIER_NOT_FOUND);
         if (cashierId == null) return;
 
-        String clientId = getClientId(tokens);
+        String clientId = tokens.nextAsStringId(clientManager, true, ERROR_INCORRECT_USE_TICKET_NEW, ERROR_CLIENT_NOT_FOUND);
         if (clientId == null) return;
 
         Ticket ticket = ticketManager.addTicket();
@@ -56,13 +56,13 @@ public class TicketNewCommandHandler implements CommandHandler {
     }
 
     private void newTicketCommandWithId(CommandTokens tokens) {
-        Integer ticketId = getTicketNewId(tokens);
+        Integer ticketId = tokens.nextAsIntegerId(ticketManager, false, ERROR_INCORRECT_USE_TICKET_NEW, ERROR_INVALID_ID);
         if (ticketId == null) return;
 
-        String cashierId = getCashierId(tokens);
+        String cashierId = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_TICKET_NEW, ERROR_CASHIER_NOT_FOUND);
         if (cashierId == null) return;
 
-        String clientId = getClientId(tokens);
+        String clientId = tokens.nextAsStringId(clientManager, true, ERROR_INCORRECT_USE_TICKET_NEW, ERROR_CLIENT_NOT_FOUND);
         if (clientId == null) return;
 
         Ticket ticket = ticketManager.addTicket(ticketId);
@@ -70,47 +70,5 @@ public class TicketNewCommandHandler implements CommandHandler {
         clientManager.get(clientId).addTicket(ticket);
 
         System.out.println(TICKET_NEW_OK);
-    }
-
-    private String getCashierId(CommandTokens tokens) {
-        if (!tokens.hasNext()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_NEW);
-            return null;
-        }
-
-        String cashierId = tokens.next();
-        if (!cashierManager.existId(cashierId)) {
-            System.out.println(ERROR_CASHIER_NOT_FOUND);
-            return null;
-        }
-        return cashierId;
-    }
-
-    private String getClientId(CommandTokens tokens) {
-        if (!tokens.hasNext()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_NEW);
-            return null;
-        }
-
-        String clientId = tokens.next();
-        if (!clientManager.existId(clientId)) {
-            System.out.println(ERROR_CLIENT_NOT_FOUND);
-            return null;
-        }
-        return clientId;
-    }
-
-    private Integer getTicketNewId(CommandTokens tokens) {
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_NEW);
-            return null;
-        }
-
-        int ticketId = tokens.nextInt();
-        if (ticketManager.existId(ticketId)) {
-            System.out.println(ERROR_INVALID_ID);
-            return null;
-        }
-        return ticketId;
     }
 }

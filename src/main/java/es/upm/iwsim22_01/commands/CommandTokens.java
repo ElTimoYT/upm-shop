@@ -145,9 +145,9 @@ public class CommandTokens {
         return hasNext() && tryParseDate().isPresent();
     }
 
-    public Integer nextAsIntegerId(AbstractManager<?, Integer> manager, boolean checkIfExistsId, String messageIfDontExists, String messageIfNotValid) {
+    public Integer nextAsIntegerId(AbstractManager<?, Integer> manager, boolean checkIfExistsId, String messageNoToken, String messageIfNotValid) {
         if (!hasNextInt()) {
-            System.out.println(messageIfDontExists);
+            System.out.println(messageNoToken);
             return null;
         }
 
@@ -160,9 +160,9 @@ public class CommandTokens {
         return id;
     }
 
-    public String nextAsStringId(AbstractManager<?, String> manager, boolean checkIfExistsId, String messageIfDontExists, String messageIfNotValid) {
+    public String nextAsStringId(AbstractManager<?, String> manager, boolean checkIfExistsId, String messageNoToken, String messageIfNotValid) {
         if (!hasNext()) {
-            System.out.println(messageIfDontExists);
+            System.out.println(messageNoToken);
             return null;
         }
 
@@ -175,9 +175,9 @@ public class CommandTokens {
         return id;
     }
 
-    public Integer nextInRange(int min, int max, String messageIfDontExists, String messageIfNotValid) {
+    public Integer nextInRange(int min, int max, String messageNoToken, String messageIfNotValid) {
         if (!hasNextInt()) {
-            System.out.println(messageIfDontExists);
+            System.out.println(messageNoToken);
             return null;
         }
 

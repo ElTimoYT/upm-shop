@@ -9,7 +9,7 @@ public class ProductService extends Product{
 
 
     public ProductService(int id, String name, double price,int MAX_PARTICIPANT,LocalDate expirationDate){
-        super(id, name, Category.SERVICE,price);
+        super(id, name,price);
         this.MAX_PARTICIPANT =MAX_PARTICIPANT;
         this.expirationDate = expirationDate;
     }
@@ -22,7 +22,6 @@ public class ProductService extends Product{
                 "class:" + this.getClass().getSimpleName() +
                 ",id:" + getId() +
                 ",name:'" + getName() + '\'' +
-                ",category:" + getCategory() +
                 ",price:" + getPrice() +
                 ",max_participant:" + MAX_PARTICIPANT +
                 ",expiration:" + expirationDate +

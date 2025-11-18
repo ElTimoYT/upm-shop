@@ -8,19 +8,14 @@ public class Ticket {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd-HH:mm");
     public static final int MAX_PRODUCTS = 100;
 
-    private final Map<Product, Integer> items = new LinkedHashMap<>();
-    private final Map<PersonalizableProduct, String[]> personalizableTextsPerProduct = new HashMap<>();
     private final int id;
-    private final Cashier cashier;
-    private final Client client;
     private final Date initialDate;
     private Date finalDate;
     private TicketState ticketState = TicketState.EMPTY;
+    private final List<TicketLine> items = new ArrayList<>();
 
-    public Ticket(int id, Cashier cashier, Client client) {
+    public Ticket(int id) {
         this.id = id;
-        this.cashier = cashier;
-        this.client = client;
 
         initialDate = new Date();
     }
@@ -30,33 +25,40 @@ public class Ticket {
     }
 
     private int totalUnits() {
-        //cantidad totales de productos en el ticket
-        int n = 0;
-        for (int q : items.values()) n += q;
-        return n;
+        int totalUnits = 0;
+
+        for (TicketLine item : items) {
+            totalUnits += item.amount;
+        }
+
+        return totalUnits;
     }
 
     private Map<Category, Integer> countCategory() {
-        //creamos mapa para las categorias
-        Map<Category, Integer> num = new EnumMap<>(Category.class);
-        //inicializamos cada categoria a 0 para evitar los nulls
-        for (Category c : Category.values()) num.put(c, 0);
-        //recorremos mapa guardamos category y añadimos la cantidad de ese producto a su categoria
-        for (Entry<Product, Integer> e : items.entrySet()) {
-            Category cat = e.getKey().getCategory();
-            num.put(cat, num.get(cat) + e.getValue());
+        Map<Category, Integer> amounts = new EnumMap<>(Category.class);
+        for (Category category : Category.values()) amounts.put(category, 0);
+
+        for (TicketLine item : items) if (item.product instanceof UnitProduct unitProduct) {
+            Category category = unitProduct.getCategory();
+
+            amounts.put(category, amounts.get(category) + item.amount);
         }
-        return num;
+
+        return amounts;
     }
 
-    private double perItemDiscount(Product p, Map<Category, Integer> counts) {
-        int n = counts.getOrDefault(p.getCategory(), 0);
-        double resultado = 0;
-        if (n >= 2) {
-            double rate = p.getCategory().getDiscount();
-            resultado= p.getPrice() * rate;
+    private double perItemDiscount(Product product, Map<Category, Integer> counts) {
+        if (product instanceof UnitProduct unitProduct) {
+            int n = counts.getOrDefault(unitProduct.getCategory(), 0);
+            double resultado = 0;
+            if (n >= 2) {
+                double rate = unitProduct.getCategory().getDiscount();
+                resultado = unitProduct.getPrice() * rate;
+            }
+            return resultado;
         }
-        return resultado;
+
+        return 0;
     }
 
     private static double round1(double v) {
@@ -65,30 +67,22 @@ public class Ticket {
 
     private double totalPrice() {
         double total = 0.0;
-        for (Entry<Product, Integer> e : items.entrySet()) {
-            total += e.getKey().getPrice() * e.getValue();
+        for (TicketLine item : items) {
+            total += item.amount * item.product.getPrice();
         }
+
         return total;
     }
 
     private double discountPrice() {
         Map<Category, Integer> counts = countCategory();
         double discount = 0.0;
-        for (Entry<Product, Integer> e : items.entrySet()) {
-            double perItem = perItemDiscount(e.getKey(), counts);
-            discount += perItem * e.getValue(); // multiplicamos por cantidad de ese producto
+        for (TicketLine item : items) {
+            double perItem = perItemDiscount(item.product, counts);
+            discount += perItem * item.amount;
         }
+
         return round1(discount);
-    }
-
-    public boolean addProduct(PersonalizableProduct product, int quantity, String[] personalizableTexts) {  //TODO: usar producto personaalizable
-        if (!addProduct(product, quantity)) return false;
-
-        personalizableTextsPerProduct.put(
-                product,
-                Arrays.copyOf(personalizableTexts, Math.min(personalizableTexts.length, product.getMaxPers()))
-        );
-        return true;
     }
 
     public boolean addProduct(Product product, int quantity) {
@@ -97,19 +91,36 @@ public class Ticket {
         int remaining = MAX_PRODUCTS - totalUnits();
         if (quantity > remaining) return false;
 
-        items.put(product, items.getOrDefault(product, 0) + quantity);
+        TicketLine item = new TicketLine(product, quantity);
+        if (items.contains(item)) {
+            items.get(items.indexOf(item)).amount += item.amount;
+        } else {
+            items.add(item);
+        }
+
         ticketState = TicketState.ACTIVE;
         return true;
     }
 
-    public boolean removeProduct(Product product) {
-        items.remove(product);
+    public boolean addProduct(PersonalizableProduct personalizableProduct, int quantity, String[] lines) {
+        if (personalizableProduct == null || quantity <= 0 || personalizableProduct.getMaxPers() < lines.length) return false;
 
-        if (product instanceof PersonalizableProduct personalizableProduct) {
-            personalizableTextsPerProduct.remove(personalizableProduct);
+        int remaining = MAX_PRODUCTS - totalUnits();
+        if (quantity > remaining) return false;
+
+        TicketLine item = new PersonalizableProductTicketLine(personalizableProduct, quantity, lines);
+        if (items.contains(item)) {
+            items.get(items.indexOf(item)).amount += item.amount;
+        } else {
+            items.add(item);
         }
 
+        ticketState = TicketState.ACTIVE;
         return true;
+    }
+
+    public void removeProduct(Product product) {
+        items.remove(new TicketLine(product, 0));
     }
 
     public void closeTicket() {
@@ -142,7 +153,7 @@ public class Ticket {
     }
 
     public String getPrintedTicket() {
-        closeTicket();
+        /*closeTicket();
 
         StringBuilder sb = new StringBuilder();
         // Precomputamos conteo por categoría
@@ -183,7 +194,9 @@ public class Ticket {
         sb.append("Total discount: ").append(discount).append("\n");
         sb.append("Final Price: ").append(round1(total - discount));
 
-        return sb.toString();
+        return sb.toString();*/
+
+        return "";
     }
 
     @Override
@@ -191,6 +204,37 @@ public class Ticket {
         return "Ticket{" +
                 "id=" + getFormattedId() +
                 '}';
+    }
+
+    private static class TicketLine {
+        private final Product product;
+        private int amount;
+
+        private TicketLine(Product product, int amount) {
+            this.product = product;
+            this.amount = amount;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object == null) return false;
+            if (object == this) return true;
+
+            if (object instanceof TicketLine ticketLine) {
+                return ticketLine.product.equals(product);
+            }
+
+            return false;
+        }
+    }
+
+    private static class PersonalizableProductTicketLine extends TicketLine {
+        private final String[] lines;
+
+        private PersonalizableProductTicketLine(PersonalizableProduct product, int amount, String[] lines) {
+            super(product, amount);
+            this.lines = lines;
+        }
     }
 
     public enum TicketState {

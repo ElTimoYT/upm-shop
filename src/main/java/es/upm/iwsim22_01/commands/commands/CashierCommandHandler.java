@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.commands.commands;
 
 import es.upm.iwsim22_01.manager.CashierManager;
+import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Cashier;
 import es.upm.iwsim22_01.models.Ticket;
 
@@ -9,9 +10,11 @@ import java.util.*;
 public class CashierCommandHandler implements CommandHandler {
 
     private CashierManager cashierManager;
+    private TicketManager ticketManager;
 
-    public CashierCommandHandler(CashierManager cashierManager) {
+    public CashierCommandHandler(CashierManager cashierManager, TicketManager ticketManager) {
         this.cashierManager = cashierManager;
+        this.ticketManager = ticketManager;
     }
 
     @Override
@@ -88,7 +91,7 @@ public class CashierCommandHandler implements CommandHandler {
                 System.out.println("Incorrect use: cashier tickets <id>");
                 return;
             }
-            Optional<Cashier> optionalCashier = cashierManager.get(id);
+            Optional<Cashier> optionalCashier = Optional.ofNullable(cashierManager.get(id));
             optionalCashier.ifPresentOrElse(
                     cashier -> {
                         System.out.println("Tickets: ");
@@ -109,25 +112,16 @@ public class CashierCommandHandler implements CommandHandler {
     }
 
     private void removeCashierCommand(Iterator<String> tokens) {
-        try {
             String id = tokens.next();
+
             if (tokens.hasNext()) {
                 System.out.println("Incorrect use: cashier remove <id>");
                 return;
             }
-            Optional<Cashier> optionalCashier = cashierManager.get(id);
-            if (optionalCashier.isEmpty()) {
-                System.out.println("Cashier not found.");
-                System.out.println("cash remove: fail");
-                return;
-            }
 
-            Cashier cashier = optionalCashier.get();
-            cashierManager.remove(cashier.getId());
-            System.out.println("cash remove: ok");
-        }catch (Exception e) {
-            System.out.println("cash remove: fail");
-        }
+            boolean removed = cashierManager.removeCashierAndTickets(id, ticketManager);
+
+            if (removed) System.out.println("cash remove: ok");
+            else System.out.println("cash remove: fail");
     }
-
 }

@@ -12,7 +12,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
 
-        Product product = new Product(id, name, category, price);
+        Product product = new UnitProduct(id, name, category, price);
         add(product, id);
 
         return product;
@@ -47,7 +47,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         return  food;
     }
 
-    public Product addMeetingProduct(int id, String name, Category category, double pricePerPerson, LocalDate expirationDate, int maxParticipants){
+    public Product addMeetingProduct(int id, String name, double pricePerPerson, LocalDate expirationDate, int maxParticipants){
         if (!isPriceValid(pricePerPerson)) throw new IllegalArgumentException("Product price " + pricePerPerson + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");

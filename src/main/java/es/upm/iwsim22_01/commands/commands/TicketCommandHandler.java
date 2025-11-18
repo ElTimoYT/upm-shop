@@ -91,14 +91,14 @@ public class TicketCommandHandler implements CommandHandler {
             return;
         }
 
-        Optional<Ticket> ticket = ticketManager.get(ticketId.getAsInt());
-        if (ticket.isEmpty()) {
+        if (ticketManager.existId(ticketId.getAsInt())) {
             System.out.println(ERROR_TICKET_NOT_FOUND);
             return;
         }
+        Ticket ticket = ticketManager.get(ticketId.getAsInt());
 
-        ticket.get().closeTicket();
-        System.out.println(ticket.get());
+        ticket.closeTicket();
+        System.out.println(ticket);
         System.out.println(TICKET_PRINT_OK);
     }
 
@@ -113,7 +113,7 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(ERROR_TICKET_NOT_FOUND);
             return;
         }
-        Ticket ticket = ticketManager.get(ticketId.getAsInt()).get();
+        Ticket ticket = ticketManager.get(ticketId.getAsInt());
 
         //cashierId
         if (!tokens.hasNext()) {
@@ -136,7 +136,7 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
-        Product product = productManager.get(productId.getAsInt()).get();
+        Product product = productManager.get(productId.getAsInt());
 
         ticket.removeProduct(product);
         System.out.println(ticket);
@@ -155,7 +155,7 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(ERROR_TICKET_NOT_FOUND);
             return;
         }
-        Ticket ticket = ticketManager.get(ticketId.getAsInt()).get();
+        Ticket ticket = ticketManager.get(ticketId.getAsInt());
 
         //cashierId
         if (!tokens.hasNext()) {
@@ -178,7 +178,7 @@ public class TicketCommandHandler implements CommandHandler {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
-        Product product = productManager.get(productId.getAsInt()).get();
+        Product product = productManager.get(productId.getAsInt());
 
         //amount
         if (!tokens.hasNext()) {
@@ -240,19 +240,26 @@ public class TicketCommandHandler implements CommandHandler {
            return;
        }
 
-        Ticket ticket = ticketManager.addTicket(cashId, clientId);
+        Ticket ticket = ticketManager.addTicket();
+        cashierManager.get(cashId).addTicket(ticket);
+        clientManager.get(clientId).addTicket(ticket);
+
         System.out.println(ticket);
         System.out.println(TICKET_NEW_OK);
     }
 
-    private void newTicketCommandWithId(String stringId, String cashId, String productId) {
+    private void newTicketCommandWithId(String stringId, String cashId, String clientId) {
         OptionalInt id = Converter.stringToInt(stringId);
         if (id.isEmpty() || ticketManager.existId(id.getAsInt())) {{
             System.out.println(ERROR_INVALID_ID);
             return;
         }}
 
-        Ticket ticket = ticketManager.addTicket(id.getAsInt(), cashId, productId);
+        Ticket ticket = ticketManager.addTicket(id.getAsInt());
+        cashierManager.get(cashId).addTicket(ticket);
+        clientManager.get(clientId).addTicket(ticket);
+
+
         System.out.println(ticket);
         System.out.println(TICKET_NEW_OK);
     }

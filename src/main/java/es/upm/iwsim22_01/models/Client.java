@@ -1,10 +1,12 @@
 package es.upm.iwsim22_01.models;
 
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends User {
 
     private Cashier cashierWhoRegisters;
+    private List<Ticket> tickets = new ArrayList<>();
 
     public Client(String name, String DNI, String email, Cashier cashierWhoRegisters) {
         super(name, email, DNI);
@@ -19,12 +21,11 @@ public class Client extends User {
 
     }
 
-    private static final Pattern REGEX = Pattern.compile("^(?![\\w.-]+@upm\\.es$)[\\w.-]+@([\\w-]+\\.)+[\\w-]+$");
-
-    @Override
-    protected boolean checkEmail(String email) {
-        return REGEX.matcher(email).find();
+    public void addTicket(Ticket ticket) {
+        tickets.add(ticket);
     }
+
+
 
 
 }

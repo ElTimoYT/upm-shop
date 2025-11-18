@@ -3,16 +3,14 @@ package es.upm.iwsim22_01.models;
 import java.util.Objects;
 
 
-public class Product {
+public abstract class Product {
     private final int id;
     private String name;
-    private Category category;
     private double price;
 
-    public Product(int id, String name, Category category, double price) {
+    public Product(int id, String name, double price) {
         this.id = id;
         this.name = name;
-        this.category = category;
         this.price = price;
     }
 
@@ -26,14 +24,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public double getPrice() {
@@ -60,7 +50,6 @@ public class Product {
                 "class:" + this.getClass().getSimpleName() +
                 ",id:" + id +
                 ",name:'" + name + '\'' +
-                ",category:" + category +
                 ",price:" + price +
                 '}';
     }

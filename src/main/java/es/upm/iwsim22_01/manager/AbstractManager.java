@@ -12,12 +12,14 @@ public abstract class AbstractManager<T, K> {
         elements.put(key, element);
     }
 
-    public boolean remove(K id) {
-        return elements.remove(id) != null;
+    public T remove(K id) {
+        return elements.remove(id);
     }
 
-    public Optional<T> get(K id) {
-        return Optional.ofNullable(elements.get(id));
+    public T get(K id) {
+         if (existId(id)) throw new IllegalArgumentException("Element with ID " + id + "doesn`t exists.");
+
+        return elements.get(id);
     }
 
     public List<T> getAll() {

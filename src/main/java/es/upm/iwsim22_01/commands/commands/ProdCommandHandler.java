@@ -1,5 +1,8 @@
 package es.upm.iwsim22_01.commands.commands;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -9,6 +12,7 @@ import es.upm.iwsim22_01.commands.Converter;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Category;
 import es.upm.iwsim22_01.models.Product;
+import es.upm.iwsim22_01.models.UnitProduct;
 
 public class ProdCommandHandler implements CommandHandler {
     private static final String ADD_SUBCOMMAND = "add",
@@ -16,7 +20,7 @@ public class ProdCommandHandler implements CommandHandler {
         REMOVE_SUBCOMMAND = "remove",
         UPDATE_SUBCOMMAND = "update",
         ADD_FOOD_SUBCOMMAND = "addfood",
-        ADD_MEETING_SUBCOMMAND = "addMeeting",
+        ADD_MEETING_SUBCOMMAND = "addmeeting",
 
 
         ERROR_INCORRECT_USE = "Incorrect use: prod add|list|update|remove|addFood|addMeeting",
@@ -66,6 +70,7 @@ public class ProdCommandHandler implements CommandHandler {
             case REMOVE_SUBCOMMAND -> removeProductCommand(tokens);
             case UPDATE_SUBCOMMAND -> updateProductCommand(tokens);
             case ADD_FOOD_SUBCOMMAND -> addFoodCommand(tokens);
+            case ADD_MEETING_SUBCOMMAND -> addMeetingCommand(tokens);
             default -> System.out.println(ERROR_INCORRECT_USE);
         };
     }
@@ -169,11 +174,11 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
 
-        Optional<Product> optionalProduct = productManager.get(optionalId.getAsInt());
-        if (optionalProduct.isEmpty()) {
+        if (!productManager.existId(optionalId.getAsInt())) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
+        Product product = productManager.get(optionalId.getAsInt());
 
         //Parametro a cambiar
         if (!tokens.hasNext()) {
@@ -192,19 +197,26 @@ public class ProdCommandHandler implements CommandHandler {
                     return;
                 }
 
-                optionalProduct.get().setName(productName);
+                product.setName(productName);
             }
             case PROD_UPDATE_PARAMETER_CATEGORY -> {
                 if (!tokens.hasNext()) {
                     System.out.println(ERROR_INCORRECT_USE_UPDATE);;
                 }
-                Optional<Category> optionalCategory = Converter.stringToCategory(tokens.next());
-                if (optionalCategory.isEmpty()) {
+
+                if (!(product instanceof UnitProduct unitProduct)) {
+                    System.out.println("This product type has no category");
+                    return;
+                }
+
+                Optional<Category> optionalCat = Converter.stringToCategory(tokens.next());
+                if (optionalCat.isEmpty()) {
                     System.out.println(ERROR_INVALID_CATEGORY);
                     return;
                 }
 
-                optionalProduct.get().setCategory(optionalCategory.get());
+                unitProduct.setCategory(optionalCat.get());
+
             }
             case PROD_UPDATE_PARAMETER_PRICE -> {
                 if (!tokens.hasNext()) {
@@ -216,7 +228,7 @@ public class ProdCommandHandler implements CommandHandler {
                     return;
                 }
 
-                optionalProduct.get().setPrice(optionalPrice.getAsDouble());
+                product.setPrice(optionalPrice.getAsDouble());
             }
             default -> {
                 System.out.println(ERROR_INCORRECT_USE_UPDATE);
@@ -224,7 +236,7 @@ public class ProdCommandHandler implements CommandHandler {
             }
         }
 
-        System.out.println(optionalProduct.get());
+        System.out.println(product);
         System.out.println(PROD_UPDATE_OK);
     }
 
@@ -240,14 +252,14 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
 
-        Optional<Product> optionalProduct = productManager.get(optionalId.getAsInt());
-        if (optionalProduct.isEmpty()) {
+        if (!productManager.existId(optionalId.getAsInt())) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
+        Product product = productManager.get(optionalId.getAsInt());
 
         productManager.remove(optionalId.getAsInt());
-        System.out.println(optionalProduct.get());
+        System.out.println(product);
         System.out.println(PROD_REMOVE_OK);
     }
 
@@ -289,6 +301,15 @@ public class ProdCommandHandler implements CommandHandler {
             return;
         }
 
+        LocalDate today = LocalDate.now();
+        LocalDate minAllowedDate = today.plusDays(3);
+        LocalDate eventDate = expiration.get();
+
+        if (eventDate.isBefore(minAllowedDate)) {
+            System.out.println("Food must be scheduled at least 3 days in advance");
+            return;
+        }
+
         if  (!tokens.hasNext()){
             System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
             return;
@@ -303,6 +324,71 @@ public class ProdCommandHandler implements CommandHandler {
         System.out.println(food);
         System.out.println(PROD_ADD_OK);
 
+    }
+    private void addMeetingCommand (Iterator<String> tokens) {
+
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_ADDMEETING);
+            return;
+        }
+        OptionalInt optionalId = Converter.stringToInt(tokens.next());
+        if (optionalId.isEmpty() || productManager.existId(optionalId.getAsInt())) {
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }
+
+        if(!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDMEETING);
+            return;
+        }
+
+        String name = tokens.next();
+
+        if (!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDMEETING);
+            return;
+        }
+
+        OptionalDouble optionalPrice = Converter.stringToDouble(tokens.next());
+        if (optionalPrice.isEmpty() || !productManager.isPriceValid(optionalPrice.getAsDouble())) {
+            System.out.println(ERROR_INVALID_PRICE);
+            return;
+        }
+
+        if (!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDMEETING);
+            return;
+        }
+
+        Optional<java.time.LocalDate> expiration = Converter.stringToLocal(tokens.next());
+        if (expiration.isEmpty()) {
+            System.out.println(ERROR_INVALID_DATE);
+            return;
+        }
+        LocalDate date = expiration.get();          // fecha de la reunión
+        LocalDateTime meetingDateTime = date.atStartOfDay(); // 00:00 de ese día
+        LocalDateTime now = LocalDateTime.now();
+        long hoursBetween = ChronoUnit.HOURS.between(now, meetingDateTime);
+
+        if (hoursBetween < 12) {
+            System.out.println("Meeting must be scheduled at least 12 hours in advance");
+            return;
+        }
+
+        if  (!tokens.hasNext()){
+            System.out.println(ERROR_INCORRECT_USE_ADDMEETING);
+            return;
+        }
+        OptionalInt optionalMaxPeople = Converter.stringToInt(tokens.next());
+        if (optionalMaxPeople.isEmpty() || optionalMaxPeople.getAsInt() < 1) {
+            System.out.println(ERROR_INVALID_MAX_PEOPLE);
+            return;
+        }
+
+        Product meeting = productManager.addMeetingProduct(optionalId.getAsInt(), name, optionalPrice.getAsDouble(), expiration.get()
+        ,optionalMaxPeople.getAsInt());
+        System.out.println(meeting);
+        System.out.println(PROD_ADD_OK);
     }
 
 

@@ -16,6 +16,7 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
     private final TicketManager ticketManager;
     private final CashierManager cashierManager;
+
     public TicketPrintCommandHandler(TicketManager ticketManager, CashierManager cashierManager) {
         this.ticketManager = ticketManager;
         this.cashierManager = cashierManager;
@@ -34,7 +35,6 @@ public class TicketPrintCommandHandler implements CommandHandler {
         Ticket ticket = ticketManager.get(ticketId);
         ticket.closeTicket();
 
-        System.out.println(ticket);
         System.out.println(TICKET_PRINT_OK);
     }
 

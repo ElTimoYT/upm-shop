@@ -69,7 +69,6 @@ public class TicketNewCommandHandler implements CommandHandler {
         cashierManager.get(cashierId).addTicket(ticket);
         clientManager.get(clientId).addTicket(ticket);
 
-        System.out.println(ticket);
         System.out.println(TICKET_NEW_OK);
     }
 
@@ -93,12 +92,12 @@ public class TicketNewCommandHandler implements CommandHandler {
             return null;
         }
 
-        String clientManager = tokens.next();
-        if (!this.clientManager.existId(clientManager)) {
+        String clientId = tokens.next();
+        if (!clientManager.existId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return null;
         }
-        return clientManager;
+        return clientId;
     }
 
     private Integer getTicketNewId(CommandTokens tokens) {

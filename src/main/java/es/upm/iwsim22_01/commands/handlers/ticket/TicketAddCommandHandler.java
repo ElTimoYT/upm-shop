@@ -52,7 +52,7 @@ public class TicketAddCommandHandler implements CommandHandler {
         Ticket ticket = ticketManager.get(ticketId);
 
         //personalizableTexts
-        if (!tokens.hasNext()) {
+        if (tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
             if (product instanceof PersonalizableProduct personalizableProduct) {
                 ticket.addProduct(personalizableProduct, amount, tokens.next().split("--p"));
@@ -64,11 +64,8 @@ public class TicketAddCommandHandler implements CommandHandler {
             ticket.addProduct(product, amount);
         }
 
-        System.out.println(ticket);
-        System.out.println(product);
         System.out.println(TICKET_ADD_OK);
     }
-
 
     private String getCashierId(CommandTokens tokens) {
         if (!tokens.hasNext()) {
@@ -125,5 +122,4 @@ public class TicketAddCommandHandler implements CommandHandler {
         }
         return amount;
     }
-
 }

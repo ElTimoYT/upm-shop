@@ -8,6 +8,7 @@ import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.handlers.EchoCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ExitCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.HelpCommandHandler;
+import es.upm.iwsim22_01.commands.handlers.cashier.CashierCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.prod.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ticket.TicketCommandHandler;
 import es.upm.iwsim22_01.manager.*;
@@ -26,6 +27,7 @@ public class App {
         dispatcher.addCommand("help", new HelpCommandHandler());
         dispatcher.addCommand("echo", new EchoCommandHandler());
         dispatcher.addCommand("prod", new ProdCommandHandler(productManager));
+        dispatcher.addCommand("cashier", new CashierCommandHandler(cashierManager, ticketManager));
         dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, cashierManager, clientManager));
 
         Scanner scanner;

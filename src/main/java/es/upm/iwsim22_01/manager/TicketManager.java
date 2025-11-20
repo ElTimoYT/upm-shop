@@ -8,6 +8,13 @@ import java.util.Optional;
 
 public class TicketManager extends AbstractManager<Ticket, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
+    private final ClientManager clientManager;
+    private final CashierManager cashierManager;
+
+    public TicketManager(ClientManager clientManager, CashierManager cashierManager) {
+        this.clientManager = clientManager;
+        this.cashierManager = cashierManager;
+    }
 
     public Ticket addTicket(int id) {
         Ticket ticket = new Ticket(id);

@@ -5,6 +5,8 @@ import es.upm.iwsim22_01.models.Category;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class CommandTokens {
@@ -99,7 +101,8 @@ public class CommandTokens {
 
     private Optional<Category> tryParseCategory() {
         try {
-            return Optional.of(Category.valueOf(currentToken));
+            String normalized = currentToken.trim().toUpperCase();
+            return Optional.of(Category.valueOf(normalized));
         } catch (IllegalArgumentException exception) {
             return Optional.empty();
         }
@@ -121,18 +124,18 @@ public class CommandTokens {
         return hasNext() && tryParseCategory().isPresent();
     }
 
-    private Optional<Date> tryParseDate() {
+    private Optional<LocalDate> tryParseDate() {
         try {
-            return Optional.of(DATE_FORMAT.parse(currentToken));
-        } catch (ParseException exception) {
+            return Optional.of(LocalDate.parse(currentToken));
+        } catch (DateTimeParseException exception) {
             return Optional.empty();
         }
     }
 
-    public Date nextDate() {
+    public LocalDate nextDate() {
         checkToken();
 
-        Optional<Date> optionalDate = tryParseDate();
+        Optional<LocalDate> optionalDate = tryParseDate();
         if (optionalDate.isEmpty()) {
             throw new IllegalArgumentException("Next token is not a date: " + currentToken);
         }

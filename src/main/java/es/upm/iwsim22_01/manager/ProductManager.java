@@ -3,6 +3,7 @@ package es.upm.iwsim22_01.manager;
 import es.upm.iwsim22_01.models.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class ProductManager extends AbstractManager<Product, Integer> {
     private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
@@ -39,7 +40,6 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (maxParticipants < 1) throw new IllegalArgumentException("Max participants " + maxParticipants + " must be >= 1.");
         if (expirationDate == null) throw new IllegalArgumentException("Invalid expiration date.");
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists.");
-        if (!isFoodDateAllowed(expirationDate)) throw new IllegalStateException("Temporal constraint not satisfied for Catering.");
 
 
         Product food = new Catering(id, name,price, maxParticipants, expirationDate);
@@ -54,7 +54,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (maxParticipants < 1) throw new IllegalArgumentException("Max participants " + maxParticipants + " must be >= 1.");
         if (expirationDate == null) throw new IllegalArgumentException("Invalid expiration date.");
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists.");
-        if (!isMeetingDateAllowed(expirationDate)) throw new IllegalStateException("Temporal constraint not satisfied for Meeting.");
+
 
         Product meeting = new Meetings(id, name, pricePerPerson, maxParticipants, expirationDate);
         add(meeting, id);
@@ -73,10 +73,5 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         return getSize() >= ProductManager.MAX_PRODUCTS;
     }
 
-    public boolean isFoodDateAllowed(LocalDate expiration) {
-        return !expiration.isBefore(LocalDate.now().plusDays(3));
-    }
-    public boolean isMeetingDateAllowed(LocalDate expiration) {
-        return !expiration.isBefore(LocalDate.now());
-    }
+
 }

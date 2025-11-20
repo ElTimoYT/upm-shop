@@ -26,7 +26,7 @@ public class ClientManager extends AbstractManager<Client, String> {
 
     private static final Pattern REGEX = Pattern.compile("^(?![\\w.-]+@upm\\.es$)[\\w.-]+@([\\w-]+\\.)+[\\w-]+$");
 
-    @Override
+
     public boolean checkEmail(String email) {
         return REGEX.matcher(email).find();
     }

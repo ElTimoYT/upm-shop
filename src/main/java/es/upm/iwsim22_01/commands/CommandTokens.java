@@ -168,7 +168,7 @@ public class CommandTokens {
             return null;
         }
 
-        String id = next();
+        String id = next().toUpperCase();
         if (checkIfExistsId == manager.existId(id)) {
             System.out.println(messageIfNotValid);
             return null;

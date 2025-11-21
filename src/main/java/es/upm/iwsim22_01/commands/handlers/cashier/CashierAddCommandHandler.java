@@ -8,7 +8,7 @@ import es.upm.iwsim22_01.models.Cashier;
 public class CashierAddCommandHandler implements CommandHandler {
 
     private static final String
-            ERROR_INCORRECT_USE_CASHIER_ADD = "Incorrect use: cashier add [<id>] \"<name>\" <email>",
+            ERROR_INCORRECT_USE_CASHIER_ADD = "Incorrect use: cash add [<id>] \"<name>\" <email>",
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
             CASHIER_ADD_OK = "cash add: ok",
             CASHIER_ADD_FAIL = "cash add: fail";
@@ -30,10 +30,16 @@ public class CashierAddCommandHandler implements CommandHandler {
         try {
             if (remaining == 3) {
                 id = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_CASHIER_ADD, ERROR_CASHIER_NOT_FOUND);
+
+                if (id == null) {
+                    System.out.println(ERROR_INCORRECT_USE_CASHIER_ADD);
+                    return;
+                }
+
                 name = tokens.next();
                 email = tokens.next();
 
-                cashier = new Cashier(id, name, email);
+                cashier = cashierManager.addCashier(name, email, id);
             } else if (remaining == 2) {
                 name = tokens.next();
                 email = tokens.next();

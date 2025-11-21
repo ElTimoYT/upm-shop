@@ -18,9 +18,8 @@ public class CommandTokens {
 
     public CommandTokens(List<String> tokens) {
         this.tokens = tokens.iterator();
-        remainingTokens = tokens.size();
-
         consumeToken();
+        remainingTokens = tokens.size();
     }
 
     private void consumeToken() {

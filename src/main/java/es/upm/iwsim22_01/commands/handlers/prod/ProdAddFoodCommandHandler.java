@@ -12,7 +12,6 @@ import java.util.Date;
 public class ProdAddFoodCommandHandler implements CommandHandler {
     private ProductManager productManager;
 
-    // Si ya tienes estas constantes en otra clase, bórralas de aquí y usa las tuyas
     private static final String ERROR_INCORRECT_USE_ADDFOOD =
             "Incorrect use: prod addfood <id> <name> <price> <expirationDate> <maxPeople>";
     private static final String ERROR_INVALID_ID = "Invalid id";

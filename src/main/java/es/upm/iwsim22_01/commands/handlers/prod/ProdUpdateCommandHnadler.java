@@ -24,13 +24,8 @@ public class ProdUpdateCommandHnadler implements CommandHandler {
     @Override
     public void runCommand(CommandTokens tokens) {
         //id
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_UPDATE);
-            return;
-        }
-        int id = tokens.nextInt();
-        if (!productManager.existId(id)) {
-            System.out.println(ERROR_PRODUCT_NOT_FOUND);
+        Integer id = tokens.nextAsIntegerId(productManager, false, ERROR_INCORRECT_USE_UPDATE, ERROR_INVALID_ID);
+        if (id == null) {
             return;
         }
         Product product = productManager.get(id);

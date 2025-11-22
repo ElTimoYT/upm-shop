@@ -155,6 +155,7 @@ public class CommandTokens {
         }
 
         int id = nextInt();
+
         if (checkIfExistsId == manager.existId(id)) {
             System.out.println(messageIfNotValid);
             return null;

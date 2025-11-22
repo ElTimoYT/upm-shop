@@ -17,8 +17,7 @@ public abstract class AbstractManager<T, K> {
     }
 
     public T get(K id) {
-         if (existId(id)) throw new IllegalArgumentException("Element with ID " + id + "doesn`t exists.");
-
+         if (!existId(id)) throw new IllegalArgumentException("Element with ID " + id + "doesn`t exists.");
         return elements.get(id);
     }
 

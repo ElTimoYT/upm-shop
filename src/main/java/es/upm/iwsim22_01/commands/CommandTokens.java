@@ -18,9 +18,8 @@ public class CommandTokens {
 
     public CommandTokens(List<String> tokens) {
         this.tokens = tokens.iterator();
-        remainingTokens = tokens.size();
-
         consumeToken();
+        remainingTokens = tokens.size();
     }
 
     private void consumeToken() {
@@ -170,7 +169,7 @@ public class CommandTokens {
             return null;
         }
 
-        String id = next();
+        String id = next().toUpperCase();
         if (checkIfExistsId == manager.existId(id)) {
             System.out.println(messageIfNotValid);
             return null;

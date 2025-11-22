@@ -9,7 +9,7 @@ import es.upm.iwsim22_01.manager.TicketManager;
 public class CashierCommandHandler implements CommandHandler {
 
     private static final String
-            ERROR_INCORRECT_USE_CASHIER = "Incorrect use: cashier add|remove|list|tickets",
+            ERROR_INCORRECT_USE_CASHIER = "Incorrect use: cash add|remove|list|tickets",
 
             ADD = "add",
             REMOVE = "remove",

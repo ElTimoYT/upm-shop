@@ -10,7 +10,7 @@ public class CashierManager extends AbstractManager<Cashier, String> {
 
     public Cashier addCashier(String name, String email, String id) {
         if (!CASHIER_EMAIL_REGEX.matcher(email).find()) {
-            System.out.println("Invalid email");
+            throw new IllegalArgumentException("Invalid email format");
         }
 
         Cashier cashier = new Cashier(name, email, id);

@@ -13,7 +13,7 @@ import java.util.Optional;
 public class CashierShowTicketCommandHandler implements CommandHandler {
 
     private static final String
-            CASHIER_SHOW_TICKETS_INCORRECT_USE = "Incorrect use: cashier tickets <id>",
+            CASHIER_SHOW_TICKETS_INCORRECT_USE = "Incorrect use: cash tickets <id>",
             CASHIER_SHOW_TICKETS_OK = "cash tickets: ok",
             CASHIER_SHOW_TICKETS_FAIL = "cash tickets: fail";
 

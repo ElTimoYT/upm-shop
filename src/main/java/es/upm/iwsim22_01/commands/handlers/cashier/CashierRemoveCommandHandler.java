@@ -8,7 +8,7 @@ import es.upm.iwsim22_01.manager.TicketManager;
 public class CashierRemoveCommandHandler implements CommandHandler {
 
     private static final String
-            ERROR_INCORRECT_USE_CASHIER_REMOVE = "Incorrect use: cashier remove <id>",
+            ERROR_INCORRECT_USE_CASHIER_REMOVE = "Incorrect use: cash remove <id>",
             CASHIER_REMOVE_OK = "cash remove: ok",
             CASHIER_REMOVE_FAIL = "cash remove: fail";
 
@@ -22,7 +22,10 @@ public class CashierRemoveCommandHandler implements CommandHandler {
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        String id = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_CASHIER_REMOVE, ERROR_INCORRECT_USE_CASHIER_REMOVE);
+
+        String id = tokens.nextAsStringId(cashierManager, false, ERROR_INCORRECT_USE_CASHIER_REMOVE, ERROR_INCORRECT_USE_CASHIER_REMOVE);
+
+        if (id == null) return;
 
         if (tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_CASHIER_REMOVE);

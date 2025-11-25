@@ -11,12 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ClientCommandHandler implements CommandHandler {
-
     private ClientManager clientManager;
     private CashierManager cashierManager;
 
-
-    private final String
+    private static final String
     REMOVE_SUBCOMMAND = "remove",
             ERROR_FAILED_REMOVAL = "Client found, but removal of client failed",
     ADD_SUBCOMMAND = "add",
@@ -25,8 +23,6 @@ public class ClientCommandHandler implements CommandHandler {
     ERROR_INCORRECT_USE =  "Incorrect formatting of the command, please try again",
     ERROR_ID_NOT_FOUND = "Client ID not found in database",
     ERROR_ID_ALREADY_FOUND = "Client ID already exists within database";
-
-
 
     public ClientCommandHandler(ClientManager clientManager, CashierManager cashierManager) {
         this.clientManager = clientManager;
@@ -39,17 +35,12 @@ public class ClientCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE);
         }
 
-
         switch (tokens.next()) {
             case REMOVE_SUBCOMMAND -> clientRemoveCommand(tokens);
             case ADD_SUBCOMMAND -> clientAddCommand(tokens);
             case LIST_SUBCOMMAND -> clientListCommand();
-
-
             default -> System.out.println(ERROR_INCORRECT_USE);
         }
-
-
     }
 
     private void clientAddCommand(CommandTokens tokens) {
@@ -74,13 +65,6 @@ public class ClientCommandHandler implements CommandHandler {
         if (!clientManager.checkEmail(tokens.next())) {
             System.out.println(ERROR_ID_ALREADY_FOUND);
         }
-
-        
-
-
-
-
-
     }
 
     private void clientRemoveCommand(CommandTokens tokens) {

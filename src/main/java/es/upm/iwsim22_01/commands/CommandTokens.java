@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class CommandTokens {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -47,11 +46,6 @@ public class CommandTokens {
         return token;
     }
 
-    public Optional<String> next(Predicate<String> predicate) {
-        String value = next();
-        return predicate.test(value) ? Optional.of(value) : Optional.empty();
-    }
-
     public boolean hasNext() {
         return currentToken != null;
     }
@@ -76,11 +70,6 @@ public class CommandTokens {
         return optionalInt.getAsInt();
     }
 
-    public OptionalInt nextInt(Predicate<Integer> predicate) {
-        int value = nextInt();
-        return predicate.test(value) ? OptionalInt.of(value) : OptionalInt.empty();
-    }
-
     public boolean hasNextInt() {
         return hasNext() && tryParseInt().isPresent();
     }
@@ -103,11 +92,6 @@ public class CommandTokens {
 
         consumeToken();
         return optionalDouble.getAsDouble();
-    }
-
-    public OptionalDouble nextDouble(Predicate<Double> predicate) {
-        double value = nextDouble();
-        return predicate.test(value) ? OptionalDouble.of(value) : OptionalDouble.empty();
     }
 
     public boolean hasNextDouble() {
@@ -162,7 +146,6 @@ public class CommandTokens {
     public boolean hasNextDate() {
         return hasNext() && tryParseDate().isPresent();
     }
-<<<<<<< Updated upstream
 
     public Integer nextAsIntegerId(AbstractManager<?, Integer> manager, boolean checkIfExistsId, String messageNoToken, String messageIfNotValid) {
         if (!hasNextInt()) {
@@ -194,20 +177,4 @@ public class CommandTokens {
 
         return id;
     }
-
-    public Integer nextInRange(int min, int max, String messageNoToken, String messageIfNotValid) {
-        if (!hasNextInt()) {
-            System.out.println(messageNoToken);
-            return null;
-        }
-
-        int val = nextInt();
-        if (val < min || val > max) {
-            System.out.println(messageIfNotValid);
-            return null;
-        }
-        return val;
-    }
-=======
->>>>>>> Stashed changes
 }

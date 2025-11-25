@@ -2,7 +2,6 @@ package es.upm.iwsim22_01.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class Cashier extends User {
     private List<Ticket> tickets;

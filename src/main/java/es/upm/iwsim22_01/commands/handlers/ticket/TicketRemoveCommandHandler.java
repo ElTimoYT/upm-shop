@@ -2,7 +2,6 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.commands.predicates.CheckIdInManagerPredicate;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
@@ -10,8 +9,6 @@ import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 public class TicketRemoveCommandHandler implements CommandHandler {
     private static final String
@@ -35,26 +32,26 @@ public class TicketRemoveCommandHandler implements CommandHandler {
     @Override
     public void runCommand(CommandTokens tokens) {
         try {
-            OptionalInt ticketId = tokens.nextInt(new CheckIdInManagerPredicate<>(ticketManager));
-            if (ticketId.isEmpty()) {
+            int ticketId = tokens.nextInt();
+            if (ticketManager.existId(ticketId)) {
                 System.out.println(ERROR_TICKET_NOT_FOUND);
                 return;
             }
 
-            Optional<String> cashierId = tokens.next(new CheckIdInManagerPredicate<>(cashierManager));
-            if (cashierId.isEmpty()) {
+            String cashierId = tokens.next();
+            if (cashierManager.existId(cashierId)) {
                 System.out.println(ERROR_CASHIER_NOT_FOUND);
                 return;
             }
 
-            OptionalInt productId = tokens.nextInt(new CheckIdInManagerPredicate<>(productManager));
-            if (productId.isEmpty()) {
+            int productId = tokens.nextInt();
+            if (productManager.existId(productId)) {
                 System.out.println(ERROR_PRODUCT_NOT_FOUND);
                 return;
             }
 
-            Product product = productManager.get(productId.getAsInt());
-            Ticket ticket = ticketManager.get(ticketId.getAsInt());
+            Product product = productManager.get(productId);
+            Ticket ticket = ticketManager.get(ticketId);
 
             ticket.removeProduct(product);
 

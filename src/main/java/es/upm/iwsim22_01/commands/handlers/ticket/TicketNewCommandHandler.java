@@ -2,15 +2,12 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.commands.predicates.CheckIdInManagerPredicate;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ClientManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 public class TicketNewCommandHandler implements CommandHandler {
     private static final String
@@ -50,48 +47,48 @@ public class TicketNewCommandHandler implements CommandHandler {
     }
 
     private void newTicketCommandWithoutId(CommandTokens tokens) {
-        Optional<String> cashierId = tokens.next(new CheckIdInManagerPredicate<>(cashierManager));
-        if (cashierId.isEmpty()) {
+        String cashierId = tokens.next();
+        if (cashierManager.existId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
-        Optional<String> clientId = tokens.next(new CheckIdInManagerPredicate<>(clientManager));
-        if (clientId.isEmpty()) {
+        String clientId = tokens.next();
+        if (clientManager.existId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
 
         Ticket ticket = ticketManager.addTicket();
-        cashierManager.get(cashierId.get()).addTicket(ticket);
-        clientManager.get(clientId.get()).addTicket(ticket);
+        cashierManager.get(cashierId).addTicket(ticket);
+        clientManager.get(clientId).addTicket(ticket);
 
         System.out.println(ticket);
         System.out.println(TICKET_NEW_OK);
     }
 
     private void newTicketCommandWithId(CommandTokens tokens) {
-        OptionalInt ticketId = tokens.nextInt(new CheckIdInManagerPredicate<>(ticketManager).negate());
-        if (ticketId.isEmpty()) {
+        int ticketId = tokens.nextInt();
+        if (ticketManager.existId(ticketId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
 
-        Optional<String> cashierId = tokens.next(new CheckIdInManagerPredicate<>(cashierManager));
-        if (cashierId.isEmpty()) {
+        String cashierId = tokens.next();
+        if (cashierManager.existId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
-        Optional<String> clientId = tokens.next(new CheckIdInManagerPredicate<>(clientManager));
-        if (clientId.isEmpty()) {
+        String clientId = tokens.next();
+        if (clientManager.existId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
 
-        Ticket ticket = ticketManager.addTicket(ticketId.getAsInt());
-        cashierManager.get(cashierId.get()).addTicket(ticket);
-        clientManager.get(clientId.get()).addTicket(ticket);
+        Ticket ticket = ticketManager.addTicket(ticketId);
+        cashierManager.get(cashierId).addTicket(ticket);
+        clientManager.get(clientId).addTicket(ticket);
 
         System.out.println(TICKET_NEW_OK);
     }

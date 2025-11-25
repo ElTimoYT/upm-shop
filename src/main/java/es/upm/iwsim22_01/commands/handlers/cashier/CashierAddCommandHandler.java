@@ -9,7 +9,7 @@ public class CashierAddCommandHandler implements CommandHandler {
 
     private static final String
             ERROR_INCORRECT_USE_CASHIER_ADD = "Incorrect use: cash add [<id>] \"<name>\" <email>",
-            ERROR_CASHIER_NOT_FOUND = "Cashier not found",
+            ERROR_INVALID_ID = "Cashier id already exits",
             CASHIER_ADD_OK = "cash add: ok",
             CASHIER_ADD_FAIL = "cash add: fail";
 
@@ -29,10 +29,9 @@ public class CashierAddCommandHandler implements CommandHandler {
         int remaining = tokens.getRemainingTokens();
         try {
             if (remaining == 3) {
-                id = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_CASHIER_ADD, ERROR_CASHIER_NOT_FOUND);
-
-                if (id == null) {
-                    System.out.println(ERROR_INCORRECT_USE_CASHIER_ADD);
+                id = tokens.next();
+                if (cashierManager.existId(id)) {
+                    System.out.println(ERROR_INVALID_ID);
                     return;
                 }
 

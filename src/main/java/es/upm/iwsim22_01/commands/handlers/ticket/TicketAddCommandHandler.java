@@ -2,12 +2,17 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
+import es.upm.iwsim22_01.commands.predicates.CheckIdInManagerPredicate;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.PersonalizableProduct;
 import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class TicketAddCommandHandler implements CommandHandler {
     private static final String
@@ -32,38 +37,50 @@ public class TicketAddCommandHandler implements CommandHandler {
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        //ticketId
-        Integer ticketId = tokens.nextAsIntegerId(ticketManager, true, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_TICKET_NOT_FOUND);
-        if (ticketId == null) return;
-
-        //cashierId
-        String cashierId = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_CASHIER_NOT_FOUND);
-        if (cashierId == null) return;
-
-        //productId
-        Integer productId = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_PRODUCT_NOT_FOUND);
-        if (productId == null) return;
-
-        //amount
-        Integer amount = tokens.nextInRange(0, Ticket.MAX_PRODUCTS, ERROR_INCORRECT_USE_TICKET_ADD, ERROR_INVALID_AMOUNT);
-        if (amount == null) return;
-
-        Product product = productManager.get(productId);
-        Ticket ticket = ticketManager.get(ticketId);
-
-        //personalizableTexts
-        if (tokens.hasNext()) {
-            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
-            if (product instanceof PersonalizableProduct personalizableProduct) {
-                ticket.addProduct(personalizableProduct, amount, tokens.next().split("--p"));
-            } else {
-                System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
+        try {
+            OptionalInt ticketId = tokens.nextInt(new CheckIdInManagerPredicate<>(ticketManager));
+            if (ticketId.isEmpty()) {
+                System.out.println(ERROR_TICKET_NOT_FOUND);
                 return;
             }
-        } else {
-            ticket.addProduct(product, amount);
-        }
 
-        System.out.println(TICKET_ADD_OK);
+            Optional<String> cashierId = tokens.next(new CheckIdInManagerPredicate<>(cashierManager));
+            if (cashierId.isEmpty()) {
+                System.out.println(ERROR_CASHIER_NOT_FOUND);
+                return;
+            }
+
+            OptionalInt productId = tokens.nextInt(new CheckIdInManagerPredicate<>(productManager));
+            if (productId.isEmpty()) {
+                System.out.println(ERROR_PRODUCT_NOT_FOUND);
+                return;
+            }
+
+            OptionalInt amount = tokens.nextInt(integer -> integer > 0 && integer < Ticket.MAX_PRODUCTS);
+            if (amount.isEmpty()) {
+                System.out.println(ERROR_INVALID_AMOUNT);
+                return;
+            }
+
+            Product product = productManager.get(productId.getAsInt());
+            Ticket ticket = ticketManager.get(ticketId.getAsInt());
+
+            //personalizableTexts
+            if (tokens.hasNext()) {
+                System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
+                if (product instanceof PersonalizableProduct personalizableProduct) {
+                    ticket.addProduct(personalizableProduct, amount.getAsInt(), tokens.next().split("--p"));
+                } else {
+                    System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
+                    return;
+                }
+            } else {
+                ticket.addProduct(product, amount.getAsInt());
+            }
+
+            System.out.println(TICKET_ADD_OK);
+        } catch (NoSuchElementException | IllegalArgumentException exception) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
+        }
     }
 }

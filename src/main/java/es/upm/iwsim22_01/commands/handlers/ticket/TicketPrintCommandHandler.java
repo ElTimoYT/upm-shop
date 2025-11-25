@@ -2,9 +2,14 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
+import es.upm.iwsim22_01.commands.predicates.CheckIdInManagerPredicate;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.Ticket;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class TicketPrintCommandHandler implements CommandHandler {
     private static final String
@@ -24,18 +29,26 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        //ticketId
-        Integer ticketId = tokens.nextAsIntegerId(ticketManager, true, ERROR_INCORRECT_USE_TICKET_PRINT, ERROR_TICKET_NOT_FOUND);
-        if (ticketId == null) return;
+        try {
+            OptionalInt ticketId = tokens.nextInt(new CheckIdInManagerPredicate<>(ticketManager));
+            if (ticketId.isEmpty()) {
+                System.out.println(ERROR_TICKET_NOT_FOUND);
+                return;
+            }
 
-        //cashierId
-        String cashierId = tokens.nextAsStringId(cashierManager, true, ERROR_INCORRECT_USE_TICKET_PRINT, ERROR_CASHIER_NOT_FOUND);
-        if (cashierId == null) return;
+            Optional<String> cashierId = tokens.next(new CheckIdInManagerPredicate<>(cashierManager));
+            if (cashierId.isEmpty()) {
+                System.out.println(ERROR_CASHIER_NOT_FOUND);
+                return;
+            }
 
-        Ticket ticket = ticketManager.get(ticketId);
-        System.out.println(ticket.toString());
-        ticket.closeTicket();
+            Ticket ticket = ticketManager.get(ticketId.getAsInt());
+            System.out.println(ticket.toString());
+            ticket.closeTicket();
 
-        System.out.println(TICKET_PRINT_OK);
+            System.out.println(TICKET_PRINT_OK);
+        } catch (NoSuchElementException | IllegalArgumentException exception) {
+            System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);
+        }
     }
 }

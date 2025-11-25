@@ -82,12 +82,11 @@ public class ClientCommandHandler implements CommandHandler {
         }
 
         String cashierTentativeId = tokens.next();
-        if (cashierManager.existId(cashierTentativeId)) {
+        if (!cashierManager.existId(cashierTentativeId)) {
             System.out.println(ERROR_NONEXISTANT_CASHIER);
         } else {
             clientManager.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
         }
-
     }
 
     private void clientRemoveCommand(CommandTokens tokens) {

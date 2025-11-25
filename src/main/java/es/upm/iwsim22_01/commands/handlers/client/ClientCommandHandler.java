@@ -22,7 +22,8 @@ public class ClientCommandHandler implements CommandHandler {
 
     ERROR_INCORRECT_USE =  "Incorrect formatting of the command, please try again",
     ERROR_ID_NOT_FOUND = "Client ID not found in database",
-    ERROR_ID_ALREADY_FOUND = "Client ID already exists within database";
+    ERROR_ID_ALREADY_FOUND = "Client ID already exists within database",
+    ERROR_NONEXISTANT_CASHIER = "Cashier to add client to database does not exist";
 
     public ClientCommandHandler(ClientManager clientManager, CashierManager cashierManager) {
         this.clientManager = clientManager;
@@ -50,6 +51,13 @@ public class ClientCommandHandler implements CommandHandler {
             return;
         }
 
+        String clientTentativeName = tokens.next();
+
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE);
+            return;
+        }
+
         String clientTentativeId = tokens.next();
 
         if (clientManager.existId(clientTentativeId)) {
@@ -62,9 +70,23 @@ public class ClientCommandHandler implements CommandHandler {
             return;
         }
 
-        if (!clientManager.checkEmail(tokens.next())) {
+        String clientTentativeEmail =  tokens.next();
+        if (!clientManager.checkEmail(clientTentativeEmail)) {
             System.out.println(ERROR_ID_ALREADY_FOUND);
         }
+
+        if (!tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE);
+            return;
+        }
+
+        String cashierTentativeId = tokens.next();
+        if (cashierManager.existId(cashierTentativeId)) {
+            System.out.println(ERROR_NONEXISTANT_CASHIER);
+        } else {
+            clientManager.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+        }
+
     }
 
     private void clientRemoveCommand(CommandTokens tokens) {

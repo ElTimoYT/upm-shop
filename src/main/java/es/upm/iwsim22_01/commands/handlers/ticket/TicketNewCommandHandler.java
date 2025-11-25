@@ -48,13 +48,13 @@ public class TicketNewCommandHandler implements CommandHandler {
 
     private void newTicketCommandWithoutId(CommandTokens tokens) {
         String cashierId = tokens.next();
-        if (cashierManager.existId(cashierId)) {
+        if (!cashierManager.existId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
         String clientId = tokens.next();
-        if (clientManager.existId(clientId)) {
+        if (!clientManager.existId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
@@ -75,13 +75,13 @@ public class TicketNewCommandHandler implements CommandHandler {
         }
 
         String cashierId = tokens.next();
-        if (cashierManager.existId(cashierId)) {
+        if (!cashierManager.existId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
         String clientId = tokens.next();
-        if (clientManager.existId(clientId)) {
+        if (!clientManager.existId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }

@@ -13,6 +13,7 @@ import java.util.Optional;
 public class CashierShowTicketCommandHandler implements CommandHandler {
 
     private static final String
+            CASHIER_NOT_FOUND = "Cashier not found",
             CASHIER_SHOW_TICKETS_INCORRECT_USE = "Incorrect use: cash tickets <id>",
             CASHIER_SHOW_TICKETS_OK = "cash tickets: ok",
             CASHIER_SHOW_TICKETS_FAIL = "cash tickets: fail";
@@ -26,11 +27,12 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
     @Override
     public void runCommand(CommandTokens tokens) {
         try {
-            String id = tokens.nextAsStringId(cashierManager, false, CASHIER_SHOW_TICKETS_INCORRECT_USE, CASHIER_SHOW_TICKETS_INCORRECT_USE);
-            if (tokens.hasNext()) {
-                System.out.println(CASHIER_SHOW_TICKETS_INCORRECT_USE);
+            String id = tokens.next();
+            if (!cashierManager.existId(id)) {
+                System.out.println(CASHIER_NOT_FOUND);
                 return;
             }
+
             Optional<Cashier> optionalCashier = Optional.ofNullable(cashierManager.get(id));
             optionalCashier.ifPresentOrElse(
                     cashier -> {
@@ -47,7 +49,7 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
                     () -> System.out.println(CASHIER_SHOW_TICKETS_FAIL)
             );
         }catch (Exception e) {
-            System.out.println(CASHIER_SHOW_TICKETS_FAIL);
+            System.out.println(CASHIER_SHOW_TICKETS_INCORRECT_USE);
         }
     }
 }

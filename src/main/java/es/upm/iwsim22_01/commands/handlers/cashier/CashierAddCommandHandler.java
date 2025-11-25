@@ -30,12 +30,11 @@ public class CashierAddCommandHandler implements CommandHandler {
         int remaining = tokens.getRemainingTokens();
         try {
             if (remaining == 3) {
-                id = tokens.next();
+                id = tokens.next().toUpperCase();
                 if (cashierManager.existId(id)) {
                     System.out.println(ERROR_INVALID_ID);
                     return;
                 }
-                id = id.toUpperCase();
 
                 if (!cashierManager.correctIdFormat(id)){
                     System.out.println(ERROR_INVALID_ID_FORMAT);

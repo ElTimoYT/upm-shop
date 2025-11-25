@@ -35,6 +35,7 @@ public class CashierAddCommandHandler implements CommandHandler {
                     System.out.println(ERROR_INVALID_ID);
                     return;
                 }
+                id = id.toUpperCase();
 
                 if (!cashierManager.correctIdFormat(id)){
                     System.out.println(ERROR_INVALID_ID_FORMAT);

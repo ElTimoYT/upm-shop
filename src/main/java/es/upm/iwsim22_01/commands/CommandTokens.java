@@ -3,7 +3,6 @@ package es.upm.iwsim22_01.commands;
 import es.upm.iwsim22_01.manager.*;
 import es.upm.iwsim22_01.models.Category;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -163,18 +162,4 @@ public class CommandTokens {
         return id;
     }
 
-    public String nextAsStringId(AbstractManager<?, String> manager, boolean checkIfExistsId, String messageNoToken, String messageIfNotValid) {
-        if (!hasNext()) {
-            System.out.println(messageNoToken);
-            return null;
-        }
-
-        String id = next().toUpperCase();
-        if (checkIfExistsId == manager.existId(id)) {
-            System.out.println(messageIfNotValid);
-            return null;
-        }
-
-        return id;
-    }
 }

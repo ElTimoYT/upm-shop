@@ -42,7 +42,7 @@ public class CashierManager extends AbstractManager<Cashier, String> {
     }
 
     public boolean correctIdFormat(String id){
-        String regex = "^UW\\d{" + CASHIER_ID_LENGTH + "}$";
+        String regex = "(?i)^UW\\d{" + CASHIER_ID_LENGTH + "}$";
         return Pattern.matches(regex, id);
     }
 

@@ -6,6 +6,10 @@ import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ClientManager;
 import es.upm.iwsim22_01.models.Client;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+
 public class ClientCommandHandler implements CommandHandler {
 
     private ClientManager clientManager;
@@ -16,13 +20,11 @@ public class ClientCommandHandler implements CommandHandler {
     REMOVE_SUBCOMMAND = "remove",
             ERROR_FAILED_REMOVAL = "Client found, but removal of client failed",
     ADD_SUBCOMMAND = "add",
+    LIST_SUBCOMMAND = "list",
 
     ERROR_INCORRECT_USE =  "Incorrect formatting of the command, please try again",
     ERROR_ID_NOT_FOUND = "Client ID not found in database",
-    ERROR_ID_ALREADY_FOUND = "Client ID already exists within database"
-
-
-    ;
+    ERROR_ID_ALREADY_FOUND = "Client ID already exists within database";
 
 
 
@@ -38,9 +40,10 @@ public class ClientCommandHandler implements CommandHandler {
         }
 
 
-        switch (tokens.next()) { //TODO: DECIDE ON WHICH COMMAND
+        switch (tokens.next()) {
             case REMOVE_SUBCOMMAND -> clientRemoveCommand(tokens);
             case ADD_SUBCOMMAND -> clientAddCommand(tokens);
+            case LIST_SUBCOMMAND -> clientListCommand();
 
 
             default -> System.out.println(ERROR_INCORRECT_USE);
@@ -102,9 +105,14 @@ public class ClientCommandHandler implements CommandHandler {
             System.out.println(client + "removed");
         }
 
-
     }
 
+    private void clientListCommand() {
+        List<Client> sortedItems = clientManager.getAll();
 
+        sortedItems.sort(Comparator.comparing(
+                        client -> client.getName(),
+                    String.CASE_INSENSITIVE_ORDER));
+    }
 
 }

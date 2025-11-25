@@ -113,6 +113,9 @@ public class ClientCommandHandler implements CommandHandler {
         sortedItems.sort(Comparator.comparing(
                         client -> client.getName(),
                     String.CASE_INSENSITIVE_ORDER));
+
+        sortedItems.forEach(System.out::println);
     }
+
 
 }

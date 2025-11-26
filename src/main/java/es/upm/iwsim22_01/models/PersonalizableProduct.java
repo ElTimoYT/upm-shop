@@ -16,11 +16,6 @@ public class PersonalizableProduct extends UnitProduct{
         return maxPers;
     }
 
-
-    public double getPriceWithPersonalization(int numTexts) {
-        double base = getPrice(); // precio del producto sin personalizar
-        return base * (1 + 0.10 * numTexts);
-    }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

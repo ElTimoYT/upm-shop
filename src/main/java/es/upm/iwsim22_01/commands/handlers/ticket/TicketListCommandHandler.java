@@ -24,7 +24,6 @@ public class TicketListCommandHandler implements CommandHandler {
         List<Ticket> allTickets = ticketManager.getAll();
         allTickets.sort(Comparator.comparing(Ticket::getInitialDate));
 
-
         System.out.println(TICKET_LIST);
 
         for (Ticket ticket : allTickets) {

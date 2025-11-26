@@ -50,28 +50,15 @@ public class Ticket {
     }
 
     private double perItemDiscount(Product product, Map<Category, Integer> counts) {
-        // Solo hay descuento para productos unitarios (UnitProduct y subclases, como PersonalizableProduct)
         if (product instanceof UnitProduct unitProduct) {
             Category category = unitProduct.getCategory();
-
-            // n = número total de unidades de esa categoría en el ticket
             int n = counts.getOrDefault(category, 0);
             if (n < 2) {
-                // Si hay menos de 2 en esa categoría, no hay descuento
                 return 0.0;
             }
-
-            double rate = category.getDiscount();   // ej. 0.07 para CLOTHES
-
-            // 👇 IMPORTANTE:
-            // product.getPrice() aquí ya es:
-            // - el precio base para productos normales
-            // - el precio con recargo (10% por texto) para los personalizados,
-            //   porque hemos creado una copia con ese precio al añadir al ticket.
+            double rate = category.getDiscount();
             return product.getPrice() * rate;
         }
-
-        // Para otros tipos de producto (servicios, etc.) no hay descuento
         return 0.0;
     }
 
@@ -265,11 +252,6 @@ public class Ticket {
             return false;
         }
     }
-    private static class ProductServiceTicketLine extends TicketLine {
-        public ProductServiceTicketLine(ProductService productService, int quantity) {
-            super(productService,quantity);
-        }
-    }
 
     private static class PersonalizableProductTicketLine extends TicketLine {
         private final String[] lines;
@@ -277,15 +259,6 @@ public class Ticket {
         private PersonalizableProductTicketLine(PersonalizableProduct product, int amount, String[] lines) {
             super(product, amount);
             this.lines = lines;
-        }
-        public int getNumValidTexts() {
-            int n = 0;
-            if (lines != null) {
-                for (String t : lines) {
-                    if (t != null && !t.isBlank()) n++;
-                }
-            }
-            return n;
         }
     }
 

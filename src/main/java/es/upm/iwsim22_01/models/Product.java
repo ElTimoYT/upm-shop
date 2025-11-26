@@ -4,9 +4,9 @@ import java.util.Objects;
 
 
 public abstract class Product {
-    private final int id;
-    private String name;
-    private double price;
+    protected final int id;
+    protected String name;
+    protected double price;
 
     public Product(int id, String name, double price) {
         this.id = id;

@@ -11,7 +11,7 @@ import java.util.List;
 public class TicketListCommandHandler implements CommandHandler {
     private static final String
             TICKET_LIST_OK = "ticket list: ok",
-            TICKET_LIST = "Tickets:";
+            TICKET_LIST = "Ticket List:";
 
     private final TicketManager ticketManager;
 
@@ -24,8 +24,14 @@ public class TicketListCommandHandler implements CommandHandler {
         List<Ticket> allTickets = ticketManager.getAll();
         allTickets.sort(Comparator.comparing(Ticket::getInitialDate));
 
+
         System.out.println(TICKET_LIST);
-        allTickets.forEach(System.out::println);
+
+        for (Ticket ticket : allTickets) {
+            String id = ticket.getFormattedId();
+            String state = String.valueOf(ticket.getState());
+            System.out.println("  " + id + " -> " + state);
+        }
         System.out.println(TICKET_LIST_OK);
     }
 }

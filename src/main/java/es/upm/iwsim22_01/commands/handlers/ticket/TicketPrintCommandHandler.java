@@ -55,9 +55,8 @@ public class TicketPrintCommandHandler implements CommandHandler {
                 return;
             }
 
-            System.out.println(ticket.toString());
+            System.out.println(ticket.printTicket());
             ticket.closeTicket();
-
             System.out.println(TICKET_PRINT_OK);
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);

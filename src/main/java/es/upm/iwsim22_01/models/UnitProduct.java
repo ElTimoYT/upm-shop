@@ -17,4 +17,15 @@ public class UnitProduct extends Product {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "class:" + this.getClass().getSimpleName() +
+                ",id:" + id +
+                ",name:'" + name + '\'' +
+                ",price:" + price +
+                ",Category: "+category+
+                '}';
+
+    }
 }

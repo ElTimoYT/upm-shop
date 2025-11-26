@@ -62,8 +62,10 @@ public class TicketNewCommandHandler implements CommandHandler {
         Ticket ticket = ticketManager.addTicket();
         cashierManager.get(cashierId).addTicket(ticket);
         clientManager.get(clientId).addTicket(ticket);
-
-        System.out.println(ticket);
+        System.out.println("Ticket: " + ticket);
+        System.out.println("  Total price: 0.0");
+        System.out.println("  Total discount: 0.0");
+        System.out.println("  Final Price: 0.0");
         System.out.println(TICKET_NEW_OK);
     }
 
@@ -89,7 +91,10 @@ public class TicketNewCommandHandler implements CommandHandler {
         Ticket ticket = ticketManager.addTicket(ticketId);
         cashierManager.get(cashierId).addTicket(ticket);
         clientManager.get(clientId).addTicket(ticket);
-
+        System.out.println("Ticket: " + ticket);
+        System.out.println("  Total price: 0.0");
+        System.out.println("  Total discount: 0.0");
+        System.out.println("  Final Price: 0.0");
         System.out.println(TICKET_NEW_OK);
     }
 }

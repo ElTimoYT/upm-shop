@@ -54,6 +54,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
             Ticket ticket = ticketManager.get(ticketId);
 
             ticket.removeProduct(product);
+            System.out.println(ticket.printTicket());
 
             System.out.println(TICKET_REMOVAL_OK);
         } catch (NoSuchElementException | IllegalArgumentException exception) {

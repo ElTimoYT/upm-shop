@@ -50,21 +50,33 @@ public class Ticket {
     }
 
     private double perItemDiscount(Product product, Map<Category, Integer> counts) {
+        // Solo hay descuento para productos unitarios (UnitProduct y subclases, como PersonalizableProduct)
         if (product instanceof UnitProduct unitProduct) {
-            int n = counts.getOrDefault(unitProduct.getCategory(), 0);
-            double resultado = 0;
-            if (n >= 2) {
-                double rate = unitProduct.getCategory().getDiscount();
-                resultado = unitProduct.getPrice() * rate;
+            Category category = unitProduct.getCategory();
+
+            // n = número total de unidades de esa categoría en el ticket
+            int n = counts.getOrDefault(category, 0);
+            if (n < 2) {
+                // Si hay menos de 2 en esa categoría, no hay descuento
+                return 0.0;
             }
-            return resultado;
+
+            double rate = category.getDiscount();   // ej. 0.07 para CLOTHES
+
+            // 👇 IMPORTANTE:
+            // product.getPrice() aquí ya es:
+            // - el precio base para productos normales
+            // - el precio con recargo (10% por texto) para los personalizados,
+            //   porque hemos creado una copia con ese precio al añadir al ticket.
+            return product.getPrice() * rate;
         }
 
-        return 0;
+        // Para otros tipos de producto (servicios, etc.) no hay descuento
+        return 0.0;
     }
 
     private static double round1(double v) {
-        return Math.round(v * 10.0) / 10.0;
+        return Math.round(v * 100.0) / 100.0;
     }
 
     private double totalPrice() {
@@ -83,7 +95,6 @@ public class Ticket {
             double perItem = perItemDiscount(item.product, counts);
             discount += perItem * item.amount;
         }
-
         return round1(discount);
     }
 
@@ -104,19 +115,36 @@ public class Ticket {
         return true;
     }
 
+
     public boolean addProduct(PersonalizableProduct personalizableProduct, int quantity, String[] lines) {
-        if (personalizableProduct == null || quantity <= 0 || personalizableProduct.getMaxPers() < lines.length) return false;
+        if (personalizableProduct == null || quantity <= 0) return false;
+        if (lines == null) lines = new String[0];
+        if (personalizableProduct.getMaxPers() < lines.length) return false;
 
         int remaining = MAX_PRODUCTS - totalUnits();
         if (quantity > remaining) return false;
 
-        TicketLine item = new PersonalizableProductTicketLine(personalizableProduct, quantity, lines);
-        if (items.contains(item)) {
-            items.get(items.indexOf(item)).amount += item.amount;
-        } else {
-            items.add(item);
+
+        int numTexts = 0;
+        for (String t : lines) {
+            if (t != null && !t.isBlank()) {
+                numTexts++;
+            }
         }
 
+        double basePrice = personalizableProduct.getPrice();
+        double recargado = basePrice * (1 + 0.10 * numTexts);
+
+        PersonalizableProduct ticketProduct = new PersonalizableProduct(
+                personalizableProduct.getId(),
+                personalizableProduct.getName(),
+                personalizableProduct.getCategory(),
+                recargado,
+                personalizableProduct.getMaxPers()
+        );
+
+        TicketLine item = new PersonalizableProductTicketLine(ticketProduct, quantity, lines);
+        items.add(item);
         ticketState = TicketState.ACTIVE;
         return true;
     }
@@ -153,10 +181,7 @@ public class Ticket {
 
         return formattedId.toString();
     }
-
-    public String getPrintedTicket() {
-        closeTicket();
-
+    public String printTicket() {
         StringBuilder sb = new StringBuilder();
         sb.append(getFormattedId()).append("\n\n");
 
@@ -172,14 +197,29 @@ public class Ticket {
             int quantity = line.amount;
             double discountPerItem = perItemDiscount(product, counts);
 
+
+            if (product instanceof ProductService service) {
+                sb.append(service.printTicketWithPeople()).append("\n");
+                continue;
+            }
+
+
             for (int i = 0; i < quantity; i++) {
-                sb.append(product).append("\n");
+                String productText = product.toString();
                 if (line instanceof PersonalizableProductTicketLine persLine) {
+                    List<String> pers = new ArrayList<>();
                     for (String text : persLine.lines) {
-                        sb.append("\t- ").append(text).append("\n");
+                        if (text != null && !text.isBlank()) {
+                            pers.add(text.trim());
+                        }
+                    }
+                    if (!pers.isEmpty()) {
+                        String withPers = productText.substring(0, productText.length() - 1) +
+                                ", personalizationList:" + pers + "}";
+                        productText = withPers;
                     }
                 }
-
+                sb.append(productText);
                 if (discountPerItem > 0) {
                     sb.append(" **discount -").append(round1(discountPerItem)).append("\n");
                 }
@@ -198,11 +238,10 @@ public class Ticket {
         return sb.toString();
     }
 
+
     @Override
     public String toString() {
-        return "Ticket{" +
-                "id=" + getFormattedId() +
-                '}';
+        return getFormattedId();
     }
 
     private static class TicketLine {
@@ -220,10 +259,15 @@ public class Ticket {
             if (object == this) return true;
 
             if (object instanceof TicketLine ticketLine) {
-                return ticketLine.product.equals(product);
+                return ticketLine.product.getId() == this.product.getId();
             }
 
             return false;
+        }
+    }
+    private static class ProductServiceTicketLine extends TicketLine {
+        public ProductServiceTicketLine(ProductService productService, int quantity) {
+            super(productService,quantity);
         }
     }
 
@@ -233,6 +277,15 @@ public class Ticket {
         private PersonalizableProductTicketLine(PersonalizableProduct product, int amount, String[] lines) {
             super(product, amount);
             this.lines = lines;
+        }
+        public int getNumValidTexts() {
+            int n = 0;
+            if (lines != null) {
+                for (String t : lines) {
+                    if (t != null && !t.isBlank()) n++;
+                }
+            }
+            return n;
         }
     }
 

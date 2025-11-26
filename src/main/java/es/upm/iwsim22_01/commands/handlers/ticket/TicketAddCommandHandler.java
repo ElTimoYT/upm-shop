@@ -11,6 +11,8 @@ import es.upm.iwsim22_01.models.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class TicketAddCommandHandler implements CommandHandler {
@@ -22,8 +24,9 @@ public class TicketAddCommandHandler implements CommandHandler {
             ERROR_INVALID_AMOUNT = "Invalid amount",
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
 
-            TICKET_ADD_OK = "ticket add: ok",
-            ERROR_SERVICE_DATE_INVALID = "Date not supported";
+            TICKET_CLOSED = "Ticket closed",
+            TICKET_ADD_OK = "ticket add: ok";
+
 
     private final TicketManager ticketManager;
     private final ProductManager productManager;
@@ -65,28 +68,46 @@ public class TicketAddCommandHandler implements CommandHandler {
             Product product = productManager.get(productId);
             Ticket ticket = ticketManager.get(ticketId);
 
-            if (product instanceof ProductService) {
-                ProductService productService = (ProductService) product;
-                if (!ServiceProductTimeValidator.isValid(productService)) {
-                    System.out.println(ERROR_SERVICE_DATE_INVALID);
-                    return;
+            if(ticket.getState() != Ticket.TicketState.CLOSED){
+                if (product instanceof ProductService) {
+                    ProductService productService = (ProductService) product;
+                    if (!ServiceProductTimeValidator.isValid(productService)) {
+                        return;
+                    }
+                    productService.setPersonasApuntadas(amount + productService.getPersonasApuntadas());
+                    ticket.addProduct(productService, amount);
+
+                }else{
+                    if (tokens.hasNext()) {
+                        if (product instanceof PersonalizableProduct personalizableProduct) {
+                            List<String> personalization = new ArrayList<>();
+                            while (tokens.hasNext()) {
+                                String tok = tokens.next();
+                                if (tok.startsWith("--p")) {
+                                    String text = tok.substring(3).trim(); // quitar "--p"
+                                    if (!text.isEmpty()) {
+                                        personalization.add(text);
+                                    }
+                                }
+                            }
+                            String[] lines = personalization.toArray(new String[0]);
+                            ticket.addProduct(personalizableProduct, amount, lines);
+                        } else {
+                            System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
+                            return;
+                        }
+                    } else {
+                        ticket.addProduct(product, amount);
+                    }
                 }
+
+                System.out.println(ticket.printTicket());
+                System.out.println(TICKET_ADD_OK);
+            } else{
+                System.out.println(TICKET_CLOSED);
             }
 
-            //personalizableTexts
-            if (tokens.hasNext()) {
-                System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
-                if (product instanceof PersonalizableProduct personalizableProduct) {
-                    ticket.addProduct(personalizableProduct, amount, tokens.next().split("--p"));
-                } else {
-                    System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
-                    return;
-                }
-            } else {
-                ticket.addProduct(product, amount);
-            }
 
-            System.out.println(TICKET_ADD_OK);
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
         }

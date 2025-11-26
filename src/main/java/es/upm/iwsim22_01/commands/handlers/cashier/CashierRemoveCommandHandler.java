@@ -23,7 +23,7 @@ public class CashierRemoveCommandHandler implements CommandHandler {
     @Override
     public void runCommand(CommandTokens tokens) {
 
-        String id = tokens.nextAsStringId(cashierManager, false, ERROR_INCORRECT_USE_CASHIER_REMOVE, ERROR_INCORRECT_USE_CASHIER_REMOVE);
+        String id = tokens.next();
 
         if (id == null) return;
 

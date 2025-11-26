@@ -41,6 +41,10 @@ public class CashierManager extends AbstractManager<Cashier, String> {
         return true;
     }
 
+    public boolean correctIdFormat(String id){
+        String regex = "(?i)^UW\\d{" + CASHIER_ID_LENGTH + "}$";
+        return Pattern.matches(regex, id);
+    }
 
     private String createID() {
         int num = (int) (Math.random() * Math.pow(10, CASHIER_ID_LENGTH));

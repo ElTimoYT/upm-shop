@@ -3,6 +3,7 @@ package es.upm.iwsim22_01.manager;
 import es.upm.iwsim22_01.models.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ProductManager extends AbstractManager<Product, Integer> {
@@ -33,7 +34,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
 
     }
 
-    public Product addFoodProduct(int id, String name, double price, LocalDate expirationDate, int maxParticipants){
+    public Product addFoodProduct(int id, String name, double price, LocalDateTime expirationDate, int maxParticipants){
         if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
@@ -47,7 +48,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         return  food;
     }
 
-    public Product addMeetingProduct(int id, String name, double pricePerPerson, LocalDate expirationDate, int maxParticipants){
+    public Product addMeetingProduct(int id, String name, double pricePerPerson, LocalDateTime expirationDate, int maxParticipants){
         if (!isPriceValid(pricePerPerson)) throw new IllegalArgumentException("Product price " + pricePerPerson + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");

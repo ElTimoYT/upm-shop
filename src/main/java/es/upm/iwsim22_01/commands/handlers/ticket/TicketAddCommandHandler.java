@@ -1,14 +1,16 @@
 package es.upm.iwsim22_01.commands.handlers.ticket;
 
+import es.upm.iwsim22_01.Validators.ServiceProductTimeValidator;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.PersonalizableProduct;
-import es.upm.iwsim22_01.models.Product;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.models.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.NoSuchElementException;
 
 public class TicketAddCommandHandler implements CommandHandler {
@@ -20,7 +22,8 @@ public class TicketAddCommandHandler implements CommandHandler {
             ERROR_INVALID_AMOUNT = "Invalid amount",
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
 
-            TICKET_ADD_OK = "ticket add: ok";
+            TICKET_ADD_OK = "ticket add: ok",
+            ERROR_SERVICE_DATE_INVALID = "Date not supported";
 
     private final TicketManager ticketManager;
     private final ProductManager productManager;
@@ -62,6 +65,14 @@ public class TicketAddCommandHandler implements CommandHandler {
             Product product = productManager.get(productId);
             Ticket ticket = ticketManager.get(ticketId);
 
+            if (product instanceof ProductService) {
+                ProductService productService = (ProductService) product;
+                if (!ServiceProductTimeValidator.isValid(productService)) {
+                    System.out.println(ERROR_SERVICE_DATE_INVALID);
+                    return;
+                }
+            }
+
             //personalizableTexts
             if (tokens.hasNext()) {
                 System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
@@ -80,4 +91,6 @@ public class TicketAddCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
         }
     }
+
+
 }

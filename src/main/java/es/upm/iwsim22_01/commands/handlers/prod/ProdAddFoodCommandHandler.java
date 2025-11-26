@@ -6,10 +6,12 @@ import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.Product;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
 public class ProdAddFoodCommandHandler implements CommandHandler {
+    private static final String ERROR_MAX_PRODUCTS = "Maximum products reached." ;
     private ProductManager productManager;
 
     private static final String ERROR_INCORRECT_USE_ADDFOOD =
@@ -22,6 +24,10 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
 
     @Override
     public void runCommand(CommandTokens tokens) {
+        if (productManager.isProductListFull()) {
+            System.out.println(ERROR_MAX_PRODUCTS);
+            return;
+        }
         Integer id = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_ADDFOOD, ERROR_INVALID_ID);
         if (id == null) {
             return;
@@ -54,13 +60,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             }
             return;
         }
-        LocalDate expiration = tokens.nextDate();
-        LocalDate today = LocalDate.now();
-        LocalDate minAllowedDate = today.plusDays(3);
-        if (expiration.isBefore(minAllowedDate)) {
-            System.out.println("Food must be scheduled at least 3 days in advance");
-            return;
-        }
+        LocalDateTime expiration = tokens.nextDate();
 
         if (!tokens.hasNextInt()) {
             if (!tokens.hasNext()) {

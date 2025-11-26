@@ -6,6 +6,7 @@ import es.upm.iwsim22_01.models.Category;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -131,7 +132,7 @@ public class CommandTokens {
         }
     }
 
-    public LocalDate nextDate() {
+    public LocalDateTime nextDate() {
         checkToken();
 
         Optional<LocalDate> optionalDate = tryParseDate();
@@ -140,7 +141,7 @@ public class CommandTokens {
         }
 
         consumeToken();
-        return optionalDate.get();
+        return optionalDate.get().atStartOfDay();
     }
 
     public boolean hasNextDate() {

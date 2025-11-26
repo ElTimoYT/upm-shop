@@ -1,5 +1,7 @@
 package es.upm.iwsim22_01.models;
 
+import es.upm.iwsim22_01.Validators.ServiceProductTimeValidator;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -238,5 +240,18 @@ public class Ticket {
         EMPTY,
         ACTIVE,
         CLOSED;
+    }
+    public boolean areAllServiceProductsValid() {
+        for (TicketLine line : items) {
+            Product product = line.product;
+
+            if (product instanceof ProductService) {
+                ProductService ps = (ProductService) product;
+                if (!ServiceProductTimeValidator.isValid(ps)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -1,6 +1,6 @@
 package es.upm.iwsim22_01.manager;
 
-import es.upm.iwsim22_01.models.*;
+import es.upm.iwsim22_01.models.product.*;
 
 import java.time.LocalDateTime;
 

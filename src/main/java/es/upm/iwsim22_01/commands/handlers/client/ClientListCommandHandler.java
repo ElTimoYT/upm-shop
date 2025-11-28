@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.client;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.models.Client;
+import es.upm.iwsim22_01.models.user.Client;
 
 import java.util.Comparator;
 import java.util.List;

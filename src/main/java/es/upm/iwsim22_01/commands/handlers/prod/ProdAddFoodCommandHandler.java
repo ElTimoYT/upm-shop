@@ -3,12 +3,9 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Product;
+import es.upm.iwsim22_01.models.product.Product;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class ProdAddFoodCommandHandler implements CommandHandler {
     private static final String ERROR_MAX_PRODUCTS = "Maximum products reached." ;

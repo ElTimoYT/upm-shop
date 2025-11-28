@@ -1,7 +1,7 @@
 package es.upm.iwsim22_01.commands;
 
 import es.upm.iwsim22_01.manager.*;
-import es.upm.iwsim22_01.models.Category;
+import es.upm.iwsim22_01.models.product.Category;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

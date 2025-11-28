@@ -1,7 +1,7 @@
 package es.upm.iwsim22_01.commands.handlers;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
-import es.upm.iwsim22_01.models.Category;
+import es.upm.iwsim22_01.models.product.Category;
 
 public class HelpCommandHandler implements CommandHandler {
     private static final String HELP_MESSAGE = """

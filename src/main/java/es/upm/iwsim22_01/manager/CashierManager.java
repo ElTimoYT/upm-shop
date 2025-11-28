@@ -1,6 +1,6 @@
 package es.upm.iwsim22_01.manager;
 
-import es.upm.iwsim22_01.models.Cashier;
+import es.upm.iwsim22_01.models.user.Cashier;
 
 import java.util.regex.Pattern;
 

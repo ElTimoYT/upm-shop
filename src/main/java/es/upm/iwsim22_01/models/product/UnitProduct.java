@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.models;
+package es.upm.iwsim22_01.models.product;
 
 public class UnitProduct extends Product {
     private Category category;

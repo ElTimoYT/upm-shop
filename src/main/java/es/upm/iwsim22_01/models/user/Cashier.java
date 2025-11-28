@@ -1,9 +1,11 @@
-package es.upm.iwsim22_01.models;
+package es.upm.iwsim22_01.models.user;
+
+import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cashier extends User {
+public class Cashier extends AbstractUser {
     private List<Ticket> tickets;
 
     public Cashier(String name, String email, String id) {

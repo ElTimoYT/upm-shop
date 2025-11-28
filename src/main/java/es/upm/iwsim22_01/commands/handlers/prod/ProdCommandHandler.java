@@ -1,19 +1,9 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-
 import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Category;
-import es.upm.iwsim22_01.models.Product;
-import es.upm.iwsim22_01.models.UnitProduct;
 
 public class ProdCommandHandler implements CommandHandler {
     private static final String

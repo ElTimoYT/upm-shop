@@ -4,7 +4,7 @@ import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.models.Client;
+import es.upm.iwsim22_01.models.user.Client;
 
 import java.util.NoSuchElementException;
 

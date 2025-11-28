@@ -1,8 +1,6 @@
-package es.upm.iwsim22_01.models;
+package es.upm.iwsim22_01.models.product;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Catering extends ProductService {
     public Catering(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate){

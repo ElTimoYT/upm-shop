@@ -3,16 +3,8 @@ package es.upm.iwsim22_01.commands.handlers.client;
 import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.commands.handlers.ticket.*;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.Client;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 
 public class ClientCommandHandler implements CommandHandler {
     private static final String

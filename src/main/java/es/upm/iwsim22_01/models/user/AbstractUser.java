@@ -1,12 +1,12 @@
-package es.upm.iwsim22_01.models;
+package es.upm.iwsim22_01.models.user;
 
-public abstract class User {
+public abstract class AbstractUser {
 
     private String name;
     private String email;
     private String id;
 
-    public User(String name, String email, String id) {
+    public AbstractUser(String name, String email, String id) {
         this.name= name;
         this.id=id;
         this.email= email;

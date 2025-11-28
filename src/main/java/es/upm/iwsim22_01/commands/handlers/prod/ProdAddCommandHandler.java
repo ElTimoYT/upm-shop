@@ -3,10 +3,8 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Category;
-import es.upm.iwsim22_01.models.Product;
-
-import java.util.OptionalInt;
+import es.upm.iwsim22_01.models.product.Category;
+import es.upm.iwsim22_01.models.product.Product;
 
 public class ProdAddCommandHandler implements CommandHandler {
 

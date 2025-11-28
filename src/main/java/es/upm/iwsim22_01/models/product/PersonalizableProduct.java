@@ -1,7 +1,4 @@
-package es.upm.iwsim22_01.models;
-
-import java.util.ArrayList;
-import java.util.List;
+package es.upm.iwsim22_01.models.product;
 
 public class PersonalizableProduct extends UnitProduct{
     int maxPers;
@@ -12,7 +9,7 @@ public class PersonalizableProduct extends UnitProduct{
 
     }
 
-    int getMaxPers() {
+    public int getMaxPers() {
         return maxPers;
     }
 

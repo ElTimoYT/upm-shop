@@ -5,8 +5,8 @@ import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.Cashier;
-import es.upm.iwsim22_01.models.Product;
+import es.upm.iwsim22_01.models.user.Cashier;
+import es.upm.iwsim22_01.models.product.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.NoSuchElementException;

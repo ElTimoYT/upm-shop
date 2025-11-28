@@ -1,9 +1,11 @@
-package es.upm.iwsim22_01.models;
+package es.upm.iwsim22_01.models.user;
+
+import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Client extends User {
+public class Client extends AbstractUser {
 
     private Cashier cashierWhoRegisters;
     private List<Ticket> tickets = new ArrayList<>();

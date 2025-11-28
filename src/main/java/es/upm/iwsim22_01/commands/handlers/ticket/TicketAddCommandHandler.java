@@ -6,6 +6,10 @@ import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.*;
+import es.upm.iwsim22_01.models.product.PersonalizableProduct;
+import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.ProductService;
+import es.upm.iwsim22_01.models.user.Cashier;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,7 +18,8 @@ public class ClientAddCommandHandler  implements CommandHandler {
             ERROR_INCORRECT_USE = "Incorrect use: client add \"<nombre>\" <DNI> <email> <cashId>",
             ERROR_ID_ALREADY_FOUND = "Client ID already exists.",
             ERROR_NONEXISTANT_CASHIER = "Cashier does not exist.",
-            ERROR_EMAIL_INVALID = "Email does not adhere to required rules.";
+            ERROR_EMAIL_INVALID = "Email does not adhere to required rules.",
+            ERROR_DNI_INVALID = "DNI does not adhere to required rules.";
 
     public ClientAddCommandHandler(ClientManager clientManager, CashierManager cashierManager) {
         this.clientManager = clientManager;
@@ -34,6 +35,10 @@ public class ClientAddCommandHandler  implements CommandHandler {
 
             if (clientManager.existId(clientTentativeId)) {
                 System.out.println(ERROR_ID_ALREADY_FOUND);
+                return;
+            }
+            if (!clientManager.checkDNI(clientTentativeId)) {
+                System.out.println(ERROR_DNI_INVALID);
                 return;
             }
 

@@ -12,6 +12,7 @@ public class CashierManager extends AbstractManager<Cashier, String> {
         if (!CASHIER_EMAIL_REGEX.matcher(email).find()) {
             throw new IllegalArgumentException("Invalid email format");
         }
+        if (!checkId(id)) throw new IllegalArgumentException("Invalid ID format");
 
         Cashier cashier = new Cashier(name, email, id);
         add(cashier, id);
@@ -41,7 +42,7 @@ public class CashierManager extends AbstractManager<Cashier, String> {
         return true;
     }
 
-    public boolean correctIdFormat(String id){
+    public boolean checkId(String id){
         String regex = "(?i)^UW\\d{" + CASHIER_ID_LENGTH + "}$";
         return Pattern.matches(regex, id);
     }

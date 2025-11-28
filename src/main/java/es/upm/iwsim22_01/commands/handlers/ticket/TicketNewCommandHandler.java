@@ -82,7 +82,7 @@ public class TicketNewCommandHandler implements CommandHandler {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
-        if (!ticketManager.correctIdFormat(ticketId)){
+        if (!ticketManager.checkId(ticketId)){
             System.out.println(ERROR_INVALID_ID_FORMAT);
             return;
         }

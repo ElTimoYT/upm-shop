@@ -1,11 +1,6 @@
 package es.upm.iwsim22_01.manager;
 
-import es.upm.iwsim22_01.models.Cashier;
-import es.upm.iwsim22_01.models.Client;
 import es.upm.iwsim22_01.models.Ticket;
-
-import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class TicketManager extends AbstractManager<Ticket, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
@@ -18,6 +13,8 @@ public class TicketManager extends AbstractManager<Ticket, Integer> {
     }
 
     public Ticket addTicket(int id) {
+        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
+
         Ticket ticket = new Ticket(id);
 
         add(ticket, id);
@@ -28,7 +25,7 @@ public class TicketManager extends AbstractManager<Ticket, Integer> {
         return addTicket(createNewId());
     }
 
-    public boolean correctIdFormat(int id){
+    public boolean checkId(int id){
         return Math.log10(id) <= TICKET_ID_LENGTH;
     }
 

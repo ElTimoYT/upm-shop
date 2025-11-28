@@ -36,7 +36,7 @@ public class CashierAddCommandHandler implements CommandHandler {
                     return;
                 }
 
-                if (!cashierManager.correctIdFormat(id)){
+                if (!cashierManager.checkId(id)){
                     System.out.println(ERROR_INVALID_ID_FORMAT);
                     return;
                 }

@@ -15,6 +15,7 @@ public class TicketNewCommandHandler implements CommandHandler {
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
             ERROR_CLIENT_NOT_FOUND = "Client not found",
             ERROR_INVALID_ID = "Invalid id",
+            ERROR_INVALID_ID_FORMAT = "Ticket id format is invalid",
 
             TICKET = "Ticket: ",
             NEW_TICKET_DATA = """
@@ -79,6 +80,10 @@ public class TicketNewCommandHandler implements CommandHandler {
         int ticketId = tokens.nextInt();
         if (ticketManager.existId(ticketId)) {
             System.out.println(ERROR_INVALID_ID);
+            return;
+        }
+        if (!ticketManager.correctIdFormat(ticketId)){
+            System.out.println(ERROR_INVALID_ID_FORMAT);
             return;
         }
 

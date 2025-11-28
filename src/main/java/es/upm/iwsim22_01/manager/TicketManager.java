@@ -5,6 +5,7 @@ import es.upm.iwsim22_01.models.Client;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class TicketManager extends AbstractManager<Ticket, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
@@ -25,6 +26,10 @@ public class TicketManager extends AbstractManager<Ticket, Integer> {
 
     public Ticket addTicket() {
         return addTicket(createNewId());
+    }
+
+    public boolean correctIdFormat(int id){
+        return Math.log10(id) <= TICKET_ID_LENGTH;
     }
 
     private int createNewId() {

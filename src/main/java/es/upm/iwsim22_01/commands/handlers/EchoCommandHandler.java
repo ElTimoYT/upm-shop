@@ -4,7 +4,7 @@ import es.upm.iwsim22_01.commands.CommandTokens;
 
 public class EchoCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE = "Incorrect use: echo \"<message>\"",
-            ECHO_MESSAGE = "echo \"%s\"";
+            ECHO_MESSAGE = "\"%s\"";
 
     @Override
     public void runCommand(CommandTokens tokens) {

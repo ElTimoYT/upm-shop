@@ -9,6 +9,8 @@ public class CashierRemoveCommandHandler implements CommandHandler {
 
     private static final String
             ERROR_INCORRECT_USE_CASHIER_REMOVE = "Incorrect use: cash remove <id>",
+            ERROR_CASHIER_NOT_FOUND = "Cashier not found",
+
             CASHIER_REMOVE_OK = "cash remove: ok",
             CASHIER_REMOVE_FAIL = "cash remove: fail";
 
@@ -29,6 +31,11 @@ public class CashierRemoveCommandHandler implements CommandHandler {
 
         if (tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_CASHIER_REMOVE);
+            return;
+        }
+
+        if (!cashierManager.existId(id)) {
+            System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 

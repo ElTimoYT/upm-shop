@@ -1,10 +1,7 @@
 package es.upm.iwsim22_01.models;
 
-import es.upm.iwsim22_01.Validators.ServiceProductTimeValidator;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map.Entry;
 
 public class Ticket {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd-HH:mm");
@@ -170,7 +167,7 @@ public class Ticket {
     }
     public String printTicket() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getFormattedId()).append("\n\n");
+        sb.append("Ticket: ").append(getFormattedId()).append("\n");
 
         Map<Category, Integer> counts = countCategory();
         List<TicketLine> sortedItems = new ArrayList<>(items);
@@ -271,9 +268,8 @@ public class Ticket {
         for (TicketLine line : items) {
             Product product = line.product;
 
-            if (product instanceof ProductService) {
-                ProductService ps = (ProductService) product;
-                if (!ServiceProductTimeValidator.isValid(ps)) {
+            if (product instanceof ProductService ps) {
+                if (!ps.checkTime()) {
                     return false;
                 }
             }

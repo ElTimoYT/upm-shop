@@ -3,10 +3,8 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Meetings;
 import es.upm.iwsim22_01.models.Product;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -63,7 +61,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
         int maxPeople = tokens.nextInt();
-        if (maxPeople < 1) {
+        if (maxPeople < 1 || maxPeople > 100) {
             System.out.println(ERROR_INVALID_MAXPEOPLE);
             return;
         }

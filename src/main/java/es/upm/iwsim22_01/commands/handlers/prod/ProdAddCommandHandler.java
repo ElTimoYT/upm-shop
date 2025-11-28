@@ -13,7 +13,7 @@ public class ProdAddCommandHandler implements CommandHandler {
     private final String
             ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add <id> \"<name>\" <category> <price>",
             ERROR_MAX_PRODUCTS = "Maximum number of products exceeded.",
-            ERROR_INVALID_ID = "Id not supported",
+            ERROR_INVALID_ID = "Id not valid",
             ERROR_INVALID_NAME ="Name not supported",
             ERROR_INVALID_CATEGORY ="Category not valid",
             ERROR_INVALID_PRICE ="Price not valid",

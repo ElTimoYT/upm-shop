@@ -71,7 +71,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
         int maxPeople = tokens.nextInt();
-        if (maxPeople < 1) {
+        if (maxPeople < 1 || maxPeople > 100) {
             System.out.println(ERROR_INVALID_MAX_PEOPLE);
             return;
         }

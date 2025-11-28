@@ -5,6 +5,7 @@ import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
+import es.upm.iwsim22_01.models.Cashier;
 import es.upm.iwsim22_01.models.Product;
 import es.upm.iwsim22_01.models.Ticket;
 
@@ -16,6 +17,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
             ERROR_TICKET_NOT_FOUND = "Ticket not found",
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
+            ERROR_CASHIER_NOT_ASSIGNED = "Cashier is not assigned to this ticket",
 
             TICKET_REMOVAL_OK = "ticket remove: ok";
 
@@ -52,6 +54,11 @@ public class TicketRemoveCommandHandler implements CommandHandler {
 
             Product product = productManager.get(productId);
             Ticket ticket = ticketManager.get(ticketId);
+            Cashier cashier = cashierManager.get(cashierId);
+            if (!cashier.getTickets().contains(ticket)) {
+                System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
+                return;
+            }
 
             ticket.removeProduct(product);
             System.out.println(ticket.printTicket());

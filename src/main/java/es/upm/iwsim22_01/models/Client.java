@@ -17,15 +17,17 @@ public class Client extends User {
         return cashierWhoRegisters;
     }
 
-    private void remove(String DNI) {
-
-    }
-
     public void addTicket(Ticket ticket) {
         tickets.add(ticket);
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + getId() +
+                ",name=" + getName() +
+                ",email=" + getEmail() +
+                ",cash=" + cashierWhoRegisters.getId() +
+                '}';
+    }
 }

@@ -5,30 +5,30 @@ import es.upm.iwsim22_01.models.Category;
 
 public class HelpCommandHandler implements CommandHandler {
     private static final String HELP_MESSAGE = """
-                Commands:
-                   client add "<nombre>" <DNI> <email> <cashId>
-                   client remove <DNI>
-                   client list
-                   cash add [<id>] "<nombre>"<email>
-                   cash remove <id>
-                   cash list
-                   cash tickets <id>
-                   ticket new [<id>] <cashId> <userId>
-                   ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]\s
-                   ticket remove <ticketId><cashId> <prodId>\s
-                   ticket print <ticketId> <cashId>\s
-                   ticket list
-                   prod add <id> "<name>" <category> <price>
-                   prod update <id> NAME|CATEGORY|PRICE <value>
-                   prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                   prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
-                   prod list
-                   prod remove <id>
-                   help
-                   echo “<text>”\s
-                   exit
-                
-                Categories:\s""",
+            Commands:
+                  client add "<nombre>" <DNI> <email> <cashId>
+                  client remove <DNI>
+                  client list
+                  cash add [<id>] "<nombre>"<email>
+                  cash remove <id>
+                  cash list
+                  cash tickets <id>
+                  ticket new [<id>] <cashId> <userId>
+                  ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
+                  ticket remove <ticketId><cashId> <prodId>
+                  ticket print <ticketId> <cashId>
+                  ticket list
+                  prod add <id> "<name>" <category> <price>
+                  prod update <id> NAME|CATEGORY|PRICE <value>
+                  prod addFood [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                  prod addMeeting [<id>] "<name>" <price> <expiration:yyyy-MM-dd> <max_people>
+                  prod list
+                  prod remove <id>
+                  help
+                  echo “<text>”
+                  exit
+            
+            Categories:\s""",
         DISCOUNT_MESSAGE = "\nDiscounts if there are ≥2 units in the category: ";
 
     @Override

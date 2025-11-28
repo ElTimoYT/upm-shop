@@ -65,8 +65,8 @@ public class CommandDispatcher {
             String token = matcher.group();
             if (token.startsWith("\"") && token.endsWith("\"")) { //Si está entre comillas quitar las comillas.
                 tokens.add(token.substring(1, token.length() -1));
-            } else { //Poner en minusculas si no
-                tokens.add(token.toLowerCase());
+            } else {
+                tokens.add(token);
             }
         }
 

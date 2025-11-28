@@ -2,9 +2,7 @@ package es.upm.iwsim22_01.manager;
 
 import es.upm.iwsim22_01.models.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class ProductManager extends AbstractManager<Product, Integer> {
     private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
@@ -57,7 +55,7 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists.");
 
 
-        Product meeting = new Meetings(id, name, pricePerPerson, maxParticipants, expirationDate);
+        Product meeting = new Meeting(id, name, pricePerPerson, maxParticipants, expirationDate);
         add(meeting, id);
         return meeting;
     }

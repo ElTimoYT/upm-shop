@@ -1,210 +1,416 @@
-@startuml
+@startuml Ticket Management System
+
 package "commands" {
+    class CommandTokens {
+    - tokens: List<String>
+    + next(): String
+    + nextInt(): int
+    + nextDouble(): double
+    + nextAsIntegerId(ProductManager, boolean, String, String): Integer
+    + nextCategory(): Category
+    + nextDate(): LocalDateTime
+    + hasNext(): boolean
+    + hasNextInt(): boolean
+    + hasNextDouble(): boolean
+    + hasNextCategory(): boolean
+    + hasNextDate(): boolean
+    + getRemainingTokens(): int
+    }
+
     class CommandDispatcher {
-        +addCommand(name : String, handler : CommandHandler) : void
-        +processCommand(line : String) : void
-
+      - commands: Map<String, CommandHandler>
+      + addCommand(String, CommandHandler)
+      + processCommand(CommandTokens)
     }
 
-    interface CommandHandler {
-        +runCommand(tokens : Iterator<String>) : void
+package "handlers" {
+  interface CommandHandler {
+    + runCommand(CommandTokens tokens)
+  }
+
+  class ProdCommandHandler {
+        - productCommandDispatcher: CommandDispatcher
+        + runCommand(CommandTokens)
+      }
+
+      class ProdAddCommandHandler {
+        - productManager: ProductManager
+        + runCommand(CommandTokens)
+      }
+
+      class ProdListCommandHandler {
+        - productManager: ProductManager
+        + runCommand(CommandTokens)
+      }
+
+      class ProdRemoveCommandHandler {
+        - productManager: ProductManager
+        + runCommand(CommandTokens)
+      }
+
+      class ProdUpdateCommandHnadler {
+        - productManager: ProductManager
+        + runCommand(CommandTokens)
+      }
+
+      class ProdAddFoodCommandHandler {
+        - productManager: ProductManager
+        + runCommand(CommandTokens)
+      }
+
+      class ProdAddMeetingCommandHandler {
+        - productManager: ProductManager
+        + runCommand(CommandTokens)
+      }
+
+      class CashierCommandHandler {
+        - cashierCommandDispatcher: CommandDispatcher
+        + runCommand(CommandTokens)
+      }
+
+      class CashierAddCommandHandler {
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class CashierRemoveCommandHandler {
+        - cashierManager: CashierManager
+        - ticketManager: TicketManager
+        + runCommand(CommandTokens)
+      }
+
+      class CashierListCommandHandler {
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class CashierShowTicketCommandHandler {
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class ClientCommandHandler {
+        - ticketCommandDispatcher: CommandDispatcher
+        + runCommand(CommandTokens)
+      }
+
+      class ClientAddCommandHandler {
+        - clientManager: ClientManager
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class ClientRemoveCommandHandler {
+        - clientManager: ClientManager
+        + runCommand(CommandTokens)
+      }
+
+      class ClientListCommandHandler {
+        - clientManager: ClientManager
+        + runCommand(CommandTokens)
+      }
+
+      class TicketCommandHandler {
+        - ticketCommandDispatcher: CommandDispatcher
+        + runCommand(CommandTokens)
+      }
+
+      class TicketNewCommandHandler {
+        - ticketManager: TicketManager
+        - cashierManager: CashierManager
+        - clientManager: ClientManager
+        + runCommand(CommandTokens)
+      }
+
+      class TicketAddCommandHandler {
+        - ticketManager: TicketManager
+        - productManager: ProductManager
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class TicketRemoveCommandHandler {
+        - ticketManager: TicketManager
+        - productManager: ProductManager
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class TicketPrintCommandHandler {
+        - ticketManager: TicketManager
+        - cashierManager: CashierManager
+        + runCommand(CommandTokens)
+      }
+
+      class TicketListCommandHandler {
+        - ticketManager: TicketManager
+        + runCommand(CommandTokens)
+      }
+
+      class ExitCommandHandler {
+        + runCommand(CommandTokens)
+      }
+
+      class HelpCommandHandler {
+        + runCommand(CommandTokens)
+      }
+
+      class EchoCommandHandler {
+        + runCommand(CommandTokens)
+      }
+    }
+}
+
+package managers {
+  abstract class AbstractManager<T, K> {
+    - elements: Map<K, T>
+    + add(T, K)
+    + remove(K): T
+    + get(K): T
+    + getAll(): List<T>
+    + existId(K): boolean
+    + getSize(): int
+  }
+
+  class ProductManager {
+    - MAX_PRODUCTS: int
+    - MAX_NAME_LENGTH: int
+    + addProduct(int, String, Category, double): Product
+    + addCustomizableProduct(int, String, Category, double, int): Product
+    + addFoodProduct(int, String, double, LocalDateTime, int): Product
+    + addMeetingProduct(int, String, double, LocalDateTime, int): Product
+    + isNameValid(String): boolean
+    + isPriceValid(double): boolean
+    + isProductListFull(): boolean
+  }
+
+  class CashierManager {
+    - CASHIER_ID_LENGTH: int
+    - CASHIER_EMAIL_REGEX: Pattern
+    + addCashier(String, String, String): Cashier
+    + addCashier(String, String): Cashier
+    + removeCashierAndTickets(String, TicketManager): boolean
+    + checkId(String): boolean
+    - createID(): String
+  }
+
+  class ClientManager {
+    - EMAIL_PATTERN: Pattern
+    - DNI_PATTERN: Pattern
+    - NIE_PATTERN: Pattern
+    - cashierManager: CashierManager
+    + addClient(String, String, String, String): Client
+    + checkDNI(String): boolean
+    + checkEmail(String): boolean
+  }
+
+  class TicketManager {
+    - TICKET_ID_LENGTH: int
+    - clientManager: ClientManager
+    - cashierManager: CashierManager
+    + addTicket(int): Ticket
+    + addTicket(): Ticket
+    + checkId(int): boolean
+    - createNewId(): int
+  }
+}
+
+package models {
+package products {
+  abstract class Product {
+    - id: int
+    - name: String
+    - price: double
+    + getId(): int
+    + getName(): String
+    + setName(String)
+    + getPrice(): double
+    + setPrice(double)
+  }
+
+  class UnitProduct {
+    - category: Category
+    + getCategory(): Category
+    + setCategory(Category)
+  }
+
+  class PersonalizableProduct {
+    - maxPers: int
+    + getMaxPers(): int
+  }
+
+  abstract class ProductService {
+    - maxParticipant: int
+    - expirationDate: LocalDateTime
+    - personasApuntadas: int
+    + getExpirationDate(): LocalDateTime
+    + getPersonasApuntadas(): int
+    + setPersonasApuntadas(int)
+    + checkTime(): boolean
+    + printTicketWithPeople(): String
+  }
+
+  class Catering {
+    + checkTime(): boolean
+  }
+
+  class Meeting {
+    + checkTime(): boolean
+  }
+
+  enum Category {
+    MERCH
+    STATIONARY
+    CLOTHES
+    BOOK
+    ELECTRONICS
+    + getDiscount(): double
+  }
+  }
+
+  package "users" {
+    abstract class AbstractUser {
+      - name: String
+      - email: String
+      - id: String
+      + getName(): String
+      + getId(): String
+      + getEmail(): String
     }
 
-    class EchoCommandHandler {
-        +runCommand(tokens : Iterator<String>) : void
+    class Cashier {
+      - tickets: List<Ticket>
+      + getTickets(): List<Ticket>
+      + addTicket(Ticket)
     }
 
-    class ExitCommandHandler {
-        +runCommand(tokens : Iterator<String>) : void
+    class Client {
+      - cashierWhoRegisters: Cashier
+      - tickets: List<Ticket>
+      + getCashier(): Cashier
+      + addTicket(Ticket)
     }
+  }
 
-    class HelpCommandHandler {
-        +runCommand(tokens : Iterator<String>) : void
-    }
-
-    class ProdCommandHandler {
-        +runCommand(tokens : Iterator<String>) : void
-        -listCommand(tokens : Iterator<String>) : void
-        -addCommand(tokens : Iterator<String>) : void
-        -removeCommand(tokens : Iterator<String>) : void
-        -showCommand(tokens : Iterator<String>) : void
-        -importCommand(tokens : Iterator<String>) : void
-    }
-
-    class TicketCommandHandler {
-        +runCommand(tokens : Iterator<String>) : void
-        -printTicketCommand(tokens : Iterator<String>) : void
-        -removeTicketCommand(tokens : Iterator<String>) : void
-        -addTicketCommand(tokens : Iterator<String>) : void
-        -newTickedCommand(tokens : Iterator<String>) : void
-    }
-
-    class Converter {
-        +stringToInt(s : String) : OptionalInt
-        +stringToDouble(s : String) : OptionalDouble
-        +stringToCategory(s : String) : Optional<Category>
-    }
+   class Ticket {
+        - id: int
+        - initialDate: Date
+        - finalDate: Date
+        - ticketState: TicketState
+        - items: List<TicketLine>
+        + getId(): int
+        + getState(): TicketState
+        + getInitialDate(): Date
+        + getFormattedId(): String
+        + addProduct(Product, int): boolean
+        + addProduct(PersonalizableProduct, int, String[]): boolean
+        + removeProduct(Product)
+        + closeTicket()
+        + printTicket(): String
+        + areAllServiceProductsValid(): boolean
+      }
 }
 
 class App {
-    -menu : boolean
-    +main(args : String[]) : void
-    +exitMenu() : void
+    - menu: boolean
+    - dispatcher: CommandDispatcher
+    - productManager: ProductManager
+    - cashierManager: CashierManager
+    - clientManager: ClientManager
+    - ticketManager: TicketManager
+    + main(String[])
+    + exitMenu()
 }
+CommandDispatcher o-- "0..*" CommandHandler : contains
 
-package "models" {
-    class Ticket {
-        -MAX_PRODUCTS : int
-        +addProduct(productId : int, quantity : int) : boolean
-        +removeProductById(id : int) : boolean
-        +toString() : String
-        -totalUnits() : int
-        -countCategory() : Map<Category, Integer>
-        -perItemDiscount(p : Product, counts : Map<Category, Integer>) : double
-        -round1(v : double) : double
-        -totalPrice() : double
-        -discountPrice() : double
-    }
+CashierCommandHandler *-- CashierAddCommandHandler
+CashierCommandHandler *-- CashierListCommandHandler
+CashierCommandHandler *-- CashierRemoveCommandHandler
+CashierCommandHandler *-- CashierShowTicketCommandHandler
 
-    enum Category {
-        MERCH
-        STATIONARY
-        CLOTHES
-        BOOK
-        ELECTRONICS
-        -discount : double
-        +getDiscount() : double
-    }
+ClientCommandHandler *-- ClientAddCommandHandler
+ClientCommandHandler *-- ClientListCommandHandler
+ClientCommandHandler *-- ClientRemoveCommandHandler
 
-    class Product {
-        -id : int
-        -name : String
-        -price : double
-        +getId() : int
-        +getName() : String
-        +getPrice() : double
-        +toString() : String
-    }
+ProdCommandHandler *-- ProdAddCommandHandler
+ProdCommandHandler *-- ProdAddFoodCommandHandler
+ProdCommandHandler *-- ProdAddMeetingCommandHandler
+ProdCommandHandler *-- ProdListCommandHandler
+ProdCommandHandler *-- ProdRemoveCommandHandler
+ProdCommandHandler *-- ProdUpdateCommandHnadler
 
-    class ProductUnit {
-            -category : Category
-            +getCategory() : Category
-    }
-    
-    class PersonalizableProduct {
-        -texts : List<String>
-    }
+TicketCommandHandler *-- TicketNewCommandHandler
+TicketCommandHandler *-- TicketAddCommandHandler
+TicketCommandHandler *-- TicketRemoveCommandHandler
+TicketCommandHandler *-- TicketPrintCommandHandler
+TicketCommandHandler *-- TicketListCommandHandler
 
-    class ProductService {
-        -MAX_PARTICIPANT : int
-        -expirationDate : Date
-        #checkDate(date : Date) : boolean
-    }
+CommandHandler <|-- EchoCommandHandler
+CommandHandler <|-- ExitCommandHandler
+CommandHandler <|-- HelpCommandHandler
 
-    class Catering {
-           -PLANING_TIME : Date
-            #checkDate(date : Date) : boolean
-    }
+CommandHandler <|-- CashierCommandHandler
+CommandHandler <|-- CashierAddCommandHandler
+CommandHandler <|-- CashierListCommandHandler
+CommandHandler <|-- CashierRemoveCommandHandler
+CommandHandler <|-- CashierShowTicketCommandHandler
 
-    class Reunion {
-        -PLANING_TIME : Date
-        #checkDate(date : Date) : boolean
-    }
+CommandHandler <|-- ClientCommandHandler
+CommandHandler <|-- ClientAddCommandHandler
+CommandHandler <|-- ClientListCommandHandler
+CommandHandler <|-- ClientRemoveCommandHandler
 
-    class User {
-        -name : String
-        -DNI : String
-        -email : String
-        -id : String
+CommandHandler <|-- ProdCommandHandler
+CommandHandler <|-- ProdAddCommandHandler
+CommandHandler <|-- ProdAddFoodCommandHandler
+CommandHandler <|-- ProdAddMeetingCommandHandler
+CommandHandler <|-- ProdListCommandHandler
+CommandHandler <|-- ProdRemoveCommandHandler
+CommandHandler <|-- ProdUpdateCommandHnadler
 
-        #checkEmail(email : String) : boolean
-    }
-    class Client {
-        #checkEmail(email : String) : boolean
-    }
-    class Cashier {
-        #checkEmail(email : String) : boolean
-    }
+CommandHandler <|-- TicketCommandHandler
+CommandHandler <|-- TicketNewCommandHandler
+CommandHandler <|-- TicketAddCommandHandler
+CommandHandler <|-- TicketRemoveCommandHandler
+CommandHandler <|-- TicketPrintCommandHandler
+CommandHandler <|-- TicketListCommandHandler
 
+CommandDispatcher ..> CommandTokens
+CommandHandler ..> CommandTokens
 
-}
+models ..> handlers
 
-package "managers" {
-    class AbstractManager<T, K> {
-        #add(T : element, K id) : void
-        +remove(K : id) : void
-        +get(K : id) : Optional<T>
-        +existId(K : id) : boolean
-        #getSize() : int
-    }
-
-    class ProductManager<Product, Integer> {
-        +addProduct(int : id, String : name, Category : category, double : price) : Product
-        +isNameValid(String : name) : boolean
-        +isPriceValid(v : double) : boolean
-        +isProductListFull() : boolean
-    }
-
-    class ClientManager<Client, String> {
-        +addClient(String : name, String : DNI, String : email, Cashier : cashierWhoRegisters) : Client
-    }
-
-    class CashierManager<Cashier, String> {
-        +addCashier(String : name, String : email, String : id) : Cashier
-        +addCashier(String name, String email) : Cashier
-        -createID() : String
-    }
-
-    class TicketManager<Ticket, String> {
-    }
-}
-
-CommandHandler <|.. EchoCommandHandler
-CommandHandler <|.. ExitCommandHandler
-CommandHandler <|.. HelpCommandHandler
-CommandHandler <|.. ProdCommandHandler
-CommandHandler <|.. TicketCommandHandler
+CommandTokens ..> Category
 
 AbstractManager <|-- ProductManager
 AbstractManager <|-- ClientManager
-AbstractManager <|-- CashierManager
 AbstractManager <|-- TicketManager
+AbstractManager <|-- CashierManager
 
-ProdCommandHandler ..> Converter
-ProdCommandHandler ..> Product
-TicketCommandHandler ..> Converter
-TicketCommandHandler ..> Ticket
-TicketCommandHandler ..> Product
+Product <|-- UnitProduct
+Product <|-- ProductService
+ProductService <|-- Catering
+ProductService <|-- Meeting
+UnitProduct <|-- PersonalizableProduct
 
-CommandDispatcher "0" o-- "*" CommandHandler
+ProductManager o-- Product
+CashierManager o-- Cashier
+ClientManager o-- Client
+TicketManager o-- Ticket
 
-App "1" *-- "1" CommandDispatcher
-App "1" *-- "1" EchoCommandHandler
-App "1" *-- "1" HelpCommandHandler
-App "1" *-- "1" ExitCommandHandler
-App "1" *-- "1" ProdCommandHandler
-App "1" *-- "1" TicketCommandHandler
+Ticket *-- Product : contains
+Cashier --> "0..*" Ticket : tickets
+Client --> "0..*" Ticket : tickets
+Client --> Cashier : registeredBy
 
-App "1" *-- "1" "managers"
+TicketManager ..> ClientManager
+TicketManager ..> CashierManager
+CashierManager ..> TicketManager
 
-ProductManager "0" o-- "*" Product
-ClientManager "0" o-- "*" Client
-CashierManager "0" o-- "*" Cashier
-TicketManager "0" o-- "*" Ticket
+App ..> CommandDispatcher
+App ..> ProductManager
+App ..> CashierManager
+App ..> ClientManager
+App ..> TicketManager
 
-ProdCommandHandler --> ProductManager
-
-TicketCommandHandler --> TicketManager
-TicketCommandHandler --> ProductManager
-
-Ticket "0" o-- "*" Product
-
-Client <|-- User
-Cashier <|-- User
-
-ProductService <|-- Product
-ProductUnit <|-- Product
-PersonalizableProduct <|-- ProductUnit
-Catering <|-- ProductService
-Reunion <|-- ProductService
 @enduml

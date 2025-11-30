@@ -1644,3 +1644,8 @@
 {"ts":1764509789055,"action":"IDE_DEACTIVATED"}
 {"ts":1764509868178,"action":"IDE_ACTIVATED"}
 {"ts":1764509870752,"action":"IDE_DEACTIVATED"}
+{"ts":1764509880263,"action":"IDE_ACTIVATED"}
+{"ts":1764509899690,"action":"IDE_DEACTIVATED"}
+{"ts":1764509913542,"action":"IDE_ACTIVATED"}
+{"ts":1764509954001,"action":"FILE_CLOSED","file":"/input2.txt","tags":{"FILE_LINE_OF_CODE":"68"}}
+{"ts":1764509954001,"action":"FILE_OPENED","file":"/pom.xml","tags":{"FILE_LINE_OF_CODE":"91"}}

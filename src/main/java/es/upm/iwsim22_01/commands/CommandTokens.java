@@ -146,21 +146,4 @@ public class CommandTokens {
     public boolean hasNextDate() {
         return hasNext() && tryParseDate().isPresent();
     }
-
-    public Integer nextAsIntegerId(AbstractManager<?, Integer> manager, boolean checkIfExistsId, String messageNoToken, String messageIfNotValid) {
-        if (!hasNextInt()) {
-            System.out.println(messageNoToken);
-            return null;
-        }
-
-        int id = nextInt();
-
-        if (checkIfExistsId == manager.existId(id)) {
-            System.out.println(messageIfNotValid);
-            return null;
-        }
-
-        return id;
-    }
-
 }

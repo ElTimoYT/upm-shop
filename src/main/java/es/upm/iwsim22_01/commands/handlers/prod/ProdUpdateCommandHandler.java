@@ -7,7 +7,7 @@ import es.upm.iwsim22_01.models.product.Category;
 import es.upm.iwsim22_01.models.product.Product;
 import es.upm.iwsim22_01.models.product.UnitProduct;
 
-public class ProdUpdateCommandHnadler implements CommandHandler {
+public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE_UPDATE =
             "Incorrect use: prod update <id> NAME|CATEGORY|PRICE <value>";
     private static final String ERROR_INVALID_ID = "Invalid id";
@@ -23,12 +23,16 @@ public class ProdUpdateCommandHnadler implements CommandHandler {
     private ProductManager productManager;
     @Override
     public void runCommand(CommandTokens tokens) {
-        //id
-        Integer id = tokens.nextAsIntegerId(productManager, false, ERROR_INCORRECT_USE_UPDATE, ERROR_INVALID_ID);
-        if (id == null) {
+        if (!tokens.hasNextInt()) {
+            System.out.println(ERROR_INCORRECT_USE_UPDATE);
             return;
         }
-        Product product = productManager.get(id);
+        int productId = tokens.nextInt();
+        if (!productManager.existId(productId)) {
+            System.out.println(ERROR_PRODUCT_NOT_FOUND);
+            return;
+        }
+        Product product = productManager.get(productId);
 
        //param
         if (!tokens.hasNext()) {
@@ -101,7 +105,7 @@ public class ProdUpdateCommandHnadler implements CommandHandler {
         System.out.println(PROD_UPDATE_OK);
     }
 
-    public  ProdUpdateCommandHnadler(ProductManager productManager) {
+    public ProdUpdateCommandHandler(ProductManager productManager) {
         this.productManager = productManager;
     }
 

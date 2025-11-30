@@ -28,7 +28,6 @@ public class App {
         dispatcher.addCommand("help", new HelpCommandHandler());
         dispatcher.addCommand("echo", new EchoCommandHandler());
         dispatcher.addCommand("prod", new ProdCommandHandler(productManager));
-        dispatcher.addCommand("cash", new CashierCommandHandler(cashierManager, ticketManager));
         dispatcher.addCommand("client", new ClientCommandHandler(clientManager, cashierManager));
         dispatcher.addCommand("cash", new CashierCommandHandler(cashierManager, ticketManager));
         dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, cashierManager, clientManager));

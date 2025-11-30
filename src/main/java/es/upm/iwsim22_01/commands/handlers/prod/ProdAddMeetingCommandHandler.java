@@ -25,10 +25,18 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
-        Integer id = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_ADDM, ERROR_INVALID_ID);
-        if (id == null) {
+
+        //id
+        if (!tokens.hasNextInt()) {
+            System.out.println(ERROR_INCORRECT_USE_ADDM);
             return;
         }
+        int productId = tokens.nextInt();
+        if (productManager.existId(productId)) {
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }
+
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADDM);
             return;
@@ -67,7 +75,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
         }
 
         Product meeting;
-        meeting = productManager.addMeetingProduct(id, name, price, expiration, maxPeople);
+        meeting = productManager.addMeetingProduct(productId, name, price, expiration, maxPeople);
 
         System.out.println(meeting);
         System.out.println(PROD_ADD_OK);

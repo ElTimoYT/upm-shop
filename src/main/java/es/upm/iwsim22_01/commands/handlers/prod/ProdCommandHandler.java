@@ -24,7 +24,7 @@ public class ProdCommandHandler implements CommandHandler {
         productCommandDispatcher.addCommand(REMOVE, new ProdRemoveCommandHandler(productManager));
         productCommandDispatcher.addCommand(ADD_FOOD, new ProdAddFoodCommandHandler(productManager));
         productCommandDispatcher.addCommand(ADD_MEETING, new ProdAddMeetingCommandHandler(productManager));
-        productCommandDispatcher.addCommand(UPDATE, new ProdUpdateCommandHnadler(productManager));
+        productCommandDispatcher.addCommand(UPDATE, new ProdUpdateCommandHandler(productManager));
     }
     
     @Override

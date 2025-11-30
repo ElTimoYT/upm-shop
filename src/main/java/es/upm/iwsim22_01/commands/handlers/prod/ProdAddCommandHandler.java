@@ -7,8 +7,7 @@ import es.upm.iwsim22_01.models.product.Category;
 import es.upm.iwsim22_01.models.product.Product;
 
 public class ProdAddCommandHandler implements CommandHandler {
-
-    private final String
+    private static final String
             ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add <id> \"<name>\" <category> <price>",
             ERROR_MAX_PRODUCTS = "Maximum number of products exceeded.",
             ERROR_INVALID_ID = "Id not valid",
@@ -19,7 +18,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             PROD_ADD_OK ="Prod add ok";
 
 
-    private ProductManager productManager;
+    private final ProductManager productManager;
 
     @Override
     public void runCommand(CommandTokens tokens) {
@@ -28,10 +27,17 @@ public class ProdAddCommandHandler implements CommandHandler {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
-        //id
 
-        Integer integerid = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_ADD, ERROR_INVALID_ID);
-        if (integerid == null) return;
+        //id
+        if (!tokens.hasNextInt()) {
+            System.out.println(ERROR_INCORRECT_USE_ADD);
+            return;
+        }
+        int productId = tokens.nextInt();
+        if (productManager.existId(productId)) {
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }
 
         //name
 
@@ -82,11 +88,11 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productManager.addCustomizableProduct(integerid, productName, category, price, maxPers);
+                created = productManager.addCustomizableProduct(productId, productName, category, price, maxPers);
             }
 
         } else {
-            created = productManager.addProduct(integerid, productName, category, price);
+            created = productManager.addProduct(productId, productName, category, price);
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);

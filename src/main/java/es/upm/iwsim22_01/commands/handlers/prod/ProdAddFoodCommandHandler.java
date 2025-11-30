@@ -8,16 +8,19 @@ import es.upm.iwsim22_01.models.product.Product;
 import java.time.LocalDateTime;
 
 public class ProdAddFoodCommandHandler implements CommandHandler {
-    private static final String ERROR_MAX_PRODUCTS = "Maximum products reached." ;
-    private ProductManager productManager;
-
-    private static final String ERROR_INCORRECT_USE_ADDFOOD =
-            "Incorrect use: prod addfood <id> <name> <price> <expirationDate> <maxPeople>";
+    private static final String ERROR_MAX_PRODUCTS = "Maximum products reached.";
+    private static final String ERROR_INCORRECT_USE_ADDFOOD = "Incorrect use: prod addfood <id> <name> <price> <expirationDate> <maxPeople>";
     private static final String ERROR_INVALID_ID = "Invalid id";
     private static final String ERROR_INVALID_PRICE = "Invalid price";
     private static final String ERROR_INVALID_DATE = "Invalid date";
     private static final String ERROR_INVALID_MAX_PEOPLE = "Invalid max people";
     private static final String PROD_ADD_OK = "prod addfood: ok";
+
+    private final ProductManager productManager;
+
+    public ProdAddFoodCommandHandler(ProductManager productManager) {
+        this.productManager = productManager;
+    }
 
     @Override
     public void runCommand(CommandTokens tokens) {
@@ -25,10 +28,18 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
-        Integer id = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_ADDFOOD, ERROR_INVALID_ID);
-        if (id == null) {
+
+        //id
+        if (!tokens.hasNextInt()) {
+            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
             return;
         }
+        int productId = tokens.nextInt();
+        if (productManager.existId(productId)) {
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }
+
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
             return;
@@ -74,7 +85,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
         }
 
         Product food = productManager.addFoodProduct(
-                id,
+                productId,
                 name,
                 price,
                 expiration,
@@ -83,10 +94,5 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
 
         System.out.println(food);
         System.out.println(PROD_ADD_OK);
-    }
-
-
-    public ProdAddFoodCommandHandler(ProductManager productManager) {
-        this.productManager = productManager;
     }
 }

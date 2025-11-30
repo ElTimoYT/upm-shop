@@ -9,11 +9,15 @@ import java.util.Comparator;
 
 
 public class ProdListCommandHandler implements CommandHandler {
-    private ProductManager productManager;
-
-    private final String PROD_LIST_OK ="Prod list ok",
+    private static final String PROD_LIST_OK ="Prod list ok",
     CATALOG = "Catalog: ";
 
+    private final ProductManager productManager;
+
+    public ProdListCommandHandler(ProductManager productManager) {
+        this.productManager = productManager;
+
+    }
 
     @Override
     public void runCommand(CommandTokens tokens) {
@@ -24,10 +28,6 @@ public class ProdListCommandHandler implements CommandHandler {
                 .forEach(p -> System.out.println("\t" + p));
 
         System.out.println(PROD_LIST_OK);
-
-    }
-    public ProdListCommandHandler(ProductManager productManager) {
-        this.productManager = productManager;
 
     }
 }

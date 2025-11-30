@@ -1,5 +1,7 @@
 package es.upm.iwsim22_01.models.product;
 
+import es.upm.iwsim22_01.manager.ProductManager;
+
 import java.util.Objects;
 
 
@@ -36,6 +38,12 @@ public abstract class Product {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == this) return true;
+
+        if (obj instanceof Product product) {
+            return product.id == this.id;
+        }
+
         return false;
     }
 

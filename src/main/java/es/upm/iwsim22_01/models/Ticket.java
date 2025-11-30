@@ -97,7 +97,7 @@ public class Ticket {
             items.add(item);
         }
 
-        ticketState = TicketState.ACTIVE;
+        ticketState = TicketState.OPEN;
         return true;
     }
 
@@ -131,7 +131,7 @@ public class Ticket {
 
         TicketLine item = new PersonalizableProductTicketLine(ticketProduct, quantity, lines);
         items.add(item);
-        ticketState = TicketState.ACTIVE;
+        ticketState = TicketState.OPEN;
         return true;
     }
 
@@ -155,14 +155,21 @@ public class Ticket {
     }
 
     public String getFormattedId() {
-        StringBuilder formattedId = new StringBuilder()
-                .append(DATE_FORMAT.format(initialDate))
-                .append("-")
-                .append(getId());
+        StringBuilder formattedId = new StringBuilder();
 
-        if (finalDate != null) {
-            formattedId.append("-")
-                    .append(DATE_FORMAT.format(finalDate));
+        if (ticketState.equals(TicketState.EMPTY)) {
+            formattedId
+                .append(DATE_FORMAT.format(initialDate))
+                .append("-");
+        }
+
+        formattedId.append(getId());
+
+        if (ticketState.equals(TicketState.CLOSED)) {
+            if (finalDate != null) {
+                formattedId.append("-")
+                        .append(DATE_FORMAT.format(finalDate));
+            }
         }
 
         return formattedId.toString();
@@ -207,8 +214,9 @@ public class Ticket {
                 }
                 sb.append(productText);
                 if (discountPerItem > 0) {
-                    sb.append(" **discount -").append(round1(discountPerItem)).append("\n");
+                    sb.append(" **discount -").append(round1(discountPerItem));
                 }
+                sb.append("\n");
             }
         }
 
@@ -261,11 +269,6 @@ public class Ticket {
         }
     }
 
-    public enum TicketState {
-        EMPTY,
-        ACTIVE,
-        CLOSED;
-    }
     public boolean areAllServiceProductsValid() {
         for (TicketLine line : items) {
             Product product = line.product;
@@ -277,5 +280,11 @@ public class Ticket {
             }
         }
         return true;
+    }
+
+    public enum TicketState {
+        EMPTY,
+        OPEN,
+        CLOSED;
     }
 }

@@ -32,21 +32,26 @@ public class App {
         dispatcher.addCommand("cash", new CashierCommandHandler(cashierManager, ticketManager));
         dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, cashierManager, clientManager));
 
+        System.out.println("Welcome to the ticket module App.");
+        System.out.println("Ticket module. Type 'help' to see commands.");
+
         Scanner scanner;
         if (args.length >= 1) {
             try {
                 scanner = new Scanner(new FileReader(args[0]));
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    System.out.println("tUPM> " + line);
+                    dispatcher.processCommand(line);
+                    System.out.println();
+                }
+                scanner.close();
             } catch (FileNotFoundException e) {
                 System.err.println("Fichero " + args[0] + " no encontrado.");
-                scanner = new Scanner(System.in);
             }
-        } else {
-            scanner = new Scanner(System.in);
         }
 
-        System.out.println("Welcome to the ticket module App.");
-        System.out.println("Ticket module. Type 'help' to see commands.");
-
+        scanner = new Scanner(System.in);
         while (menu) {
             System.out.print("tUPM> ");
             dispatcher.processCommand(scanner.nextLine());

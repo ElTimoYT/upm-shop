@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 import es.upm.iwsim22_01.commands.CommandDispatcher;
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.handlers.EchoCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ExitCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.HelpCommandHandler;
@@ -56,7 +57,10 @@ public class App {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     System.out.println("tUPM> " + line);
-                    dispatcher.processCommand(line);
+                    CommandResult result = dispatcher.processCommand(line);
+                    if (result.canShowMessage()) {
+                        System.out.println(result.getMessage());
+                    }
                     System.out.println();
                 }
                 scanner.close();
@@ -69,7 +73,10 @@ public class App {
         scanner = new Scanner(System.in);
         while (menu) {
             System.out.print("tUPM> ");
-            dispatcher.processCommand(scanner.nextLine());
+            CommandResult result = dispatcher.processCommand(scanner.nextLine());
+            if (result.canShowMessage()) {
+                System.out.println(result.getMessage());
+            }
 
             System.out.println();
         }

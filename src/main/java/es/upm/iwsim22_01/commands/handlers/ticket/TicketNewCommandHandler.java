@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.ticket;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -36,14 +37,14 @@ public class TicketNewCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         try {
             switch (tokens.getRemainingTokens()) {
                 case 3:
-                    newTicketCommandWithId(tokens);
+                    newTicketCommandWithId(tokens, result);
                     break;
                 case 2:
-                    newTicketCommandWithoutId(tokens);
+                    newTicketCommandWithoutId(tokens, result);
                     break;
                 default:
                     System.out.println(ERROR_INCORRECT_USE_TICKET_NEW);
@@ -53,7 +54,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         }
     }
 
-    private void newTicketCommandWithoutId(CommandTokens tokens) {
+    private void newTicketCommandWithoutId(CommandTokens tokens, CommandResult result) {
         String cashierId = tokens.next();
         if (!cashierManager.existId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
@@ -74,9 +75,11 @@ public class TicketNewCommandHandler implements CommandHandler {
         System.out.println("  Total discount: 0.0");
         System.out.println("  Final Price: 0.0");
         System.out.println(TICKET_NEW_OK);
+
+        result.success();
     }
 
-    private void newTicketCommandWithId(CommandTokens tokens) {
+    private void newTicketCommandWithId(CommandTokens tokens, CommandResult result) {
         int ticketId = tokens.nextInt();
         if (ticketManager.existId(ticketId)) {
             System.out.println(ERROR_INVALID_ID);
@@ -105,5 +108,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         System.out.println(TICKET + ticket.getFormattedId());
         System.out.println(NEW_TICKET_DATA);
         System.out.println(TICKET_NEW_OK);
+
+        result.success();
     }
 }

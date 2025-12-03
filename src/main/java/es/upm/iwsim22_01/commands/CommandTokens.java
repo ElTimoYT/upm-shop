@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Clase que gestiona una secuencia de tokens y proporciona utilidades para obtenerlos
@@ -75,6 +76,15 @@ public class CommandTokens {
         return token;
     }
 
+    public Optional<String> next(Predicate<String> predicate) {
+        checkToken();
+
+        String token = currentToken;
+        consumeToken();
+
+        return predicate.test(token) ? Optional.of(token) : Optional.empty();
+    }
+
     /**
      * Indica si existe un token disponible.
      *
@@ -115,6 +125,18 @@ public class CommandTokens {
         return optionalInt.getAsInt();
     }
 
+    public OptionalInt nextInt(Predicate<Integer> predicate) {
+        checkToken();
+
+        OptionalInt optionalInt = tryParseInt();
+        if (optionalInt.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not an integer: " + currentToken);
+        }
+
+        consumeToken();
+        return predicate.test(optionalInt.getAsInt()) ? optionalInt : OptionalInt.empty();
+    }
+
     /**
      * Indica si el token actual es un entero válido.
      *
@@ -153,6 +175,18 @@ public class CommandTokens {
 
         consumeToken();
         return optionalDouble.getAsDouble();
+    }
+
+    public OptionalDouble nextDouble(Predicate<Double> predicate) {
+        checkToken();
+
+        OptionalDouble optionalDouble = tryParseDouble();
+        if (optionalDouble.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a double: " + currentToken);
+        }
+
+        consumeToken();
+        return predicate.test(optionalDouble.getAsDouble()) ? optionalDouble : OptionalDouble.empty();
     }
 
     /**
@@ -197,6 +231,18 @@ public class CommandTokens {
         return optionalCategory.get();
     }
 
+    public Optional<Category> nextCategory(Predicate<Category> predicate) {
+        checkToken();
+
+        Optional<Category> optionalCategory = tryParseCategory();
+        if (optionalCategory.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a category: " + currentToken);
+        }
+
+        consumeToken();
+        return predicate.test(optionalCategory.get()) ? optionalCategory : Optional.empty();
+    }
+
     /**
      * Indica si el token actual es una categoría válida.
      *
@@ -236,6 +282,18 @@ public class CommandTokens {
 
         consumeToken();
         return optionalDate.get().atStartOfDay();
+    }
+
+    public Optional<LocalDateTime> nextDate(Predicate<LocalDateTime> predicate) {
+        checkToken();
+
+        Optional<LocalDate> optionalDate = tryParseDate();
+        if (optionalDate.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a date: " + currentToken);
+        }
+
+        consumeToken();
+        return predicate.test(optionalDate.get().atStartOfDay()) ? Optional.of(optionalDate.get().atStartOfDay()) : Optional.empty();
     }
 
     /**

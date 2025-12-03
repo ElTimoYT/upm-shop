@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.ticket;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.TicketManager;
@@ -20,7 +21,7 @@ public class TicketListCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         List<Ticket> allTickets = ticketManager.getAll();
         allTickets.sort(Comparator.comparing(Ticket::getInitialDate));
 
@@ -32,5 +33,6 @@ public class TicketListCommandHandler implements CommandHandler {
             System.out.println("  " + id + " -> " + state);
         }
         System.out.println(TICKET_LIST_OK);
+        result.success();
     }
 }

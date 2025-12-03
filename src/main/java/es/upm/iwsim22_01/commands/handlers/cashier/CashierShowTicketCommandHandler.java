@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.cashier;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -25,7 +26,7 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         try {
             String id = tokens.next();
             if (!cashierManager.existId(id)) {
@@ -48,6 +49,8 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
                     },
                     () -> System.out.println(CASHIER_SHOW_TICKETS_FAIL)
             );
+
+            result.success();
         }catch (Exception e) {
             System.out.println(CASHIER_SHOW_TICKETS_INCORRECT_USE);
         }

@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.cashier;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -21,7 +22,7 @@ public class CashierAddCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         String id = null;
         String name;
         String email;
@@ -56,6 +57,7 @@ public class CashierAddCommandHandler implements CommandHandler {
             System.out.println(cashier);
             System.out.println(CASHIER_ADD_OK);
 
+            result.success();
         }catch (Exception e) {
             System.out.println(CASHIER_ADD_FAIL);
         }

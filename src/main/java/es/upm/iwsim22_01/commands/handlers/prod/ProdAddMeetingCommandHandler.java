@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
@@ -20,7 +21,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
     private static final String ERROR_MAX_PRODUCTS = "Maximum products reached";
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         if (productManager.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
@@ -80,6 +81,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
         System.out.println(meeting);
         System.out.println(PROD_ADD_OK);
 
+        result.success();
     }
 
     public ProdAddMeetingCommandHandler(ProductManager productManager) {

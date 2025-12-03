@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.client;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ClientManager;
@@ -18,7 +19,7 @@ public class ClientListCommandHandler  implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         List<Client> sortedItems = clientManager.getAll();
 
         sortedItems.sort(Comparator.comparing(
@@ -30,5 +31,7 @@ public class ClientListCommandHandler  implements CommandHandler {
             System.out.println("\t" + client);
         }
         System.out.println(OK_CLIENT_LIST);
+
+        result.success();
     }
 }

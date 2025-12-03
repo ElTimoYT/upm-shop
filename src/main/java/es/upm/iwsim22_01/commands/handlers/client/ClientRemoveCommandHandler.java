@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.client;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ClientManager;
@@ -22,7 +23,7 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         try {
             String id = tokens.next();
 
@@ -38,6 +39,7 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
             }
 
             System.out.println(OK_CLIENT_REMOVE);
+            result.success();
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE);
         }

@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 
 public class EchoCommandHandler implements CommandHandler {
@@ -7,12 +8,14 @@ public class EchoCommandHandler implements CommandHandler {
             ECHO_MESSAGE = "\"%s\"";
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE);
         }
 
         System.out.printf(ECHO_MESSAGE, tokens.next());
         System.out.println();
+
+        result.hideMessage();
     }
 }

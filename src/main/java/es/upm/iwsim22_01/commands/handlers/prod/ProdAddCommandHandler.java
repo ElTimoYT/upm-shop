@@ -1,10 +1,15 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
+import es.upm.iwsim22_01.commands.predicates.ValidPricePredicate;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.product.Category;
 import es.upm.iwsim22_01.models.product.AbstractProduct;
+
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 public class ProdAddCommandHandler implements CommandHandler {
     private static final String
@@ -21,7 +26,7 @@ public class ProdAddCommandHandler implements CommandHandler {
     private final ProductManager productManager;
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
 
         if (productManager.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
@@ -71,7 +76,11 @@ public class ProdAddCommandHandler implements CommandHandler {
             }
             return;
         }
-        double price = tokens.nextDouble();
+        OptionalDouble price = tokens.nextDouble(new ValidPricePredicate(productManager));
+        if (price.isEmpty()) {
+            System.out.println(ERROR_INVALID_PRICE);
+            return;
+        }
 
         //crear producto
         AbstractProduct created;
@@ -88,15 +97,16 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productManager.addCustomizableProduct(productId, productName, category, price, maxPers);
+                created = productManager.addCustomizableProduct(productId, productName, category, price.getAsDouble(), maxPers);
             }
 
         } else {
-            created = productManager.addProduct(productId, productName, category, price);
+            created = productManager.addProduct(productId, productName, category, price.getAsDouble());
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);
 
+        result.success();
     }
 
     public ProdAddCommandHandler(ProductManager productManager) {

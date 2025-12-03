@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.commands.handlers.client;
 
 import es.upm.iwsim22_01.commands.CommandDispatcher;
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -22,7 +23,7 @@ public class ClientCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
-        ticketCommandDispatcher.processCommand(tokens);
+    public void runCommand(CommandTokens tokens, CommandResult result) {
+        ticketCommandDispatcher.processCommand(tokens, result);
     }
 }

@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.client;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -27,7 +28,7 @@ public class ClientAddCommandHandler  implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         try {
             String clientTentativeName = tokens.next();
 
@@ -56,6 +57,8 @@ public class ClientAddCommandHandler  implements CommandHandler {
             Client client = clientManager.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
             System.out.println(client);
             System.out.println(OK_CLIENT_ADD);
+
+            result.success();
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE);
         }

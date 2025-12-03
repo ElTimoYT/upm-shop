@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 
 /**
@@ -15,5 +16,5 @@ public interface CommandHandler {
      *
      * @param tokens conjunto de tokens que representan el comando y sus argumentos
      */
-    void runCommand(CommandTokens tokens);
+    void runCommand(CommandTokens tokens, CommandResult result);
 }

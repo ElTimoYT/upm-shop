@@ -59,8 +59,8 @@ public class CommandDispatcher {
      *
      * @param command cadena con el comando y sus argumentos
      */
-    public void processCommand(String command) {
-        processCommand(tokenizeCommand(command));
+    public CommandResult processCommand(String command) {
+        return processCommand(tokenizeCommand(command), new CommandResult());
     }
 
     /**
@@ -69,23 +69,28 @@ public class CommandDispatcher {
      *
      * @param tokens tokens que representan el comando y sus argumentos
      */
-    public void processCommand(CommandTokens tokens) {
+    public CommandResult processCommand(CommandTokens tokens, CommandResult result) {
         if (!tokens.hasNext()) {
             System.out.println(noCommandFoundMessage);
-            return;
+            return result;
         }
 
         String commandName = tokens.next();
         if (!COMMANDS.containsKey(commandName)) {
             System.out.println(unknownCommandMessage);
-            return;
+            return result;
         }
 
         try {
-            COMMANDS.get(commandName).runCommand(tokens);
+            result.initialize();
+            result.addPath(commandName);
+
+            COMMANDS.get(commandName).runCommand(tokens, result);
         } catch (Exception exception) {
             System.out.println(ERROR_UNEXPECTED_EXCEPTION);
         }
+
+        return result;
     }
 
     /**

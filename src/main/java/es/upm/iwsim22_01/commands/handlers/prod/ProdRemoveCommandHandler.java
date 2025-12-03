@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
@@ -17,7 +18,7 @@ public class ProdRemoveCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         if (!tokens.hasNextInt()) {
             System.out.println(ERROR_INCORRECT_USE_REMOVE);
             return;
@@ -34,5 +35,6 @@ public class ProdRemoveCommandHandler implements CommandHandler {
 
         System.out.println(product);
         System.out.println(PROD_REMOVE_OK);
+        result.success();
     }
 }

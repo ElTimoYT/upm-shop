@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandDispatcher;
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
@@ -28,7 +29,7 @@ public class ProdCommandHandler implements CommandHandler {
     }
     
     @Override
-    public void runCommand(CommandTokens tokens) {
-        productCommandDispatcher.processCommand(tokens);
+    public void runCommand(CommandTokens tokens, CommandResult result) {
+        productCommandDispatcher.processCommand(tokens, result);
     }
 }

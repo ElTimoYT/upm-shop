@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
@@ -20,7 +21,7 @@ public class ProdListCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         System.out.println(CATALOG);
 
         productManager.getAll().stream()
@@ -28,6 +29,6 @@ public class ProdListCommandHandler implements CommandHandler {
                 .forEach(p -> System.out.println("\t" + p));
 
         System.out.println(PROD_LIST_OK);
-
+        result.success();
     }
 }

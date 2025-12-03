@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.prod;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
@@ -21,8 +22,9 @@ public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String PROD_UPDATE_PARAMETER_PRICE = "PRICE";
 
     private ProductManager productManager;
+
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         if (!tokens.hasNextInt()) {
             System.out.println(ERROR_INCORRECT_USE_UPDATE);
             return;
@@ -103,6 +105,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
         }
         System.out.println(product);
         System.out.println(PROD_UPDATE_OK);
+        result.success();
     }
 
     public ProdUpdateCommandHandler(ProductManager productManager) {

@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.cashier;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -20,7 +21,7 @@ private static final String ERROR_CASHIER_NOT_FOUND = "Cashier not found",
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         Collection<Cashier> cashiers = cashierManager.getAll();
 
         if (cashiers.isEmpty()) System.out.println(ERROR_CASHIER_NOT_FOUND);
@@ -32,5 +33,7 @@ private static final String ERROR_CASHIER_NOT_FOUND = "Cashier not found",
                     .forEach(c -> System.out.println("  " + c));
         }
         System.out.println(CASHIER_LIST_OK);
+
+        result.success();
     }
 }

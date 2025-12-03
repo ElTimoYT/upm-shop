@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.ticket;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -32,7 +33,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         try {
             int ticketId = tokens.nextInt();
             if (!ticketManager.existId(ticketId)) {
@@ -64,6 +65,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
             System.out.println(ticket.printTicket());
 
             System.out.println(TICKET_REMOVAL_OK);
+            result.success();
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_REMOVE);
         }

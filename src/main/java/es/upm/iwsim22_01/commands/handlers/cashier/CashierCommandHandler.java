@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandDispatcher;
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -26,8 +27,8 @@ public class CashierCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
-        cashierCommandDispatcher.processCommand(tokens);
+    public void runCommand(CommandTokens tokens, CommandResult result) {
+        cashierCommandDispatcher.processCommand(tokens, result);
     }
 
 }

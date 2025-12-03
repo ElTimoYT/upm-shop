@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers.cashier;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
@@ -23,7 +24,7 @@ public class CashierRemoveCommandHandler implements CommandHandler {
     }
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
 
         String id = tokens.next();
 
@@ -41,7 +42,11 @@ public class CashierRemoveCommandHandler implements CommandHandler {
 
         boolean removed = cashierManager.removeCashierAndTickets(id, ticketManager);
 
-        if (removed) System.out.println(CASHIER_REMOVE_OK);
-        else System.out.println(CASHIER_REMOVE_FAIL);
+        if (removed) {
+            System.out.println(CASHIER_REMOVE_OK);
+            result.success();
+        } else {
+            System.out.println(CASHIER_REMOVE_FAIL);
+        }
     }
 }

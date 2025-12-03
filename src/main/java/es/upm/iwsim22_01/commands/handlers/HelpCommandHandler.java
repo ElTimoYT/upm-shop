@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.commands.handlers;
 
+import es.upm.iwsim22_01.commands.CommandResult;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.models.product.Category;
 
@@ -32,7 +33,7 @@ public class HelpCommandHandler implements CommandHandler {
         DISCOUNT_MESSAGE = "\nDiscounts if there are ≥2 units in the category: ";
 
     @Override
-    public void runCommand(CommandTokens tokens) {
+    public void runCommand(CommandTokens tokens, CommandResult result) {
         System.out.print(HELP_MESSAGE);
 
         Category[] categories = Category.values();
@@ -49,5 +50,7 @@ public class HelpCommandHandler implements CommandHandler {
             if (i < categories.length - 1) System.out.print(", ");
             else System.out.print(".");
         }
+
+        result.hideMessage();
     }
 }

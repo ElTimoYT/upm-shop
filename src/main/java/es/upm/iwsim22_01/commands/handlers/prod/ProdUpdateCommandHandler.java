@@ -4,7 +4,7 @@ import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.product.Category;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 import es.upm.iwsim22_01.models.product.UnitProduct;
 
 public class ProdUpdateCommandHandler implements CommandHandler {
@@ -32,7 +32,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
-        Product product = productManager.get(productId);
+        AbstractProduct product = productManager.get(productId);
 
        //param
         if (!tokens.hasNext()) {

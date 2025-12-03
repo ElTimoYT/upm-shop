@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 
 import java.time.LocalDateTime;
 
@@ -74,7 +74,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
 
-        Product meeting;
+        AbstractProduct meeting;
         meeting = productManager.addMeetingProduct(productId, name, price, expiration, maxPeople);
 
         System.out.println(meeting);

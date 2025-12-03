@@ -6,7 +6,7 @@ import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.user.Cashier;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.NoSuchElementException;
@@ -52,7 +52,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
                 return;
             }
 
-            Product product = productManager.get(productId);
+            AbstractProduct product = productManager.get(productId);
             Ticket ticket = ticketManager.get(ticketId);
             Cashier cashier = cashierManager.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {

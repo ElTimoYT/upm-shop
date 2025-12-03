@@ -7,7 +7,7 @@ import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.*;
 import es.upm.iwsim22_01.models.product.PersonalizableProduct;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 import es.upm.iwsim22_01.models.product.ProductService;
 import es.upm.iwsim22_01.models.user.Cashier;
 
@@ -68,7 +68,7 @@ public class TicketAddCommandHandler implements CommandHandler {
                 return;
             }
 
-            Product product = productManager.get(productId);
+            AbstractProduct product = productManager.get(productId);
             Ticket ticket = ticketManager.get(ticketId);
             Cashier cashier = cashierManager.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
@@ -82,7 +82,7 @@ public class TicketAddCommandHandler implements CommandHandler {
                         System.out.println(ERROR_INVALID_DATE);
                         return;
                     }
-                    productService.setPersonasApuntadas(amount + productService.getPersonasApuntadas());
+                    productService.setParticipantsAmount(amount + productService.getParticipantsAmount());
                     ticket.addProduct(productService, amount);
 
                 }else{

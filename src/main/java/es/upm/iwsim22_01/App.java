@@ -14,6 +14,11 @@ import es.upm.iwsim22_01.commands.handlers.prod.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ticket.TicketCommandHandler;
 import es.upm.iwsim22_01.manager.*;
 
+/**
+ * Clase principal de la aplicación de gestión de tickets.
+ * Esta clase inicializa los gestores y el despachador de comandos,
+ * y proporciona un bucle interactivo para procesar comandos de usuario.
+ */
 public class App {
     private static boolean menu = true;
     private static CommandDispatcher dispatcher = new CommandDispatcher();
@@ -21,9 +26,16 @@ public class App {
     private static ProductManager productManager = new ProductManager();
     private static CashierManager cashierManager = new CashierManager();
     private static ClientManager clientManager = new ClientManager(cashierManager);
-    private static TicketManager ticketManager = new TicketManager(clientManager, cashierManager);
+    private static TicketManager ticketManager = new TicketManager();
 
+    /**
+     * Método principal de la aplicación.
+     * Registra los manejadores de comandos y procesa las entradas del usuario.
+     *
+     * @param args Argumentos de línea de comandos. Si se proporciona un archivo, se ejecutarán los comandos desde él.
+     */
     public static void main(String[] args) {
+        // Registrar manejadores de comandos
         dispatcher.addCommand("exit", new ExitCommandHandler());
         dispatcher.addCommand("help", new HelpCommandHandler());
         dispatcher.addCommand("echo", new EchoCommandHandler());
@@ -32,9 +44,11 @@ public class App {
         dispatcher.addCommand("cash", new CashierCommandHandler(cashierManager, ticketManager));
         dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, cashierManager, clientManager));
 
+        // Mensaje de bienvenida
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");
 
+        // Procesar comandos desde archivo si se proporciona
         Scanner scanner;
         if (args.length >= 1) {
             try {
@@ -51,6 +65,7 @@ public class App {
             }
         }
 
+        // Procesar comandos desde consola
         scanner = new Scanner(System.in);
         while (menu) {
             System.out.print("tUPM> ");
@@ -59,12 +74,16 @@ public class App {
             System.out.println();
         }
 
+        // Mensaje de despedida
         System.out.println("""
                 Closing application.
                 Goodbye!
                 """);
     }
 
+    /**
+     * Finaliza el bucle principal del menú.
+     */
     public static void exitMenu() {
         menu = false;
     }

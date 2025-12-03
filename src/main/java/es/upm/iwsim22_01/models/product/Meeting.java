@@ -4,11 +4,35 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/**
+ * Clase que representa un producto de tipo reunión, especialización de {@link ProductService}.
+ * Implementa reglas específicas para validar la fecha y hora de las reuniones,
+ * asegurando que se cumplan los plazos mínimos de reserva y cancelación.
+ */
 public class Meeting extends ProductService{
+    /**
+     * Constructor de la clase Meeting.
+     *
+     * @param id               Identificador único del producto.
+     * @param name             Nombre del producto.
+     * @param pricePerPerson   Precio por persona.
+     * @param maxPers          Número máximo de participantes.
+     * @param expirationDate   Fecha y hora de caducidad/reserva del servicio.
+     */
     public Meeting(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate){
         super(id,name, pricePerPerson,maxPers,expirationDate);
     }
 
+    /**
+     * Valida que la fecha y hora de la reunión cumplan las reglas de negocio:
+     *
+     * La fecha de caducidad debe ser posterior a 12 horas desde el momento actual.
+     * Si la reunión es para el día siguiente, la reserva debe realizarse antes del mediodía del día actual.
+     *
+     * Además, verifica la validez de la fecha mediante la implementación de la clase padre.
+     *
+     * @return true si la fecha y hora son válidas según las reglas de negocio, false en caso contrario.
+     */
     @Override
     public boolean checkTime() {
         if (!super.checkTime()) {

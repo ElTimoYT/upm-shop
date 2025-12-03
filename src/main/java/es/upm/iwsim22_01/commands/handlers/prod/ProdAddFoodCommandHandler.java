@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 
 import java.time.LocalDateTime;
 
@@ -84,7 +84,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
 
-        Product food = productManager.addFoodProduct(
+        AbstractProduct food = productManager.addFoodProduct(
                 productId,
                 name,
                 price,

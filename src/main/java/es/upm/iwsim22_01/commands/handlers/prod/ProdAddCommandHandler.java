@@ -4,7 +4,7 @@ import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.models.product.Category;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 
 public class ProdAddCommandHandler implements CommandHandler {
     private static final String
@@ -74,7 +74,7 @@ public class ProdAddCommandHandler implements CommandHandler {
         double price = tokens.nextDouble();
 
         //crear producto
-        Product created;
+        AbstractProduct created;
 
         if (tokens.hasNext()) {
 

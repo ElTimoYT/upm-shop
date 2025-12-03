@@ -217,7 +217,7 @@ package managers {
 
 package models {
 package products {
-  abstract class Product {
+  abstract class AbstractProduct{
     - id: int
     - name: String
     - price: double
@@ -387,8 +387,8 @@ AbstractManager <|-- ClientManager
 AbstractManager <|-- TicketManager
 AbstractManager <|-- CashierManager
 
-Product <|-- UnitProduct
-Product <|-- ProductService
+AbstractProduct <|-- UnitProduct
+AbstractProduct <|-- ProductService
 ProductService <|-- Catering
 ProductService <|-- Meeting
 UnitProduct <|-- PersonalizableProduct
@@ -398,10 +398,13 @@ CashierManager o-- Cashier
 ClientManager o-- Client
 TicketManager o-- Ticket
 
-Ticket *-- Product : contains
+Ticket *-- AbstractProduct: contains
 Cashier --> "0..*" Ticket : tickets
 Client --> "0..*" Ticket : tickets
 Client --> Cashier : registeredBy
+
+AbstractUser <|-- Cashier
+AbstractUser <|-- Client
 
 TicketManager ..> ClientManager
 TicketManager ..> CashierManager

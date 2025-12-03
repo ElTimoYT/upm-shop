@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 
 import java.util.Comparator;
 
@@ -24,7 +24,7 @@ public class ProdListCommandHandler implements CommandHandler {
         System.out.println(CATALOG);
 
         productManager.getAll().stream()
-                .sorted(Comparator.comparingInt(Product::getId))
+                .sorted(Comparator.comparingInt(AbstractProduct::getId))
                 .forEach(p -> System.out.println("\t" + p));
 
         System.out.println(PROD_LIST_OK);

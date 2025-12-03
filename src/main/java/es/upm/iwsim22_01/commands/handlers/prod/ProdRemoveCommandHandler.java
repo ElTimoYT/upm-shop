@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 
 public class ProdRemoveCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE_REMOVE = "Incorrect use: prod remove <id>";
@@ -28,7 +28,7 @@ public class ProdRemoveCommandHandler implements CommandHandler {
             return;
         }
 
-        Product product = productManager.get(productId);
+        AbstractProduct product = productManager.get(productId);
 
         productManager.remove(productId);
 

@@ -393,7 +393,7 @@ ProductService <|-- Catering
 ProductService <|-- Meeting
 UnitProduct <|-- PersonalizableProduct
 
-ProductManager o-- Product
+ProductManager o-- AbstractProduct
 CashierManager o-- Cashier
 ClientManager o-- Client
 TicketManager o-- Ticket

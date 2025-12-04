@@ -3,10 +3,8 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Meetings;
-import es.upm.iwsim22_01.models.Product;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -27,10 +25,18 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
-        Integer id = tokens.nextAsIntegerId(productManager, true, ERROR_INCORRECT_USE_ADDM, ERROR_INVALID_ID);
-        if (id == null) {
+
+        //id
+        if (!tokens.hasNextInt()) {
+            System.out.println(ERROR_INCORRECT_USE_ADDM);
             return;
         }
+        int productId = tokens.nextInt();
+        if (productManager.existId(productId)) {
+            System.out.println(ERROR_INVALID_ID);
+            return;
+        }
+
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADDM);
             return;
@@ -63,13 +69,13 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
         int maxPeople = tokens.nextInt();
-        if (maxPeople < 1) {
+        if (maxPeople < 1 || maxPeople > 100) {
             System.out.println(ERROR_INVALID_MAXPEOPLE);
             return;
         }
 
-        Product meeting;
-        meeting = productManager.addMeetingProduct(id, name, price, expiration, maxPeople);
+        AbstractProduct meeting;
+        meeting = productManager.addMeetingProduct(productId, name, price, expiration, maxPeople);
 
         System.out.println(meeting);
         System.out.println(PROD_ADD_OK);

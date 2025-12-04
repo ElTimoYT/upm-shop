@@ -1,40 +1,77 @@
 package es.upm.iwsim22_01.manager;
 
-import es.upm.iwsim22_01.models.*;
+import es.upm.iwsim22_01.models.product.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-public class ProductManager extends AbstractManager<Product, Integer> {
+/**
+ * Gestor de productos, encargado de la creación, validación y registro de instancias de {@link AbstractProduct}.
+ * Permite añadir diferentes tipos de productos al sistema, validando sus parámetros y restricciones.
+ */
+public class ProductManager extends AbstractManager<AbstractProduct, Integer> {
     private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
 
-    public Product addProduct(int id, String name, Category category, double price) {
+    /**
+     * Añade un producto unitario al sistema.
+     *
+     * @param id       Identificador único del producto.
+     * @param name     Nombre del producto (no puede ser nulo, vacío o superar {@value #MAX_NAME_LENGTH} caracteres).
+     * @param category Categoría del producto.
+     * @param price    Precio del producto (debe ser mayor que 0).
+     * @return La instancia de {@link AbstractProduct} creada.
+     * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido o el producto ya existe.
+     * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
+     */
+    public AbstractProduct addProduct(int id, String name, Category category, double price) {
         if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
 
-        Product product = new UnitProduct(id, name, category, price);
+        AbstractProduct product = new UnitProduct(id, name, category, price);
         add(product, id);
 
         return product;
     }
 
-    public Product addCustomizableProduct(int id, String name, Category category, double price, int maxText){
+    /**
+     * Añade un producto personalizable al sistema.
+     *
+     * @param id           Identificador único del producto.
+     * @param name         Nombre del producto (no puede ser nulo, vacío o superar {@value #MAX_NAME_LENGTH} caracteres).
+     * @param category     Categoría del producto.
+     * @param price        Precio del producto (debe ser mayor que 0).
+     * @param maxText      Número máximo de caracteres personalizables (debe ser mayor o igual a 1).
+     * @return La instancia de {@link AbstractProduct} creada.
+     * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido, el producto ya existe o maxText es menor que 1.
+     * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
+     */
+    public AbstractProduct addCustomizableProduct(int id, String name, Category category, double price, int maxText){
         if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
         if (maxText < 1) throw new IllegalArgumentException("Max pers " + maxText + " cannot be less than 1.");
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists(cannot convert basic to customizable).");
 
-        Product product = new PersonalizableProduct(id, name, category, price, maxText);
+        AbstractProduct product = new PersonalizableProduct(id, name, category, price, maxText);
         add(product, id);
 
         return  product;
 
     }
 
-    public Product addFoodProduct(int id, String name, double price, LocalDateTime expirationDate, int maxParticipants){
+    /**
+     * Añade un producto de catering al sistema.
+     *
+     * @param id               Identificador único del producto.
+     * @param name             Nombre del producto (no puede ser nulo, vacío o superar {@value #MAX_NAME_LENGTH} caracteres).
+     * @param price            Precio del producto (debe ser mayor que 0).
+     * @param expirationDate   Fecha de caducidad del producto (no puede ser nula).
+     * @param maxParticipants   Número máximo de participantes (debe ser mayor o igual a 1).
+     * @return La instancia de {@link AbstractProduct} creada.
+     * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido, la fecha de caducidad es nula, maxParticipants es menor que 1 o el producto ya existe.
+     * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
+     */
+    public AbstractProduct addFoodProduct(int id, String name, double price, LocalDateTime expirationDate, int maxParticipants){
         if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + price + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
@@ -43,12 +80,24 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists.");
 
 
-        Product food = new Catering(id, name,price, maxParticipants, expirationDate);
+        AbstractProduct food = new Catering(id, name,price, maxParticipants, expirationDate);
         add(food, id);
         return  food;
     }
 
-    public Product addMeetingProduct(int id, String name, double pricePerPerson, LocalDateTime expirationDate, int maxParticipants){
+    /**
+     * Añade un producto de reunión al sistema.
+     *
+     * @param id               Identificador único del producto.
+     * @param name             Nombre del producto (no puede ser nulo, vacío o superar {@value #MAX_NAME_LENGTH} caracteres).
+     * @param pricePerPerson   Precio por persona (debe ser mayor que 0).
+     * @param expirationDate   Fecha de caducidad del producto (no puede ser nula).
+     * @param maxParticipants   Número máximo de participantes (debe ser mayor o igual a 1).
+     * @return La instancia de {@link AbstractProduct} creada.
+     * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido, la fecha de caducidad es nula, maxParticipants es menor que 1 o el producto ya existe.
+     * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
+     */
+    public AbstractProduct addMeetingProduct(int id, String name, double pricePerPerson, LocalDateTime expirationDate, int maxParticipants){
         if (!isPriceValid(pricePerPerson)) throw new IllegalArgumentException("Product price " + pricePerPerson + " cannot be negative.");
         if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
         if (isProductListFull()) throw new RuntimeException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
@@ -57,19 +106,36 @@ public class ProductManager extends AbstractManager<Product, Integer> {
         if (existId(id)) throw new IllegalArgumentException("Product id " + id + " already exists.");
 
 
-        Product meeting = new Meetings(id, name, pricePerPerson, maxParticipants, expirationDate);
+        AbstractProduct meeting = new Meeting(id, name, pricePerPerson, maxParticipants, expirationDate);
         add(meeting, id);
         return meeting;
     }
 
+    /**
+     * Valida el nombre de un producto.
+     *
+     * @param name Nombre del producto a validar.
+     * @return {@code true} si el nombre es válido (no nulo, no vacío y no supera {@value #MAX_NAME_LENGTH} caracteres).
+     */
     public boolean isNameValid(String name) {
         return name != null && !name.isBlank() && name.length() < MAX_NAME_LENGTH;
     }
 
+    /**
+     * Valida el precio de un producto.
+     *
+     * @param price Precio del producto a validar.
+     * @return {@code true} si el precio es mayor que 0.
+     */
     public boolean isPriceValid(double price) {
         return price > 0;
     }
 
+    /**
+     * Comprueba si se ha alcanzado el número máximo de productos permitidos.
+     *
+     * @return {@code true} si el número de productos es mayor o igual a {@value #MAX_PRODUCTS}.
+     */
     public boolean isProductListFull() {
         return getSize() >= ProductManager.MAX_PRODUCTS;
     }

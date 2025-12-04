@@ -4,9 +4,7 @@ import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.Cashier;
-import es.upm.iwsim22_01.models.Product;
-import es.upm.iwsim22_01.models.ProductService;
+import es.upm.iwsim22_01.models.user.Cashier;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.NoSuchElementException;
@@ -17,7 +15,7 @@ public class TicketPrintCommandHandler implements CommandHandler {
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
             ERROR_TICKET_NOT_FOUND = "Ticket not found",
             ERROR_TICKET_SERVICE_PRODUCT_INVALID = "One of the service products expiration date is invalid",
-            ERROR_TICKET_CASHIER_MISMATCH = "This cashier cannot close the ticket",
+            ERROR_CASHIER_NOT_ASSIGNED = "Cashier is not assigned to this ticket",
 
             TICKET_PRINT_OK = "ticket print: ok";
 
@@ -46,10 +44,11 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
             Ticket ticket = ticketManager.get(ticketId);
             Cashier cashier = cashierManager.get(cashierId);
-            if (!cashierHasTicket(cashier, ticketId)) {
-                System.out.println(ERROR_TICKET_CASHIER_MISMATCH);
+            if (!cashier.getTickets().contains(ticket)) {
+                System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
                 return;
             }
+
             if (!ticket.areAllServiceProductsValid()) {
                 System.out.println(ERROR_TICKET_SERVICE_PRODUCT_INVALID);
                 return;
@@ -62,14 +61,4 @@ public class TicketPrintCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);
         }
     }
-    private boolean cashierHasTicket(Cashier cashier, int ticketId) {
-        for (Ticket t : cashier.getTickets()) {
-            if (t.getId() == ticketId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 }

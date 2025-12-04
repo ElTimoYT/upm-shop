@@ -1,16 +1,16 @@
 package es.upm.iwsim22_01.commands.handlers.ticket;
 
-import es.upm.iwsim22_01.Validators.ServiceProductTimeValidator;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
 import es.upm.iwsim22_01.manager.ProductManager;
 import es.upm.iwsim22_01.manager.TicketManager;
 import es.upm.iwsim22_01.models.*;
+import es.upm.iwsim22_01.models.product.PersonalizableProduct;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.models.product.ProductService;
+import es.upm.iwsim22_01.models.user.Cashier;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,6 +23,9 @@ public class TicketAddCommandHandler implements CommandHandler {
             ERROR_TICKET_NOT_FOUND = "Ticket not found",
             ERROR_INVALID_AMOUNT = "Invalid amount",
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
+            ERROR_INVALID_DATE = "Date of the product already passed",
+            ERROR_CASHIER_NOT_ASSIGNED = "Cashier is not assigned to this ticket",
+            ERROR_PARAM_NOT_VALID = "Command param %s not valid, the command will ignore this param\n",
 
             TICKET_CLOSED = "Ticket closed",
             TICKET_ADD_OK = "ticket add: ok";
@@ -65,16 +68,21 @@ public class TicketAddCommandHandler implements CommandHandler {
                 return;
             }
 
-            Product product = productManager.get(productId);
+            AbstractProduct product = productManager.get(productId);
             Ticket ticket = ticketManager.get(ticketId);
+            Cashier cashier = cashierManager.get(cashierId);
+            if (!cashier.getTickets().contains(ticket)) {
+                System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
+                return;
+            }
 
             if(ticket.getState() != Ticket.TicketState.CLOSED){
-                if (product instanceof ProductService) {
-                    ProductService productService = (ProductService) product;
-                    if (!ServiceProductTimeValidator.isValid(productService)) {
+                if (product instanceof ProductService productService) {
+                    if (!productService.checkTime()) {
+                        System.out.println(ERROR_INVALID_DATE);
                         return;
                     }
-                    productService.setPersonasApuntadas(amount + productService.getPersonasApuntadas());
+                    productService.setParticipantsAmount(amount + productService.getParticipantsAmount());
                     ticket.addProduct(productService, amount);
 
                 }else{
@@ -82,12 +90,14 @@ public class TicketAddCommandHandler implements CommandHandler {
                         if (product instanceof PersonalizableProduct personalizableProduct) {
                             List<String> personalization = new ArrayList<>();
                             while (tokens.hasNext()) {
-                                String tok = tokens.next();
-                                if (tok.startsWith("--p")) {
-                                    String text = tok.substring(3).trim(); // quitar "--p"
+                                String token = tokens.next();
+                                if (token.startsWith("--p")) {
+                                    String text = token.substring(3).trim(); // quitar "--p"
                                     if (!text.isEmpty()) {
                                         personalization.add(text);
                                     }
+                                } else {
+                                    System.out.printf(ERROR_PARAM_NOT_VALID, token);
                                 }
                             }
                             String[] lines = personalization.toArray(new String[0]);

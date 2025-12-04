@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.models.Cashier;
+import es.upm.iwsim22_01.models.user.Cashier;
 import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.Collection;

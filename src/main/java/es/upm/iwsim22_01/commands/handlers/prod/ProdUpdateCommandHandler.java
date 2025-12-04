@@ -3,32 +3,36 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.Category;
-import es.upm.iwsim22_01.models.Product;
-import es.upm.iwsim22_01.models.UnitProduct;
+import es.upm.iwsim22_01.models.product.Category;
+import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.models.product.UnitProduct;
 
-public class ProdUpdateCommandHnadler implements CommandHandler {
+public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE_UPDATE =
-            "Incorrect use: prod update <id> <parameter> <value>";
+            "Incorrect use: prod update <id> NAME|CATEGORY|PRICE <value>";
     private static final String ERROR_INVALID_ID = "Invalid id";
     private static final String ERROR_PRODUCT_NOT_FOUND = "Product not found";
     private static final String ERROR_INVALID_NAME = "Invalid name";
     private static final String ERROR_INVALID_CATEGORY = "Invalid category";
     private static final String ERROR_INVALID_PRICE = "Invalid price";
     private static final String PROD_UPDATE_OK = "prod update: ok";
-    private static final String PROD_UPDATE_PARAMETER_NAME = "name";
-    private static final String PROD_UPDATE_PARAMETER_CATEGORY = "category";
-    private static final String PROD_UPDATE_PARAMETER_PRICE = "price";
+    private static final String PROD_UPDATE_PARAMETER_NAME = "NAME";
+    private static final String PROD_UPDATE_PARAMETER_CATEGORY = "CATEGORY";
+    private static final String PROD_UPDATE_PARAMETER_PRICE = "PRICE";
 
     private ProductManager productManager;
     @Override
     public void runCommand(CommandTokens tokens) {
-        //id
-        Integer id = tokens.nextAsIntegerId(productManager, false, ERROR_INCORRECT_USE_UPDATE, ERROR_INVALID_ID);
-        if (id == null) {
+        if (!tokens.hasNextInt()) {
+            System.out.println(ERROR_INCORRECT_USE_UPDATE);
             return;
         }
-        Product product = productManager.get(id);
+        int productId = tokens.nextInt();
+        if (!productManager.existId(productId)) {
+            System.out.println(ERROR_PRODUCT_NOT_FOUND);
+            return;
+        }
+        AbstractProduct product = productManager.get(productId);
 
        //param
         if (!tokens.hasNext()) {
@@ -101,7 +105,7 @@ public class ProdUpdateCommandHnadler implements CommandHandler {
         System.out.println(PROD_UPDATE_OK);
     }
 
-    public  ProdUpdateCommandHnadler(ProductManager productManager) {
+    public ProdUpdateCommandHandler(ProductManager productManager) {
         this.productManager = productManager;
     }
 

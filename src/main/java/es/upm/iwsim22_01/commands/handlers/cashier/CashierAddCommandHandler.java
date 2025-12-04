@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.models.Cashier;
+import es.upm.iwsim22_01.models.user.Cashier;
 
 public class CashierAddCommandHandler implements CommandHandler {
 
@@ -36,7 +36,7 @@ public class CashierAddCommandHandler implements CommandHandler {
                     return;
                 }
 
-                if (!cashierManager.correctIdFormat(id)){
+                if (!cashierManager.checkId(id)){
                     System.out.println(ERROR_INVALID_ID_FORMAT);
                     return;
                 }

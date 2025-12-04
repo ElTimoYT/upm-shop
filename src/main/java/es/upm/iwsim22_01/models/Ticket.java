@@ -1,11 +1,15 @@
 package es.upm.iwsim22_01.models;
 
-import es.upm.iwsim22_01.Validators.ServiceProductTimeValidator;
+import es.upm.iwsim22_01.models.product.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map.Entry;
 
+/**
+ * Clase que representa un ticket de compra en el sistema.
+ * Un ticket puede contener múltiples productos, aplicar descuentos por categoría,
+ * y gestionar su estado (abierto, cerrado, vacío).
+ */
 public class Ticket {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd-HH:mm");
     public static final int MAX_PRODUCTS = 100;
@@ -16,16 +20,31 @@ public class Ticket {
     private TicketState ticketState = TicketState.EMPTY;
     private final List<TicketLine> items = new ArrayList<>();
 
+    /**
+     * Constructor de la clase Ticket.
+     *
+     * @param id Identificador único del ticket.
+     */
     public Ticket(int id) {
         this.id = id;
 
         initialDate = new Date();
     }
 
+    /**
+     * Obtiene el identificador del ticket.
+     *
+     * @return El identificador del ticket.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Calcula el número total de unidades en el ticket.
+     *
+     * @return Número total de unidades.
+     */
     private int totalUnits() {
         int totalUnits = 0;
 
@@ -36,6 +55,11 @@ public class Ticket {
         return totalUnits;
     }
 
+    /**
+     * Cuenta la cantidad de productos por categoría.
+     *
+     * @return Mapa con la cantidad de productos por categoría.
+     */
     private Map<Category, Integer> countCategory() {
         Map<Category, Integer> amounts = new EnumMap<>(Category.class);
         for (Category category : Category.values()) amounts.put(category, 0);
@@ -49,7 +73,14 @@ public class Ticket {
         return amounts;
     }
 
-    private double perItemDiscount(Product product, Map<Category, Integer> counts) {
+    /**
+     * Calcula el descuento aplicable a un producto según su categoría y cantidad.
+     *
+     * @param product Producto del que calcular el descuento.
+     * @param counts Mapa con la cantidad de productos por categoría.
+     * @return Descuento aplicable al producto.
+     */
+    private double perItemDiscount(AbstractProduct product, Map<Category, Integer> counts) {
         if (product instanceof UnitProduct unitProduct) {
             Category category = unitProduct.getCategory();
             int n = counts.getOrDefault(category, 0);
@@ -62,10 +93,21 @@ public class Ticket {
         return 0.0;
     }
 
+    /**
+     * Redondea un valor a dos decimales.
+     *
+     * @param v Valor a redondear.
+     * @return Valor redondeado.
+     */
     private static double round1(double v) {
         return Math.round(v * 100.0) / 100.0;
     }
 
+    /**
+     * Calcula el precio total del ticket sin descuentos.
+     *
+     * @return Precio total sin descuentos.
+     */
     private double totalPrice() {
         double total = 0.0;
         for (TicketLine item : items) {
@@ -74,6 +116,12 @@ public class Ticket {
 
         return total;
     }
+
+    /**
+     * Calcula el descuento total aplicable al ticket.
+     *
+     * @return Descuento total.
+     */
 
     private double discountPrice() {
         Map<Category, Integer> counts = countCategory();
@@ -85,7 +133,14 @@ public class Ticket {
         return round1(discount);
     }
 
-    public boolean addProduct(Product product, int quantity) {
+    /**
+     * Añade un producto al ticket.
+     *
+     * @param product Producto a añadir.
+     * @param quantity Cantidad del producto.
+     * @return true si el producto se añadió correctamente, false en caso contrario.
+     */
+    public boolean addProduct(AbstractProduct product, int quantity) {
         if (product == null || quantity <= 0) return false;
 
         int remaining = MAX_PRODUCTS - totalUnits();
@@ -98,11 +153,18 @@ public class Ticket {
             items.add(item);
         }
 
-        ticketState = TicketState.ACTIVE;
+        ticketState = TicketState.OPEN;
         return true;
     }
 
-
+    /**
+     * Añade un producto personalizable al ticket.
+     *
+     * @param personalizableProduct Producto personalizable a añadir.
+     * @param quantity Cantidad del producto.
+     * @param lines Líneas de personalización.
+     * @return true si el producto se añadió correctamente, false en caso contrario.
+     */
     public boolean addProduct(PersonalizableProduct personalizableProduct, int quantity, String[] lines) {
         if (personalizableProduct == null || quantity <= 0) return false;
         if (lines == null) lines = new String[0];
@@ -130,14 +192,22 @@ public class Ticket {
 
         TicketLine item = new PersonalizableProductTicketLine(ticketProduct, quantity, lines);
         items.add(item);
-        ticketState = TicketState.ACTIVE;
+        ticketState = TicketState.OPEN;
         return true;
     }
 
-    public void removeProduct(Product product) {
+    /**
+     * Elimina un producto del ticket.
+     *
+     * @param product Producto a eliminar.
+     */
+    public void removeProduct(AbstractProduct product) {
         items.remove(new TicketLine(product, 0));
     }
 
+    /**
+     * Cierra el ticket, estableciendo la fecha de cierre y cambiando su estado a CLOSED.
+     */
     public void closeTicket() {
         if (ticketState.equals(TicketState.CLOSED)) return;
 
@@ -145,30 +215,58 @@ public class Ticket {
         ticketState = TicketState.CLOSED;
     }
 
+    /**
+     * Obtiene el estado actual del ticket.
+     *
+     * @return Estado del ticket.
+     */
     public TicketState getState() {
         return ticketState;
     }
 
+    /**
+     * Obtiene la fecha de creación del ticket.
+     *
+     * @return Fecha de creación.
+     */
     public Date getInitialDate(){
         return initialDate;
     }
 
+    /**
+     * Devuelve el identificador del ticket formateado.
+     *
+     * @return Identificador formateado del ticket.
+     */
     public String getFormattedId() {
-        StringBuilder formattedId = new StringBuilder()
-                .append(DATE_FORMAT.format(initialDate))
-                .append("-")
-                .append(getId());
+        StringBuilder formattedId = new StringBuilder();
 
-        if (finalDate != null) {
-            formattedId.append("-")
-                    .append(DATE_FORMAT.format(finalDate));
+        if (ticketState.equals(TicketState.EMPTY)) {
+            formattedId
+                .append(DATE_FORMAT.format(initialDate))
+                .append("-");
+        }
+
+        formattedId.append(getId());
+
+        if (ticketState.equals(TicketState.CLOSED)) {
+            if (finalDate != null) {
+                formattedId.append("-")
+                        .append(DATE_FORMAT.format(finalDate));
+            }
         }
 
         return formattedId.toString();
     }
+
+    /**
+     * Imprime el ticket con todos sus detalles.
+     *
+     * @return Cadena con la representación completa del ticket.
+     */
     public String printTicket() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getFormattedId()).append("\n\n");
+        sb.append("Ticket: ").append(getFormattedId()).append("\n");
 
         Map<Category, Integer> counts = countCategory();
         List<TicketLine> sortedItems = new ArrayList<>(items);
@@ -178,7 +276,7 @@ public class Ticket {
         ));
 
         for (TicketLine line : sortedItems) {
-            Product product = line.product;
+            AbstractProduct product = line.product;
             int quantity = line.amount;
             double discountPerItem = perItemDiscount(product, counts);
 
@@ -206,8 +304,9 @@ public class Ticket {
                 }
                 sb.append(productText);
                 if (discountPerItem > 0) {
-                    sb.append(" **discount -").append(round1(discountPerItem)).append("\n");
+                    sb.append(" **discount -").append(round1(discountPerItem));
                 }
+                sb.append("\n");
             }
         }
 
@@ -223,17 +322,42 @@ public class Ticket {
         return sb.toString();
     }
 
+    /**
+     * Verifica si todos los productos de servicio en el ticket son válidos.
+     *
+     * @return true si todos los productos de servicio son válidos, false en caso contrario.
+     */
+    public boolean areAllServiceProductsValid() {
+        for (TicketLine line : items) {
+            AbstractProduct product = line.product;
 
+            if (product instanceof ProductService ps) {
+                if (!ps.checkTime()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Devuelve una representación en cadena del ticket.
+     *
+     * @return Identificador formateado del ticket.
+     */
     @Override
     public String toString() {
         return getFormattedId();
     }
 
+    /**
+     * Clase interna que representa una línea de ticket (producto y cantidad).
+     */
     private static class TicketLine {
-        private final Product product;
+        private final AbstractProduct product;
         private int amount;
 
-        private TicketLine(Product product, int amount) {
+        private TicketLine(AbstractProduct product, int amount) {
             this.product = product;
             this.amount = amount;
         }
@@ -251,6 +375,9 @@ public class Ticket {
         }
     }
 
+    /**
+     * Clase interna que representa una línea de ticket para productos personalizables.
+     */
     private static class PersonalizableProductTicketLine extends TicketLine {
         private final String[] lines;
 
@@ -260,22 +387,12 @@ public class Ticket {
         }
     }
 
+    /**
+     * Enumeración que representa los posibles estados de un ticket.
+     */
     public enum TicketState {
         EMPTY,
-        ACTIVE,
+        OPEN,
         CLOSED;
-    }
-    public boolean areAllServiceProductsValid() {
-        for (TicketLine line : items) {
-            Product product = line.product;
-
-            if (product instanceof ProductService) {
-                ProductService ps = (ProductService) product;
-                if (!ServiceProductTimeValidator.isValid(ps)) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

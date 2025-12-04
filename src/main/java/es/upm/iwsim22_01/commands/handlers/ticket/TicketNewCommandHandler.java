@@ -15,7 +15,14 @@ public class TicketNewCommandHandler implements CommandHandler {
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
             ERROR_CLIENT_NOT_FOUND = "Client not found",
             ERROR_INVALID_ID = "Invalid id",
+            ERROR_INVALID_ID_FORMAT = "Ticket id format is invalid",
 
+            TICKET = "Ticket: ",
+            NEW_TICKET_DATA = """
+                          Total price: 0.0
+                          Total discount: 0.0
+                          Final Price: 0.0
+                    """,
             TICKET_NEW_OK = "ticket new: ok";
 
     private final TicketManager ticketManager;
@@ -75,6 +82,10 @@ public class TicketNewCommandHandler implements CommandHandler {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
+        if (!ticketManager.checkId(ticketId)){
+            System.out.println(ERROR_INVALID_ID_FORMAT);
+            return;
+        }
 
         String cashierId = tokens.next();
         if (!cashierManager.existId(cashierId)) {
@@ -91,10 +102,8 @@ public class TicketNewCommandHandler implements CommandHandler {
         Ticket ticket = ticketManager.addTicket(ticketId);
         cashierManager.get(cashierId).addTicket(ticket);
         clientManager.get(clientId).addTicket(ticket);
-        System.out.println("Ticket: " + ticket);
-        System.out.println("  Total price: 0.0");
-        System.out.println("  Total discount: 0.0");
-        System.out.println("  Final Price: 0.0");
+        System.out.println(TICKET + ticket.getFormattedId());
+        System.out.println(NEW_TICKET_DATA);
         System.out.println(TICKET_NEW_OK);
     }
 }

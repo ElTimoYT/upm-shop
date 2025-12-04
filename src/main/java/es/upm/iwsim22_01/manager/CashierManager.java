@@ -1,7 +1,9 @@
 package es.upm.iwsim22_01.manager;
 
+import es.upm.iwsim22_01.models.Ticket;
 import es.upm.iwsim22_01.models.user.Cashier;
 
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -65,6 +67,7 @@ public class CashierManager extends AbstractManager<Cashier, String> {
         }
 
         cashier.getTickets().forEach(t -> ticketManager.remove(t.getId()));
+
         this.remove(id);
 
         return true;

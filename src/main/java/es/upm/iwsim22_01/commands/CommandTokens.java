@@ -2,9 +2,9 @@ package es.upm.iwsim22_01.commands;
 
 import es.upm.iwsim22_01.models.product.Category;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -14,8 +14,6 @@ import java.util.*;
  * Cada llamada a los métodos next* avanza automáticamente al siguiente token.
  */
 public class CommandTokens {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
     private Iterator<String> tokens;
     private String currentToken;
     private int remainingTokens;

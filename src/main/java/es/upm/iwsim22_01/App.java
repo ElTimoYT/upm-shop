@@ -44,7 +44,6 @@ public class App {
         dispatcher.addCommand("cash", new CashierCommandHandler(cashierManager, ticketManager));
         dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, cashierManager, clientManager));
 
-        // Mensaje de bienvenida
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");
 
@@ -74,7 +73,6 @@ public class App {
             System.out.println();
         }
 
-        // Mensaje de despedida
         System.out.println("""
                 Closing application.
                 Goodbye!

@@ -8,7 +8,9 @@ import es.upm.iwsim22_01.models.Ticket;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class CashierShowTicketCommandHandler implements CommandHandler {
 
@@ -33,21 +35,17 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
                 return;
             }
 
-            Optional<Cashier> optionalCashier = Optional.ofNullable(cashierManager.get(id));
-            optionalCashier.ifPresentOrElse(
-                    cashier -> {
-                        System.out.println("Tickets: ");
-                        Collection<Ticket> tickets = cashier.getTickets();
+            Cashier cashier = cashierManager.get(id);
 
-                        if (tickets != null && !tickets.isEmpty()) {
-                            tickets.stream()
-                                    .sorted(Comparator.comparing(Ticket::getId))
-                                    .forEach(t -> System.out.println("  " + t.getId() + "->" + t.getState()));
-                        }
-                        System.out.println(CASHIER_SHOW_TICKETS_OK);
-                    },
-                    () -> System.out.println(CASHIER_SHOW_TICKETS_FAIL)
-            );
+            System.out.println("Tickets: ");
+            List<Ticket> tickets = cashier.getTickets();
+
+            if (tickets != null && !tickets.isEmpty()) {
+                tickets.stream()
+                        .sorted(Comparator.comparing(ticket -> ticket.getId()))
+                        .forEach(t -> System.out.println("  " + t.getId() + "->" + t.getState()));
+            }
+            System.out.println(CASHIER_SHOW_TICKETS_OK);
         }catch (Exception e) {
             System.out.println(CASHIER_SHOW_TICKETS_INCORRECT_USE);
         }

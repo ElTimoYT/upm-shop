@@ -92,7 +92,7 @@ public class TicketAddCommandHandler implements CommandHandler {
                             while (tokens.hasNext()) {
                                 String token = tokens.next();
                                 if (token.startsWith("--p")) {
-                                    String text = token.substring(3).trim(); // quitar "--p"
+                                    String text = token.substring(3).trim();
                                     if (!text.isEmpty()) {
                                         personalization.add(text);
                                     }

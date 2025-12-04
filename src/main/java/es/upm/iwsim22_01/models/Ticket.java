@@ -110,8 +110,6 @@ public class Ticket {
 
         int remaining = MAX_PRODUCTS - totalUnits();
         if (quantity > remaining) return false;
-
-
         int numTexts = 0;
         for (String t : lines) {
             if (t != null && !t.isBlank()) {

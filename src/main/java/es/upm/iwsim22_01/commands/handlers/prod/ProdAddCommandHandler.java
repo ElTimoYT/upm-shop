@@ -2,9 +2,9 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.Category;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 public class ProdAddCommandHandler implements CommandHandler {
     private static final String
@@ -18,7 +18,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             PROD_ADD_OK ="Prod add ok";
 
 
-    private final ProductManager productManager;
+    private final ProductService productManager;
 
     @Override
     public void runCommand(CommandTokens tokens) {
@@ -60,7 +60,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             }
             return;
         }
-        Category category = tokens.nextCategory();
+        CategoryDTO category = tokens.nextCategory();
 
         //price
         if (!tokens.hasNextDouble()) {
@@ -74,7 +74,7 @@ public class ProdAddCommandHandler implements CommandHandler {
         double price = tokens.nextDouble();
 
         //crear producto
-        AbstractProduct created;
+        AbstractProductDTO created;
 
         if (tokens.hasNext()) {
 
@@ -99,7 +99,7 @@ public class ProdAddCommandHandler implements CommandHandler {
 
     }
 
-    public ProdAddCommandHandler(ProductManager productManager) {
+    public ProdAddCommandHandler(ProductService productManager) {
         this.productManager = productManager;
     }
 }

@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.manager;
+package es.upm.iwsim22_01.service.service;
 
 import java.util.*;
 
@@ -9,7 +9,7 @@ import java.util.*;
  * @param <T> tipo de los elementos gestionados
  * @param <K> tipo de la clave que identifica cada elemento
  */
-public abstract class AbstractManager<T, K> {
+public abstract class AbstractService<T, K> {
      private Map<K, T> elements = new HashMap<>();
 
     /**

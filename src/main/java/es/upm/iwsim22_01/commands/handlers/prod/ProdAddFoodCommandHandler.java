@@ -2,8 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 import java.time.LocalDateTime;
 
@@ -16,9 +16,9 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
     private static final String ERROR_INVALID_MAX_PEOPLE = "Invalid max people";
     private static final String PROD_ADD_OK = "prod addfood: ok";
 
-    private final ProductManager productManager;
+    private final ProductService productManager;
 
-    public ProdAddFoodCommandHandler(ProductManager productManager) {
+    public ProdAddFoodCommandHandler(ProductService productManager) {
         this.productManager = productManager;
     }
 
@@ -84,7 +84,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
 
-        AbstractProduct food = productManager.addFoodProduct(
+        AbstractProductDTO food = productManager.addFoodProduct(
                 productId,
                 name,
                 price,

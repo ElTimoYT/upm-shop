@@ -1,27 +1,27 @@
-package es.upm.iwsim22_01.manager;
+package es.upm.iwsim22_01.service.service;
 
-import es.upm.iwsim22_01.models.user.Cashier;
-import es.upm.iwsim22_01.models.user.Client;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
 import java.util.regex.Pattern;
 
 /**
- * Gestor de clientes, encargado de la creación, validación y registro de instancias de {@link Client}.
+ * Gestor de clientes, encargado de la creación, validación y registro de instancias de {@link ClientDTO}.
  * Valida el formato del DNI/NIE, el correo electrónico y la existencia del cajero que realiza el registro.
  */
-public class ClientManager extends AbstractManager<Client, String> {
+public class ClientService extends AbstractService<ClientDTO, String> {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^\\w+@\\w+\\.\\w+$"),
         DNI_PATTERN = Pattern.compile("^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$"),
         NIE_PATTERN = Pattern.compile("^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$");
 
-    private final CashierManager cashierManager;
+    private final CashierService cashierManager;
 
     /**
      * Constructor de la clase.
      *
      * @param cashierManager Gestor de cajeros necesario para validar la existencia del cajero que registra al cliente.
      */
-    public ClientManager(CashierManager cashierManager) {
+    public ClientService(CashierService cashierManager) {
         this.cashierManager = cashierManager;
     }
 
@@ -34,17 +34,17 @@ public class ClientManager extends AbstractManager<Client, String> {
      * @param DNI                   DNI o NIE del cliente (debe cumplir el formato válido).
      * @param email                 Correo electrónico del cliente (debe cumplir el formato válido).
      * @param cashierWhoRegistersId Identificador del cajero que realiza el registro.
-     * @return La instancia de {@link Client} creada.
+     * @return La instancia de {@link ClientDTO} creada.
      * @throws IllegalArgumentException Si el cajero no existe, el correo no es válido o el DNI/NIE no es válido.
      */
-    public Client addClient(String name, String DNI, String email, String cashierWhoRegistersId) {
+    public ClientDTO addClient(String name, String DNI, String email, String cashierWhoRegistersId) {
         if (!cashierManager.existId(cashierWhoRegistersId)) throw new IllegalArgumentException("No cashier found with such an id");
         if (!checkEmail(email)) throw new IllegalArgumentException("Email is not valid");
         if (!checkDNI(DNI)) throw new IllegalArgumentException("Invalid DNI");
 
-        Cashier cashier = cashierManager.get(cashierWhoRegistersId);
+        CashierDTO cashier = cashierManager.get(cashierWhoRegistersId);
 
-        Client client = new  Client(name, DNI, email, cashier);
+        ClientDTO client = new ClientDTO(name, DNI, email, cashier);
         add(client, DNI);
 
         return client;

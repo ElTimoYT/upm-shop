@@ -2,13 +2,13 @@ package es.upm.iwsim22_01.commands.handlers.client;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.models.user.Client;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
 import java.util.NoSuchElementException;
 
 public class ClientRemoveCommandHandler  implements CommandHandler {
-    private final ClientManager clientManager;
+    private final ClientService clientManager;
 
     private static final String
             ERROR_FAILED_REMOVAL = "Client found, but removal of client failed",
@@ -17,7 +17,7 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
             ERROR_INCORRECT_USE =  "Incorrect use: client remove <DNI>",
             ERROR_ID_NOT_FOUND = "Client ID not found";
 
-    public ClientRemoveCommandHandler(ClientManager clientManager) {
+    public ClientRemoveCommandHandler(ClientService clientManager) {
         this.clientManager = clientManager;
     }
 
@@ -31,7 +31,7 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
                 return;
             }
 
-            Client client = clientManager.remove(id);
+            ClientDTO client = clientManager.remove(id);
             if (client == null) {
                 System.out.println(ERROR_FAILED_REMOVAL);
                 return;

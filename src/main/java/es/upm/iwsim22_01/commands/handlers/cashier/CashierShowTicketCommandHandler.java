@@ -2,15 +2,12 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.models.user.Cashier;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 public class CashierShowTicketCommandHandler implements CommandHandler {
 
@@ -20,9 +17,9 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
             CASHIER_SHOW_TICKETS_OK = "cash tickets: ok",
             CASHIER_SHOW_TICKETS_FAIL = "cash tickets: fail";
 
-    private CashierManager cashierManager;
+    private CashierService cashierManager;
 
-    public CashierShowTicketCommandHandler(CashierManager cashierManager) {
+    public CashierShowTicketCommandHandler(CashierService cashierManager) {
         this.cashierManager = cashierManager;
     }
 
@@ -35,10 +32,10 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
                 return;
             }
 
-            Cashier cashier = cashierManager.get(id);
+            CashierDTO cashier = cashierManager.get(id);
 
             System.out.println("Tickets: ");
-            List<Ticket> tickets = cashier.getTickets();
+            List<TicketDTO> tickets = cashier.getTickets();
 
             if (tickets != null && !tickets.isEmpty()) {
                 tickets.stream()

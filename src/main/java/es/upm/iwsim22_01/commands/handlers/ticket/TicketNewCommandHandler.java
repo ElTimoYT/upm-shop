@@ -2,10 +2,10 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -25,11 +25,11 @@ public class TicketNewCommandHandler implements CommandHandler {
                     """,
             TICKET_NEW_OK = "ticket new: ok";
 
-    private final TicketManager ticketManager;
-    private final CashierManager cashierManager;
-    private final ClientManager clientManager;
+    private final TicketService ticketManager;
+    private final CashierService cashierManager;
+    private final ClientService clientManager;
 
-    public TicketNewCommandHandler(TicketManager ticketManager, CashierManager cashierManager, ClientManager clientManager) {
+    public TicketNewCommandHandler(TicketService ticketManager, CashierService cashierManager, ClientService clientManager) {
         this.ticketManager = ticketManager;
         this.cashierManager = cashierManager;
         this.clientManager = clientManager;
@@ -66,7 +66,7 @@ public class TicketNewCommandHandler implements CommandHandler {
             return;
         }
 
-        Ticket ticket = ticketManager.addTicket();
+        TicketDTO ticket = ticketManager.addTicket();
         cashierManager.get(cashierId).addTicket(ticket);
         clientManager.get(clientId).addTicket(ticket);
         System.out.println("Ticket: " + ticket);
@@ -99,7 +99,7 @@ public class TicketNewCommandHandler implements CommandHandler {
             return;
         }
 
-        Ticket ticket = ticketManager.addTicket(ticketId);
+        TicketDTO ticket = ticketManager.addTicket(ticketId);
         cashierManager.get(cashierId).addTicket(ticket);
         clientManager.get(clientId).addTicket(ticket);
         System.out.println(TICKET + ticket.getFormattedId());

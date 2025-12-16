@@ -1,11 +1,11 @@
-package es.upm.iwsim22_01.models.user;
+package es.upm.iwsim22_01.service.dto.user;
 
 /**
  * Clase abstracta que representa a un usuario genérico en el sistema.
  * Define los atributos y métodos básicos comunes a todos los tipos de usuarios,
  * como nombre, correo electrónico e identificador único.
  */
-public abstract class AbstractUser {
+public abstract class AbstractUserDTO {
     private String name;
     private String email;
     private String id;
@@ -17,7 +17,7 @@ public abstract class AbstractUser {
      * @param email Correo electrónico del usuario.
      * @param id Identificador único del usuario.
      */
-    public AbstractUser(String name, String email, String id) {
+    public AbstractUserDTO(String name, String email, String id) {
         this.name= name;
         this.id=id;
         this.email= email;

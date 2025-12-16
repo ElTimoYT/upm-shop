@@ -2,10 +2,10 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.user.Cashier;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -19,10 +19,10 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
             TICKET_PRINT_OK = "ticket print: ok";
 
-    private final TicketManager ticketManager;
-    private final CashierManager cashierManager;
+    private final TicketService ticketManager;
+    private final CashierService cashierManager;
 
-    public TicketPrintCommandHandler(TicketManager ticketManager, CashierManager cashierManager) {
+    public TicketPrintCommandHandler(TicketService ticketManager, CashierService cashierManager) {
         this.ticketManager = ticketManager;
         this.cashierManager = cashierManager;
     }
@@ -42,8 +42,8 @@ public class TicketPrintCommandHandler implements CommandHandler {
                 return;
             }
 
-            Ticket ticket = ticketManager.get(ticketId);
-            Cashier cashier = cashierManager.get(cashierId);
+            TicketDTO ticket = ticketManager.get(ticketId);
+            CashierDTO cashier = cashierManager.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
                 return;

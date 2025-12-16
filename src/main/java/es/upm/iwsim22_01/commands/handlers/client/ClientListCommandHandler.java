@@ -2,31 +2,31 @@ package es.upm.iwsim22_01.commands.handlers.client;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.models.user.Client;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class ClientListCommandHandler  implements CommandHandler {
-    private final ClientManager clientManager;
+    private final ClientService clientManager;
 
     private static final String CLIENTS = "Clients: ", OK_CLIENT_LIST = "client list: ok";
 
-    public ClientListCommandHandler(ClientManager clientManager) {
+    public ClientListCommandHandler(ClientService clientManager) {
         this.clientManager = clientManager;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        List<Client> sortedItems = clientManager.getAll();
+        List<ClientDTO> sortedItems = clientManager.getAll();
 
         sortedItems.sort(Comparator.comparing(
                 client -> client.getName(),
                 String.CASE_INSENSITIVE_ORDER));
 
         System.out.println(CLIENTS);
-        for (Client client : sortedItems) {
+        for (ClientDTO client : sortedItems) {
             System.out.println("\t" + client);
         }
         System.out.println(OK_CLIENT_LIST);

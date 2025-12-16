@@ -2,12 +2,12 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.user.Cashier;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -21,11 +21,11 @@ public class TicketRemoveCommandHandler implements CommandHandler {
 
             TICKET_REMOVAL_OK = "ticket remove: ok";
 
-    private final TicketManager ticketManager;
-    private final ProductManager productManager;
-    private final CashierManager cashierManager;
+    private final TicketService ticketManager;
+    private final ProductService productManager;
+    private final CashierService cashierManager;
 
-    public TicketRemoveCommandHandler(TicketManager ticketManager, ProductManager productManager, CashierManager cashierManager) {
+    public TicketRemoveCommandHandler(TicketService ticketManager, ProductService productManager, CashierService cashierManager) {
         this.ticketManager = ticketManager;
         this.productManager = productManager;
         this.cashierManager = cashierManager;
@@ -52,9 +52,9 @@ public class TicketRemoveCommandHandler implements CommandHandler {
                 return;
             }
 
-            AbstractProduct product = productManager.get(productId);
-            Ticket ticket = ticketManager.get(ticketId);
-            Cashier cashier = cashierManager.get(cashierId);
+            AbstractProductDTO product = productManager.get(productId);
+            TicketDTO ticket = ticketManager.get(ticketId);
+            CashierDTO cashier = cashierManager.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
                 return;

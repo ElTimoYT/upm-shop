@@ -1,10 +1,10 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 /**
  * Clase que representa un producto personalizable, especialización de UnitProduct.
  * Permite definir un número máximo de caracteres para la personalización del producto.
  */
-public class PersonalizableProduct extends UnitProduct{
+public class PersonalizableProductDTO extends UnitProductDTO {
     private int maxPers;
 
 
@@ -17,7 +17,7 @@ public class PersonalizableProduct extends UnitProduct{
      * @param price Precio del producto.
      * @param maxPers Número máximo de caracteres permitidos para la personalización.
      */
-    public PersonalizableProduct(int id, String name, Category category, double price, int maxPers){
+    public PersonalizableProductDTO(int id, String name, CategoryDTO category, double price, int maxPers){
         super(id, name, category, price);
         this.maxPers = maxPers;
 

@@ -2,8 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.Comparator;
 import java.util.List;
@@ -13,20 +13,20 @@ public class TicketListCommandHandler implements CommandHandler {
             TICKET_LIST_OK = "ticket list: ok",
             TICKET_LIST = "Ticket List:";
 
-    private final TicketManager ticketManager;
+    private final TicketService ticketManager;
 
-    public TicketListCommandHandler(TicketManager ticketManager) {
+    public TicketListCommandHandler(TicketService ticketManager) {
         this.ticketManager = ticketManager;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        List<Ticket> allTickets = ticketManager.getAll();
-        allTickets.sort(Comparator.comparing(Ticket::getInitialDate));
+        List<TicketDTO> allTickets = ticketManager.getAll();
+        allTickets.sort(Comparator.comparing(TicketDTO::getInitialDate));
 
         System.out.println(TICKET_LIST);
 
-        for (Ticket ticket : allTickets) {
+        for (TicketDTO ticket : allTickets) {
             String id = ticket.getFormattedId();
             String state = String.valueOf(ticket.getState());
             System.out.println("  " + id + " -> " + state);

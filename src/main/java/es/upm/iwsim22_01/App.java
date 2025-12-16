@@ -12,7 +12,10 @@ import es.upm.iwsim22_01.commands.handlers.cashier.CashierCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.client.ClientCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.prod.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ticket.TicketCommandHandler;
-import es.upm.iwsim22_01.manager.*;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.service.TicketService;
 
 /**
  * Clase principal de la aplicación de gestión de tickets.
@@ -23,10 +26,10 @@ public class App {
     private static boolean menu = true;
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
-    private static ProductManager productManager = new ProductManager();
-    private static CashierManager cashierManager = new CashierManager();
-    private static ClientManager clientManager = new ClientManager(cashierManager);
-    private static TicketManager ticketManager = new TicketManager();
+    private static ProductService productManager = new ProductService();
+    private static CashierService cashierManager = new CashierService();
+    private static ClientService clientManager = new ClientService(cashierManager);
+    private static TicketService ticketManager = new TicketService();
 
     /**
      * Método principal de la aplicación.

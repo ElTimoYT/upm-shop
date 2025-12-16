@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 import java.time.LocalDateTime;
 
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Incluye información sobre el número máximo de participantes, la fecha de caducidad
  * y el número actual de personas apuntadas al servicio.
  */
-public abstract class ProductService extends AbstractProduct {
+public abstract class ProductServiceDTO extends AbstractProductDTO {
     private int maxParticipant;
     private LocalDateTime expirationDate;
     private int participantsAmount;
@@ -21,7 +21,7 @@ public abstract class ProductService extends AbstractProduct {
      * @param maxParticipant Número máximo de participantes permitidos.
      * @param expirationDate Fecha y hora de caducidad o realización del servicio.
      */
-    public ProductService(int id, String name, double price, int maxParticipant, LocalDateTime expirationDate){
+    public ProductServiceDTO(int id, String name, double price, int maxParticipant, LocalDateTime expirationDate){
         super(id, name,price);
         this.maxParticipant = maxParticipant;
         this.expirationDate = expirationDate;

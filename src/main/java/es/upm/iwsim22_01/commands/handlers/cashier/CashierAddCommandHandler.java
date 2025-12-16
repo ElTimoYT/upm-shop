@@ -2,8 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.models.user.Cashier;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 public class CashierAddCommandHandler implements CommandHandler {
 
@@ -14,9 +14,9 @@ public class CashierAddCommandHandler implements CommandHandler {
             CASHIER_ADD_OK = "cash add: ok",
             CASHIER_ADD_FAIL = "cash add: fail";
 
-    private CashierManager cashierManager;
+    private CashierService cashierManager;
 
-    public CashierAddCommandHandler(CashierManager cashierManager) {
+    public CashierAddCommandHandler(CashierService cashierManager) {
         this.cashierManager = cashierManager;
     }
 
@@ -25,7 +25,7 @@ public class CashierAddCommandHandler implements CommandHandler {
         String id = null;
         String name;
         String email;
-        Cashier cashier;
+        CashierDTO cashier;
 
         int remaining = tokens.getRemainingTokens();
         try {

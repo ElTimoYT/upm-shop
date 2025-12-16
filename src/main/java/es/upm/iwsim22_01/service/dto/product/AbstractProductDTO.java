@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 import java.util.Objects;
 
@@ -6,7 +6,7 @@ import java.util.Objects;
  * Clase abstracta que representa un producto genérico en el sistema.
  * Define los atributos y métodos básicos comunes a todos los tipos de productos.
  */
-public abstract class AbstractProduct {
+public abstract class AbstractProductDTO {
     protected final int id;
     protected String name;
     protected double price;
@@ -18,7 +18,7 @@ public abstract class AbstractProduct {
      * @param name Nombre del producto.
      * @param price Precio del producto.
      */
-    public AbstractProduct(int id, String name, double price) {
+    public AbstractProductDTO(int id, String name, double price) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -80,7 +80,7 @@ public abstract class AbstractProduct {
     public boolean equals(Object obj) {
         if (obj == this) return true;
 
-        if (obj instanceof AbstractProduct product) {
+        if (obj instanceof AbstractProductDTO product) {
             return product.id == this.id;
         }
 

@@ -19,8 +19,8 @@ public class MeetingDTO extends ProductServiceDTO {
      * @param maxPers          Número máximo de participantes.
      * @param expirationDate   Fecha y hora de caducidad/reserva del servicio.
      */
-    public MeetingDTO(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate){
-        super(id,name, pricePerPerson,maxPers,expirationDate);
+    public MeetingDTO(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id, name, pricePerPerson, maxPers, expirationDate, participantsAmount);
     }
 
     /**

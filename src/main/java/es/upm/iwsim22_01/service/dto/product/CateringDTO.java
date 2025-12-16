@@ -17,8 +17,8 @@ public class CateringDTO extends ProductServiceDTO {
      * @param maxPers          Número máximo de personas.
      * @param expirationDate   Fecha de caducidad del producto.
      */
-    public CateringDTO(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate){
-        super(id,name, pricePerPerson, maxPers, expirationDate);
+    public CateringDTO(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id,name, pricePerPerson, maxPers, expirationDate, participantsAmount);
     }
 
     /**

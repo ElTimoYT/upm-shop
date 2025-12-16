@@ -42,7 +42,7 @@ public class PersonalizableProductDTO extends UnitProductDTO {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("{class:ProductPersonalized")
+        sb.append("Product{class:ProductPersonalized")
                 .append(", id:").append(getId())
                 .append(", name:'").append(getName()).append('\'')
                 .append(", category:").append(getCategory())

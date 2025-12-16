@@ -21,11 +21,11 @@ public abstract class ProductServiceDTO extends AbstractProductDTO {
      * @param maxParticipant Número máximo de participantes permitidos.
      * @param expirationDate Fecha y hora de caducidad o realización del servicio.
      */
-    public ProductServiceDTO(int id, String name, double price, int maxParticipant, LocalDateTime expirationDate){
+    public ProductServiceDTO(int id, String name, double price, int maxParticipant, LocalDateTime expirationDate, int participantsAmount){
         super(id, name,price);
         this.maxParticipant = maxParticipant;
         this.expirationDate = expirationDate;
-        this.participantsAmount = 0;
+        this.participantsAmount = participantsAmount;
     }
 
     /**

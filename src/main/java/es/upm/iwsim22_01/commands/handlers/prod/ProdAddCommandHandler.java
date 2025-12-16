@@ -88,7 +88,7 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productManager.addCustomizableProduct(productId, productName, category, price, maxPers);
+                created = productManager.addPersonalizableProduct(productId, productName, category, price, maxPers);
             }
 
         } else {

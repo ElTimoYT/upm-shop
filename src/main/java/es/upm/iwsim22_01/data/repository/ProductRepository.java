@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class ProductRepository implements Repository<Product, Integer> {
     private static final String FILE = "data/products/products.json";
@@ -39,7 +38,6 @@ public class ProductRepository implements Repository<Product, Integer> {
         System.out.println(file);
         return file;
     }
-
 
     private List<Product> readFile() throws IOException {
         try (Reader reader = new FileReader(getFile())) {
@@ -145,11 +143,9 @@ public class ProductRepository implements Repository<Product, Integer> {
     }
 
     @Override
-    public Stream<Product> getAll() {
+    public List<Product> getAll() {
         try {
-            List<Product> products = readFile();
-
-            return products.stream();
+            return readFile();
         } catch (IOException exception) {
             throw new RuntimeException("Error writing/reading the file");
         }
@@ -157,7 +153,7 @@ public class ProductRepository implements Repository<Product, Integer> {
 
     @Override
     public boolean existsId(Integer id) {
-        return getAll().anyMatch(product -> product.getId() == id);
+        return getAll().stream().anyMatch(product -> product.getId() == id);
     }
 
 

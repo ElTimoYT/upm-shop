@@ -117,7 +117,7 @@ public class ProductService {
     }
 
     public List<AbstractProductDTO> getAll() {
-        return repository.getAll().map(this::toDTO).toList();
+        return repository.getAll().stream().map(this::toDTO).toList();
     }
 
     public boolean existId(int id) {

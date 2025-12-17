@@ -1,14 +1,13 @@
 package es.upm.iwsim22_01.data.repository;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.List;
 
 public interface Repository<T, K> {
-    <T2 extends T> T2 create(T2 element);
+    T create(T element);
     
     T get(K id);
     
-    Stream<T> getAll();
+    List<T> getAll();
     
     T update(T element);
     

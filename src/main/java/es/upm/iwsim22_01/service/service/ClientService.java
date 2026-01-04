@@ -42,9 +42,9 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
     protected Client toModel(ClientDTO dto) {
         return new Client(
                 dto.getName(),
-                dto.getDNI(),
+                dto.getId(),
                 dto.getEmail(),
-                dto.getCashier().getDNI()
+                dto.getCashier().getId()
         );
     }
 

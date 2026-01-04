@@ -54,7 +54,7 @@ public class CashierDTO extends AbstractUserDTO {
     @Override
     public String toString() {
         return "Cash{" +
-                "identifier='" + getDNI() + '\'' +
+                "identifier='" + getId() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 "}";

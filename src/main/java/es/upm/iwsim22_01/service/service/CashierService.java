@@ -41,7 +41,7 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
         return new Cashier(
                 dto.getName(),
                 dto.getEmail(),
-                dto.getDNI(),
+                dto.getId(),
                 dto.getTickets()
                         .stream()
                         .map(TicketDTO::getId)

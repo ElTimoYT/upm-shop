@@ -1,10 +1,28 @@
 [
   {
+    "id": 23456,
+    "name": "Reunion Rotonda",
+    "price": 12.0,
+    "type": "MEETING",
+    "maxParticipant": 100,
+    "expirationDate": "2025-12-02T00:00:00",
+    "participantsAmount": 0
+  },
+  {
     "id": 1,
     "name": "libro poo",
     "price": 7.0,
     "type": "UNIT_PRODUCT",
     "category": "BOOK"
+  },
+  {
+    "id": 23457,
+    "name": "Graduacion ETSISI",
+    "price": 40.0,
+    "type": "MEETING",
+    "maxParticipant": 30,
+    "expirationDate": "2025-12-02T00:00:00",
+    "participantsAmount": 0
   },
   {
     "id": 2,
@@ -14,11 +32,13 @@
     "category": "BOOK"
   },
   {
-    "id": 3,
-    "name": "libro poo",
-    "price": 7.0,
-    "type": "UNIT_PRODUCT",
-    "category": "BOOK"
+    "id": 23459,
+    "name": "Restaurante Asador",
+    "price": 50.0,
+    "type": "CATERING",
+    "maxParticipant": 40,
+    "expirationDate": "2025-12-02T00:00:00",
+    "participantsAmount": 0
   },
   {
     "id": 5,
@@ -27,5 +47,13 @@
     "type": "PERSONALIZABLE_PRODUCT",
     "category": "BOOK",
     "lines": 9
+  },
+  {
+    "id": 6,
+    "name": "Camiseta talla:L UPM",
+    "price": 20.0,
+    "type": "PERSONALIZABLE_PRODUCT",
+    "category": "CLOTHES",
+    "lines": 4
   }
 ]

@@ -20,7 +20,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String PROD_UPDATE_PARAMETER_CATEGORY = "CATEGORY";
     private static final String PROD_UPDATE_PARAMETER_PRICE = "PRICE";
 
-    private ProductService productManager;
+    private ProductService productService;
     @Override
     public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNextInt()) {
@@ -28,11 +28,11 @@ public class ProdUpdateCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (!productManager.existsId(productId)) {
+        if (!productService.existsId(productId)) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
-        AbstractProductDTO product = productManager.get(productId);
+        AbstractProductDTO product = productService.get(productId);
 
        //param
         if (!tokens.hasNext()) {
@@ -50,7 +50,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
                 }
 
                 String productName = tokens.next();
-                if (!productManager.isNameValid(productName)) {
+                if (!productService.isNameValid(productName)) {
                     System.out.println(ERROR_INVALID_NAME);
                     return;
                 }
@@ -88,7 +88,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
                     return;
                 }
                 double price = tokens.nextDouble();
-                if (!productManager.isPriceValid(price)) {
+                if (!productService.isPriceValid(price)) {
                     System.out.println(ERROR_INVALID_PRICE);
                     return;
                 }
@@ -102,14 +102,14 @@ public class ProdUpdateCommandHandler implements CommandHandler {
             }
         }
 
-        productManager.update(product);
+        productService.update(product);
 
         System.out.println(product);
         System.out.println(PROD_UPDATE_OK);
     }
 
-    public ProdUpdateCommandHandler(ProductService productManager) {
-        this.productManager = productManager;
+    public ProdUpdateCommandHandler(ProductService productService) {
+        this.productService = productService;
     }
 
 }

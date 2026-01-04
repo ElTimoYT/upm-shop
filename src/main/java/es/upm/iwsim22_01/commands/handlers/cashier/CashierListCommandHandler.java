@@ -10,20 +10,17 @@ import java.util.Comparator;
 
 public class CashierListCommandHandler implements CommandHandler {
 
-private static final String ERROR_CASHIER_NOT_FOUND = "Cashier not found",
-            CASHIER_LIST_OK = "cash list: ok";
+private static final String CASHIER_LIST_OK = "cash list: ok";
 
-    private CashierService cashierManager;
+    private final CashierService cashierService;
 
-    public CashierListCommandHandler(CashierService cashierManager) {
-        this.cashierManager = cashierManager;
+    public CashierListCommandHandler(CashierService cashierService) {
+        this.cashierService = cashierService;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        Collection<CashierDTO> cashiers = cashierManager.getAll();
-
-        if (cashiers.isEmpty()) System.out.println(ERROR_CASHIER_NOT_FOUND);
+        Collection<CashierDTO> cashiers = cashierService.getAll();
 
         System.out.println("Cash:");
         if (!cashiers.isEmpty()) {

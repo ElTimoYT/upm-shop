@@ -10,17 +10,21 @@ import java.time.LocalTime;
  * asegurando que se cumplan los plazos mínimos de reserva y cancelación.
  */
 public class MeetingDTO extends AbstractServiceDTO {
+    public MeetingDTO(int id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id, name, price, amount, maxPers, expirationDate, participantsAmount);
+    }
+
     /**
      * Constructor de la clase Meeting.
      *
      * @param id               Identificador único del producto.
      * @param name             Nombre del producto.
-     * @param pricePerPerson   Precio por persona.
+     * @param price   Precio por persona.
      * @param maxPers          Número máximo de participantes.
      * @param expirationDate   Fecha y hora de caducidad/reserva del servicio.
      */
-    public MeetingDTO(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
-        super(id, name, pricePerPerson, maxPers, expirationDate, participantsAmount);
+    public MeetingDTO(int id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id, name, price, maxPers, expirationDate, participantsAmount);
     }
 
     /**
@@ -34,8 +38,8 @@ public class MeetingDTO extends AbstractServiceDTO {
      * @return true si la fecha y hora son válidas según las reglas de negocio, false en caso contrario.
      */
     @Override
-    public boolean checkTime() {
-        if (!super.checkTime()) {
+    public boolean isValid() {
+        if (!super.isValid()) {
             return false;
         }
 

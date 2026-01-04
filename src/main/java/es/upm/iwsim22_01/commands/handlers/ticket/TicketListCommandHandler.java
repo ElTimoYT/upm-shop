@@ -13,15 +13,15 @@ public class TicketListCommandHandler implements CommandHandler {
             TICKET_LIST_OK = "ticket list: ok",
             TICKET_LIST = "Ticket List:";
 
-    private final TicketService ticketManager;
+    private final TicketService ticketService;
 
-    public TicketListCommandHandler(TicketService ticketManager) {
-        this.ticketManager = ticketManager;
+    public TicketListCommandHandler(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        List<TicketDTO> allTickets = ticketManager.getAll();
+        List<TicketDTO> allTickets = ticketService.getAll();
         allTickets.sort(Comparator.comparing(TicketDTO::getInitialDate));
 
         System.out.println(TICKET_LIST);

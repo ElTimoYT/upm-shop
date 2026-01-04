@@ -26,10 +26,10 @@ public class App {
     private static boolean menu = true;
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
-    private static ProductService productManager = new ProductService();
-    private static TicketService ticketManager = new TicketService();
-    private static CashierService cashierManager = new CashierService(ticketManager);
-    private static ClientService clientManager = new ClientService(cashierManager);
+    private static ProductService productService = new ProductService();
+    private static TicketService ticketService = new TicketService(productService);
+    private static CashierService cashierService = new CashierService(ticketService);
+    private static ClientService clientService = new ClientService(cashierService);
 
     /**
      * Método principal de la aplicación.
@@ -42,10 +42,10 @@ public class App {
         dispatcher.addCommand("exit", new ExitCommandHandler());
         dispatcher.addCommand("help", new HelpCommandHandler());
         dispatcher.addCommand("echo", new EchoCommandHandler());
-        dispatcher.addCommand("prod", new ProdCommandHandler(productManager));
-        dispatcher.addCommand("client", new ClientCommandHandler(clientManager, cashierManager));
-        dispatcher.addCommand("cash", new CashierCommandHandler(cashierManager, ticketManager));
-        dispatcher.addCommand("ticket", new TicketCommandHandler(ticketManager, productManager, cashierManager, clientManager));
+        dispatcher.addCommand("prod", new ProdCommandHandler(productService));
+        dispatcher.addCommand("client", new ClientCommandHandler(clientService, cashierService));
+        dispatcher.addCommand("cash", new CashierCommandHandler(cashierService, clientService, ticketService));
+        dispatcher.addCommand("ticket", new TicketCommandHandler(ticketService, productService, cashierService, clientService));
 
         System.out.println("Welcome to the ticket module App.");
         System.out.println("Ticket module. Type 'help' to see commands.");

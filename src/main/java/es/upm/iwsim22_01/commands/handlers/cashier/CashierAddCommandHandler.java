@@ -14,10 +14,10 @@ public class CashierAddCommandHandler implements CommandHandler {
             CASHIER_ADD_OK = "cash add: ok",
             CASHIER_ADD_FAIL = "cash add: fail";
 
-    private CashierService cashierManager;
+    private CashierService cashierService;
 
-    public CashierAddCommandHandler(CashierService cashierManager) {
-        this.cashierManager = cashierManager;
+    public CashierAddCommandHandler(CashierService cashierService) {
+        this.cashierService = cashierService;
     }
 
     @Override
@@ -31,12 +31,12 @@ public class CashierAddCommandHandler implements CommandHandler {
         try {
             if (remaining == 3) {
                 id = tokens.next();
-                if (cashierManager.existsId(id)) {
+                if (cashierService.existsId(id)) {
                     System.out.println(ERROR_INVALID_ID);
                     return;
                 }
 
-                if (!cashierManager.checkId(id)){
+                if (!cashierService.checkId(id)){
                     System.out.println(ERROR_INVALID_ID_FORMAT);
                     return;
                 }
@@ -44,11 +44,11 @@ public class CashierAddCommandHandler implements CommandHandler {
                 name = tokens.next();
                 email = tokens.next();
 
-                cashier = cashierManager.addCashier(name, email, id);
+                cashier = cashierService.addCashier(name, email, id);
             } else if (remaining == 2) {
                 name = tokens.next();
                 email = tokens.next();
-                cashier = cashierManager.addCashier(name, email);
+                cashier = cashierService.addCashier(name, email);
             } else {
                 System.out.println(ERROR_INCORRECT_USE_CASHIER_ADD);
                 return;

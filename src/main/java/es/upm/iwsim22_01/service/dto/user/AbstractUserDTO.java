@@ -1,5 +1,7 @@
 package es.upm.iwsim22_01.service.dto.user;
 
+import java.util.Objects;
+
 /**
  * Clase abstracta que representa a un usuario genérico en el sistema.
  * Define los atributos y métodos básicos comunes a todos los tipos de usuarios,
@@ -48,5 +50,13 @@ public abstract class AbstractUserDTO {
      */
     public String getEmail(){
         return email;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        AbstractUserDTO abstractUserDTO = (AbstractUserDTO) object;
+
+        return Objects.equals(name, abstractUserDTO.name);
     }
 }

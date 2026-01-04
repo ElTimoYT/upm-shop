@@ -7,6 +7,12 @@ package es.upm.iwsim22_01.service.dto.product;
 public class UnitProductDTO extends AbstractProductDTO {
     private CategoryDTO category;
 
+    public UnitProductDTO(int id, String name, CategoryDTO category, double price, int amount) {
+        super(id,  name, price, amount);
+
+        this.category = category;
+    }
+
     /**
      * Constructor de la clase UnitProduct.
      *

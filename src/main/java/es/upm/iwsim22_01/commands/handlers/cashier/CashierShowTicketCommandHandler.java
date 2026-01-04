@@ -17,22 +17,22 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
             CASHIER_SHOW_TICKETS_OK = "cash tickets: ok",
             CASHIER_SHOW_TICKETS_FAIL = "cash tickets: fail";
 
-    private CashierService cashierManager;
+    private CashierService cashierService;
 
-    public CashierShowTicketCommandHandler(CashierService cashierManager) {
-        this.cashierManager = cashierManager;
+    public CashierShowTicketCommandHandler(CashierService cashierService) {
+        this.cashierService = cashierService;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
         try {
             String id = tokens.next();
-            if (!cashierManager.existsId(id)) {
+            if (!cashierService.existsId(id)) {
                 System.out.println(CASHIER_NOT_FOUND);
                 return;
             }
 
-            CashierDTO cashier = cashierManager.get(id);
+            CashierDTO cashier = cashierService.get(id);
 
             System.out.println("Tickets: ");
             List<TicketDTO> tickets = cashier.getTickets();

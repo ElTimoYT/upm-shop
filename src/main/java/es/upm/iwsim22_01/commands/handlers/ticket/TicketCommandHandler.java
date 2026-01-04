@@ -20,12 +20,12 @@ public class TicketCommandHandler implements CommandHandler {
 
     private final CommandDispatcher ticketCommandDispatcher = new CommandDispatcher(ERROR_INCORRECT_USE_TICKET, ERROR_INCORRECT_USE_TICKET);
 
-    public TicketCommandHandler(TicketService ticketManager, ProductService productManager, CashierService cashierManager, ClientService clientManager) {
-        ticketCommandDispatcher.addCommand(NEW, new TicketNewCommandHandler(ticketManager, cashierManager, clientManager));
-        ticketCommandDispatcher.addCommand(ADD, new TicketAddCommandHandler(ticketManager, productManager, cashierManager));
-        ticketCommandDispatcher.addCommand(REMOVE, new TicketRemoveCommandHandler(ticketManager, productManager, cashierManager));
-        ticketCommandDispatcher.addCommand(PRINT, new TicketPrintCommandHandler(ticketManager, cashierManager));
-        ticketCommandDispatcher.addCommand(LIST, new TicketListCommandHandler(ticketManager));
+    public TicketCommandHandler(TicketService ticketService, ProductService productService, CashierService cashierService, ClientService clientService) {
+        ticketCommandDispatcher.addCommand(NEW, new TicketNewCommandHandler(ticketService, cashierService, clientService));
+        ticketCommandDispatcher.addCommand(ADD, new TicketAddCommandHandler(ticketService, productService, cashierService));
+        ticketCommandDispatcher.addCommand(REMOVE, new TicketRemoveCommandHandler(ticketService, productService, cashierService));
+        ticketCommandDispatcher.addCommand(PRINT, new TicketPrintCommandHandler(ticketService, cashierService));
+        ticketCommandDispatcher.addCommand(LIST, new TicketListCommandHandler(ticketService));
     }
 
     @Override

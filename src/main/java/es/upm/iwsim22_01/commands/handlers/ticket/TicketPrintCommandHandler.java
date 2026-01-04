@@ -19,31 +19,31 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
             TICKET_PRINT_OK = "ticket print: ok";
 
-    private final TicketService ticketManager;
-    private final CashierService cashierManager;
+    private final TicketService ticketService;
+    private final CashierService cashierService;
 
-    public TicketPrintCommandHandler(TicketService ticketManager, CashierService cashierManager) {
-        this.ticketManager = ticketManager;
-        this.cashierManager = cashierManager;
+    public TicketPrintCommandHandler(TicketService ticketService, CashierService cashierService) {
+        this.ticketService = ticketService;
+        this.cashierService = cashierService;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
         try {
             int ticketId = tokens.nextInt();
-            if (!ticketManager.existsId(ticketId)) {
+            if (!ticketService.existsId(ticketId)) {
                 System.out.println(ERROR_TICKET_NOT_FOUND);
                 return;
             }
 
             String cashierId = tokens.next();
-            if (!cashierManager.existsId(cashierId)) {
+            if (!cashierService.existsId(cashierId)) {
                 System.out.println(ERROR_CASHIER_NOT_FOUND);
                 return;
             }
 
-            TicketDTO ticket = ticketManager.get(ticketId);
-            CashierDTO cashier = cashierManager.get(cashierId);
+            TicketDTO ticket = ticketService.get(ticketId);
+            CashierDTO cashier = cashierService.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
                 return;

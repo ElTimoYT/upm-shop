@@ -10,10 +10,10 @@ public class ProdRemoveCommandHandler implements CommandHandler {
     private static final String ERROR_PRODUCT_NOT_FOUND = "Product not found";
     private static final String PROD_REMOVE_OK =  "prod remove: ok";
 
-    private final ProductService productManager;
+    private final ProductService productService;
 
-    public ProdRemoveCommandHandler(ProductService productManager) {
-        this.productManager = productManager;
+    public ProdRemoveCommandHandler(ProductService productService) {
+        this.productService = productService;
     }
 
     @Override
@@ -23,14 +23,14 @@ public class ProdRemoveCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (!productManager.existsId(productId)) {
+        if (!productService.existsId(productId)) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
 
-        AbstractProductDTO product = productManager.get(productId);
+        AbstractProductDTO product = productService.get(productId);
 
-        productManager.remove(productId);
+        productService.remove(productId);
 
         System.out.println(product);
         System.out.println(PROD_REMOVE_OK);

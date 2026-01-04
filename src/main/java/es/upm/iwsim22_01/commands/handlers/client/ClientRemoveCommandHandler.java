@@ -8,7 +8,7 @@ import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import java.util.NoSuchElementException;
 
 public class ClientRemoveCommandHandler  implements CommandHandler {
-    private final ClientService clientManager;
+    private final ClientService clientService;
 
     private static final String
             ERROR_FAILED_REMOVAL = "Client found, but removal of client failed",
@@ -17,8 +17,8 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
             ERROR_INCORRECT_USE =  "Incorrect use: client remove <DNI>",
             ERROR_ID_NOT_FOUND = "Client ID not found";
 
-    public ClientRemoveCommandHandler(ClientService clientManager) {
-        this.clientManager = clientManager;
+    public ClientRemoveCommandHandler(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @Override
@@ -26,17 +26,18 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
         try {
             String id = tokens.next();
 
-            if (!clientManager.existsId(id)) {
+            if (!clientService.existsId(id)) {
                 System.out.println(ERROR_ID_NOT_FOUND);
                 return;
             }
 
-            ClientDTO client = clientManager.remove(id);
+            ClientDTO client = clientService.remove(id);
             if (client == null) {
                 System.out.println(ERROR_FAILED_REMOVAL);
                 return;
             }
 
+            System.out.println(client);
             System.out.println(OK_CLIENT_REMOVE);
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE);

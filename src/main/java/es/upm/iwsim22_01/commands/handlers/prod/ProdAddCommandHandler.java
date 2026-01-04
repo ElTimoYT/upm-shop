@@ -18,12 +18,12 @@ public class ProdAddCommandHandler implements CommandHandler {
             PROD_ADD_OK ="Prod add ok";
 
 
-    private final ProductService productManager;
+    private final ProductService productService;
 
     @Override
     public void runCommand(CommandTokens tokens) {
 
-        if (productManager.isProductListFull()) {
+        if (productService.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
@@ -34,7 +34,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existsId(productId)) {
+        if (productService.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -46,7 +46,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
         String productName = tokens.next();
-        if (!productManager.isNameValid(productName)) {
+        if (!productService.isNameValid(productName)) {
             System.out.println(ERROR_INVALID_NAME);
             return;
         }
@@ -88,18 +88,18 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productManager.addPersonalizableProduct(productId, productName, category, price, maxPers);
+                created = productService.addPersonalizableProduct(productId, productName, category, price, maxPers);
             }
 
         } else {
-            created = productManager.addUnitProduct(productId, productName, category, price);
+            created = productService.addUnitProduct(productId, productName, category, price);
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);
 
     }
 
-    public ProdAddCommandHandler(ProductService productManager) {
-        this.productManager = productManager;
+    public ProdAddCommandHandler(ProductService productService) {
+        this.productService = productService;
     }
 }

@@ -16,15 +16,15 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
     private static final String ERROR_INVALID_MAX_PEOPLE = "Invalid max people";
     private static final String PROD_ADD_OK = "prod addfood: ok";
 
-    private final ProductService productManager;
+    private final ProductService productService;
 
-    public ProdAddFoodCommandHandler(ProductService productManager) {
-        this.productManager = productManager;
+    public ProdAddFoodCommandHandler(ProductService productService) {
+        this.productService = productService;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        if (productManager.isProductListFull()) {
+        if (productService.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
@@ -35,7 +35,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existsId(productId)) {
+        if (productService.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -55,7 +55,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
         double price = tokens.nextDouble();
-        if (!productManager.isPriceValid(price)) {
+        if (!productService.isPriceValid(price)) {
             System.out.println(ERROR_INVALID_PRICE);
             return;
         }
@@ -84,7 +84,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
 
-        AbstractProductDTO food = productManager.addFoodProduct(
+        AbstractProductDTO food = productService.addFoodProduct(
                 productId,
                 name,
                 price,

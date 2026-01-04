@@ -4,6 +4,8 @@ import es.upm.iwsim22_01.data.models.Ticket;
 import es.upm.iwsim22_01.data.repository.TicketRepository;
 import es.upm.iwsim22_01.service.dto.TicketDTO;
 
+import java.util.ArrayList;
+
 /**
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
  * Permite generar tickets con identificadores únicos y validar su formato.
@@ -11,8 +13,12 @@ import es.upm.iwsim22_01.service.dto.TicketDTO;
 public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
 
-    public TicketService() {
+    private final ProductService productService;
+
+    public TicketService(ProductService productService) {
         super(new TicketRepository());
+
+        this.productService = productService;
     }
 
     @Override
@@ -20,18 +26,27 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
         return new TicketDTO(
                 model.getId(),
                 model.getInitialDate(),
-                model.getFinalDate()
+                model.getFinalDate(),
+                TicketDTO.TicketState.valueOf(model.getTicketState()),
+                new ArrayList<>(model.getProducts()
+                        .stream()
+                        .map(productService::toDto)
+                        .toList())
         );
     }
 
     @Override
     protected Ticket toModel(TicketDTO dto) {
-        /*return new Ticket(
+        return new Ticket(
                 dto.getId(),
                 dto.getInitialDate(),
-                dto.getFinalDate()
-        );*/
-        throw new RuntimeException("NO IMPLEMENTADO");
+                dto.getFinalDate(),
+                dto.getState().toString(),
+                dto.getProducts()
+                        .stream()
+                        .map(productService::toModel)
+                        .toList()
+        );
     }
 
     /**

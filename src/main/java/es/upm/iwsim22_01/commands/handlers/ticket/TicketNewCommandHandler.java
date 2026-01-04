@@ -25,14 +25,14 @@ public class TicketNewCommandHandler implements CommandHandler {
                     """,
             TICKET_NEW_OK = "ticket new: ok";
 
-    private final TicketService ticketManager;
-    private final CashierService cashierManager;
-    private final ClientService clientManager;
+    private final TicketService ticketService;
+    private final CashierService cashierService;
+    private final ClientService clientService;
 
-    public TicketNewCommandHandler(TicketService ticketManager, CashierService cashierManager, ClientService clientManager) {
-        this.ticketManager = ticketManager;
-        this.cashierManager = cashierManager;
-        this.clientManager = clientManager;
+    public TicketNewCommandHandler(TicketService ticketService, CashierService cashierService, ClientService clientService) {
+        this.ticketService = ticketService;
+        this.cashierService = cashierService;
+        this.clientService = clientService;
     }
 
     @Override
@@ -55,20 +55,20 @@ public class TicketNewCommandHandler implements CommandHandler {
 
     private void newTicketCommandWithoutId(CommandTokens tokens) {
         String cashierId = tokens.next();
-        if (!cashierManager.existsId(cashierId)) {
+        if (!cashierService.existsId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
         String clientId = tokens.next();
-        if (!clientManager.existsId(clientId)) {
+        if (!clientService.existsId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
 
-        TicketDTO ticket = ticketManager.addTicket();
-        cashierManager.get(cashierId).addTicket(ticket);
-        clientManager.get(clientId).addTicket(ticket);
+        TicketDTO ticket = ticketService.addTicket();
+        cashierService.get(cashierId).addTicket(ticket);
+        clientService.get(clientId).addTicket(ticket);
         System.out.println("Ticket: " + ticket);
         System.out.println("  Total price: 0.0");
         System.out.println("  Total discount: 0.0");
@@ -78,30 +78,30 @@ public class TicketNewCommandHandler implements CommandHandler {
 
     private void newTicketCommandWithId(CommandTokens tokens) {
         int ticketId = tokens.nextInt();
-        if (ticketManager.existsId(ticketId)) {
+        if (ticketService.existsId(ticketId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
-        if (!ticketManager.checkId(ticketId)){
+        if (!ticketService.checkId(ticketId)){
             System.out.println(ERROR_INVALID_ID_FORMAT);
             return;
         }
 
         String cashierId = tokens.next();
-        if (!cashierManager.existsId(cashierId)) {
+        if (!cashierService.existsId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
         String clientId = tokens.next();
-        if (!clientManager.existsId(clientId)) {
+        if (!clientService.existsId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
 
-        TicketDTO ticket = ticketManager.addTicket(ticketId);
-        cashierManager.get(cashierId).addTicket(ticket);
-        clientManager.get(clientId).addTicket(ticket);
+        TicketDTO ticket = ticketService.addTicket(ticketId);
+        cashierService.get(cashierId).addTicket(ticket);
+        clientService.get(clientId).addTicket(ticket);
         System.out.println(TICKET + ticket.getFormattedId());
         System.out.println(NEW_TICKET_DATA);
         System.out.println(TICKET_NEW_OK);

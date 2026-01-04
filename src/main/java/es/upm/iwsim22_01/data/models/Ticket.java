@@ -1,8 +1,5 @@
 package es.upm.iwsim22_01.data.models;
 
-import es.upm.iwsim22_01.service.dto.TicketDTO;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,14 +8,14 @@ public class Ticket {
     private Date initialDate;
     private Date finalDate;
     private String ticketState;
-    private List<Product> items;
+    private List<Product> products;
 
-    public Ticket(int id, Date initialDate, Date finalDate, String ticketState, List<Product> items) {
+    public Ticket(int id, Date initialDate, Date finalDate, String ticketState, List<Product> products) {
         this.id = id;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.ticketState = ticketState;
-        this.items = items;
+        this.products = products;
     }
 
     public int getId() {
@@ -53,12 +50,12 @@ public class Ticket {
         this.ticketState = ticketState;
     }
 
-    public List<Product> getItems() {
-        return items;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setItems(List<Product> items) {
-        this.items = items;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     @Override

@@ -4,6 +4,7 @@ import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
 import es.upm.iwsim22_01.service.service.TicketService;
 
 public class CashierCommandHandler implements CommandHandler {
@@ -18,11 +19,11 @@ public class CashierCommandHandler implements CommandHandler {
 
     private final CommandDispatcher cashierCommandDispatcher = new CommandDispatcher(ERROR_INCORRECT_USE_CASHIER, ERROR_INCORRECT_USE_CASHIER);
 
-    public CashierCommandHandler(CashierService cashierManager, TicketService ticketManager) {
-        cashierCommandDispatcher.addCommand(ADD, new CashierAddCommandHandler(cashierManager));
-        cashierCommandDispatcher.addCommand(REMOVE, new CashierRemoveCommandHandler(cashierManager, ticketManager));
-        cashierCommandDispatcher.addCommand(LIST, new CashierListCommandHandler(cashierManager));
-        cashierCommandDispatcher.addCommand(TICKETS, new CashierShowTicketCommandHandler(cashierManager));
+    public CashierCommandHandler(CashierService cashierService, ClientService clientService, TicketService ticketService) {
+        cashierCommandDispatcher.addCommand(ADD, new CashierAddCommandHandler(cashierService));
+        cashierCommandDispatcher.addCommand(REMOVE, new CashierRemoveCommandHandler(cashierService, clientService, ticketService));
+        cashierCommandDispatcher.addCommand(LIST, new CashierListCommandHandler(cashierService));
+        cashierCommandDispatcher.addCommand(TICKETS, new CashierShowTicketCommandHandler(cashierService));
     }
 
     @Override

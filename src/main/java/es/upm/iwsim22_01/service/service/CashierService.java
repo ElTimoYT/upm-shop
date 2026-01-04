@@ -85,27 +85,6 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
     }
 
     /**
-     * Elimina un cajero y todos sus tickets asociados del sistema.
-     *
-     * @param id             Identificador único del cajero a eliminar.
-     * @param ticketManager  Gestor de tickets para eliminar los tickets asociados al cajero.
-     * @return {@code true} si el cajero fue encontrado y eliminado, {@code false} en caso contrario.
-     */
-    public boolean removeCashierAndTickets(String id, TicketService ticketManager) {
-        CashierDTO cashier = get(id);
-
-        if (cashier == null){
-            return false;
-        }
-
-        cashier.getTickets().forEach(t -> ticketManager.remove(t.getId()));
-
-        this.remove(id);
-
-        return true;
-    }
-
-    /**
      * Valida el formato de un identificador de cajero.
      * El formato válido es: "UW" seguido de 7 dígitos numéricos.
      *

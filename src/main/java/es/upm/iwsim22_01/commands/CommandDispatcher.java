@@ -85,7 +85,6 @@ public class CommandDispatcher {
             COMMANDS.get(commandName).runCommand(tokens);
         } catch (Exception exception) {
             System.out.println(ERROR_UNEXPECTED_EXCEPTION);
-            System.out.println(exception.getMessage());
         }
     }
 

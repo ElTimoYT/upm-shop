@@ -12,8 +12,8 @@ import java.util.List;
 public class CashierDTO extends AbstractUserDTO {
     private List<TicketDTO> tickets;
 
-    public CashierDTO(String name, String email, String dni, List<TicketDTO> tickets) {
-        super(name, email , dni);
+    public CashierDTO(String name, String email, String id, List<TicketDTO> tickets) {
+        super(name, email , id);
         this.tickets = tickets;
     }
 
@@ -24,8 +24,8 @@ public class CashierDTO extends AbstractUserDTO {
      * @param email Correo electrónico del cajero.
      * @param id Identificador único del cajero.
      */
-    public CashierDTO(String name, String email, String dni) {
-        this(name, email , dni, new ArrayList<>());
+    public CashierDTO(String name, String email, String id) {
+        this(name, email , id, new ArrayList<>());
     }
 
     /**
@@ -64,12 +64,12 @@ public class CashierDTO extends AbstractUserDTO {
      * Compara este cajero con otro objeto para determinar si son iguales.
      * Utiliza la implementación de la clase padre.
      *
-     * @param obj Objeto con el que comparar.
+     * @param object Objeto con el que comparar.
      * @return true si los objetos son iguales, false en caso contrario.
      */
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object object) {
+        return super.equals(object);
     }
 
     /**

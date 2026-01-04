@@ -15,10 +15,10 @@ public class ClientCommandHandler implements CommandHandler {
 
     private final CommandDispatcher ticketCommandDispatcher = new CommandDispatcher(ERROR_INCORRECT_USE, ERROR_INCORRECT_USE);
 
-    public ClientCommandHandler(ClientService clientManager, CashierService cashierManager) {
-        ticketCommandDispatcher.addCommand(ADD_SUBCOMMAND, new ClientAddCommandHandler(clientManager, cashierManager));
-        ticketCommandDispatcher.addCommand(REMOVE_SUBCOMMAND, new ClientRemoveCommandHandler(clientManager));
-        ticketCommandDispatcher.addCommand(LIST_SUBCOMMAND, new ClientListCommandHandler(clientManager));
+    public ClientCommandHandler(ClientService clientService, CashierService cashierService) {
+        ticketCommandDispatcher.addCommand(ADD_SUBCOMMAND, new ClientAddCommandHandler(clientService, cashierService));
+        ticketCommandDispatcher.addCommand(REMOVE_SUBCOMMAND, new ClientRemoveCommandHandler(clientService));
+        ticketCommandDispatcher.addCommand(LIST_SUBCOMMAND, new ClientListCommandHandler(clientService));
     }
 
     @Override

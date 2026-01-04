@@ -9,8 +9,8 @@ import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import java.util.NoSuchElementException;
 
 public class ClientAddCommandHandler  implements CommandHandler {
-    private final ClientService clientManager;
-    private final CashierService cashierManager;
+    private final ClientService clientService;
+    private final CashierService cashierService;
 
     private static final String
             OK_CLIENT_ADD = "client add: ok",
@@ -21,9 +21,9 @@ public class ClientAddCommandHandler  implements CommandHandler {
             ERROR_EMAIL_INVALID = "Email does not adhere to required rules.",
             ERROR_DNI_INVALID = "DNI does not adhere to required rules.";
 
-    public ClientAddCommandHandler(ClientService clientManager, CashierService cashierManager) {
-        this.clientManager = clientManager;
-        this.cashierManager = cashierManager;
+    public ClientAddCommandHandler(ClientService clientService, CashierService cashierService) {
+        this.clientService = clientService;
+        this.cashierService = cashierService;
     }
 
     @Override
@@ -33,27 +33,27 @@ public class ClientAddCommandHandler  implements CommandHandler {
 
             String clientTentativeId = tokens.next();
 
-            if (clientManager.existsId(clientTentativeId)) {
+            if (clientService.existsId(clientTentativeId)) {
                 System.out.println(ERROR_ID_ALREADY_FOUND);
                 return;
             }
-            if (!clientManager.checkDNI(clientTentativeId)) {
+            if (!clientService.checkDNI(clientTentativeId)) {
                 System.out.println(ERROR_DNI_INVALID);
                 return;
             }
 
             String clientTentativeEmail = tokens.next();
-            if (!clientManager.checkEmail(clientTentativeEmail)) {
+            if (!clientService.checkEmail(clientTentativeEmail)) {
                 System.out.println(ERROR_EMAIL_INVALID);
             }
 
             String cashierTentativeId = tokens.next();
-            if (!cashierManager.existsId(cashierTentativeId)) {
+            if (!cashierService.existsId(cashierTentativeId)) {
                 System.out.println(ERROR_NONEXISTANT_CASHIER);
                 return;
             }
 
-            ClientDTO client = clientManager.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            ClientDTO client = clientService.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
             System.out.println(client);
             System.out.println(OK_CLIENT_ADD);
         } catch (NoSuchElementException | IllegalArgumentException exception) {

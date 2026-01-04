@@ -12,6 +12,13 @@ public abstract class AbstractServiceDTO extends AbstractProductDTO {
     private LocalDateTime expirationDate;
     private int participantsAmount;
 
+    public AbstractServiceDTO(int id, String name, double price, int amount, int maxParticipant, LocalDateTime expirationDate, int participantsAmount) {
+        super(id, name, price, amount);
+        this.maxParticipant = maxParticipant;
+        this.expirationDate = expirationDate;
+        this.participantsAmount = participantsAmount;
+    }
+
     /**
      * Constructor de la clase ProductService.
      *
@@ -64,7 +71,8 @@ public abstract class AbstractServiceDTO extends AbstractProductDTO {
      *
      * @return true si la fecha de caducidad es válida, false en caso contrario.
      */
-    public boolean checkTime() {
+    @Override
+    public boolean isValid() {
         LocalDateTime now = LocalDateTime.now();
 
         return !getExpirationDate().isBefore(now);

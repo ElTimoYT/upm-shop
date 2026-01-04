@@ -45,10 +45,12 @@ public abstract class AbstractService<M, D, K> {
     }
 
     public List<D> getAll() {
-        return repository.getAll()
-                .stream()
-                .map(this::toDto)
-                .toList();
+        return new ArrayList<>(
+                repository.getAll()
+                        .stream()
+                        .map(this::toDto)
+                        .toList()
+        );
     }
 
     public boolean existsId(K id) {

@@ -20,21 +20,20 @@ public class ProductService extends AbstractService<Product, AbstractProductDTO,
     @Override
     protected AbstractProductDTO toDto(Product model) {
         return switch (model.getType()) {
-            case UNIT_PRODUCT -> new UnitProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice());
-            case PERSONALIZABLE_PRODUCT -> new PersonalizableProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getLines());
-            case CATERING -> new CateringDTO(model.getId(), model.getName(), model.getPrice(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
-            case MEETING -> new MeetingDTO(model.getId(), model.getName(), model.getPrice(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
+            case UNIT_PRODUCT -> new UnitProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount());
+            case PERSONALIZABLE_PRODUCT -> new PersonalizableProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount(), model.getLines());
+            case CATERING -> new CateringDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
+            case MEETING -> new MeetingDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
         };
-
     }
 
     @Override
     protected Product toModel(AbstractProductDTO dto) {
         return switch (dto) {
-            case PersonalizableProductDTO personalizableProductDTO -> Product.createPersonalizable(personalizableProductDTO.getId(), personalizableProductDTO.getName(), personalizableProductDTO.getCategory().toString(), personalizableProductDTO.getPrice(), personalizableProductDTO.getMaxPers());
-            case UnitProductDTO unitProductDTO -> Product.createUnit(unitProductDTO.getId(), unitProductDTO.getName(), unitProductDTO.getCategory().toString(), unitProductDTO.getPrice());
-            case CateringDTO cateringDTO -> Product.createCatering(cateringDTO.getId(), cateringDTO.getName(), cateringDTO.getPrice(), cateringDTO.getMaxParticipant(), cateringDTO.getExpirationDate(), cateringDTO.getParticipantsAmount());
-            case MeetingDTO meetingDTO -> Product.createMeeting(meetingDTO.getId(), meetingDTO.getName(), meetingDTO.getPrice(), meetingDTO.getMaxParticipant(), meetingDTO.getExpirationDate(), meetingDTO.getParticipantsAmount());
+            case PersonalizableProductDTO personalizableProductDTO -> Product.createPersonalizable(personalizableProductDTO.getId(), personalizableProductDTO.getName(), personalizableProductDTO.getCategory().toString(), personalizableProductDTO.getPrice(), personalizableProductDTO.getAmount(), personalizableProductDTO.getLines());
+            case UnitProductDTO unitProductDTO -> Product.createUnit(unitProductDTO.getId(), unitProductDTO.getName(), unitProductDTO.getCategory().toString(), unitProductDTO.getPrice(), unitProductDTO.getAmount());
+            case CateringDTO cateringDTO -> Product.createCatering(cateringDTO.getId(), cateringDTO.getName(), cateringDTO.getPrice(), cateringDTO.getAmount(), cateringDTO.getMaxParticipant(), cateringDTO.getExpirationDate(), cateringDTO.getParticipantsAmount());
+            case MeetingDTO meetingDTO -> Product.createMeeting(meetingDTO.getId(), meetingDTO.getName(), meetingDTO.getPrice(), meetingDTO.getAmount(), meetingDTO.getMaxParticipant(), meetingDTO.getExpirationDate(), meetingDTO.getParticipantsAmount());
             default -> throw new IllegalStateException("Unexpected product type: " + dto);
         };
     }

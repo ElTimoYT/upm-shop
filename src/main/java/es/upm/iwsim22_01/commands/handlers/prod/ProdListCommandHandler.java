@@ -12,10 +12,10 @@ public class ProdListCommandHandler implements CommandHandler {
     private static final String PROD_LIST_OK ="Prod list ok",
     CATALOG = "Catalog: ";
 
-    private final ProductService productManager;
+    private final ProductService productService;
 
-    public ProdListCommandHandler(ProductService productManager) {
-        this.productManager = productManager;
+    public ProdListCommandHandler(ProductService productService) {
+        this.productService = productService;
 
     }
 
@@ -23,7 +23,7 @@ public class ProdListCommandHandler implements CommandHandler {
     public void runCommand(CommandTokens tokens) {
         System.out.println(CATALOG);
 
-        productManager.getAll().stream()
+        productService.getAll().stream()
                 .sorted(Comparator.comparingInt(AbstractProductDTO::getId))
                 .forEach(p -> System.out.println("\t" + p));
 

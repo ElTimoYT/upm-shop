@@ -6,10 +6,18 @@ import java.util.Objects;
  * Clase abstracta que representa un producto genérico en el sistema.
  * Define los atributos y métodos básicos comunes a todos los tipos de productos.
  */
-public abstract class AbstractProductDTO {
+public abstract class AbstractProductDTO implements Cloneable {
     protected final int id;
     protected String name;
     protected double price;
+    protected int amount;
+
+    public AbstractProductDTO(int id, String name, double price, int amount) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.amount = amount;
+    }
 
     /**
      * Constructor de la clase AbstractProduct.
@@ -19,9 +27,7 @@ public abstract class AbstractProductDTO {
      * @param price Precio del producto.
      */
     public AbstractProductDTO(int id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
+        this(id, name, price, 0);
     }
 
     /**
@@ -69,6 +75,18 @@ public abstract class AbstractProductDTO {
         this.price = price;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
+    public void addAmount(int amountToAdd) {
+        amount += amountToAdd;
+    }
+
+    public boolean isValid() {
+        return true;
+    }
+
     /**
      * Compara este producto con otro objeto para determinar si son iguales.
      * Dos productos se consideran iguales si tienen el mismo identificador.
@@ -110,5 +128,14 @@ public abstract class AbstractProductDTO {
                 ",name:'" + name + '\'' +
                 ",price:" + price +
                 '}';
+    }
+
+    @Override
+    public AbstractProductDTO clone() {
+        try {
+            return (AbstractProductDTO) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

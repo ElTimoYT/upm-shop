@@ -2,14 +2,14 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 import java.time.LocalDateTime;
 
 
 public class ProdAddMeetingCommandHandler implements CommandHandler {
-    private ProductManager productManager;
+    private ProductService productManager;
     private static final String ERROR_INCORRECT_USE_ADDM =
             "Incorrect use: prod addMeeting [<id>] \"<name>\" <price> <expiration: yyyy-MM-dd> <max_people>";
     private static final String ERROR_INVALID_ID = "Invalid id";
@@ -32,7 +32,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existId(productId)) {
+        if (productManager.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -74,7 +74,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
 
-        AbstractProduct meeting;
+        AbstractProductDTO meeting;
         meeting = productManager.addMeetingProduct(productId, name, price, expiration, maxPeople);
 
         System.out.println(meeting);
@@ -82,7 +82,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
 
     }
 
-    public ProdAddMeetingCommandHandler(ProductManager productManager) {
+    public ProdAddMeetingCommandHandler(ProductService productManager) {
         this.productManager = productManager;
 
     }

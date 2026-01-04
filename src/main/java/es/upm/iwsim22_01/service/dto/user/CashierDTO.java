@@ -1,6 +1,6 @@
-package es.upm.iwsim22_01.models.user;
+package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,13 @@ import java.util.List;
  * Clase que representa a un cajero en el sistema, especialización de AbstractUser.
  * Un cajero puede gestionar múltiples tickets asociados a su cuenta.
  */
-public class Cashier extends AbstractUser {
-    private List<Ticket> tickets;
+public class CashierDTO extends AbstractUserDTO {
+    private List<TicketDTO> tickets;
+
+    public CashierDTO(String name, String email, String dni, List<TicketDTO> tickets) {
+        super(name, email , dni);
+        this.tickets = tickets;
+    }
 
     /**
      * Constructor de la clase Cashier.
@@ -19,9 +24,8 @@ public class Cashier extends AbstractUser {
      * @param email Correo electrónico del cajero.
      * @param id Identificador único del cajero.
      */
-    public Cashier(String name, String email, String id) {
-        super(name, email , id);
-        this.tickets = new ArrayList<>();
+    public CashierDTO(String name, String email, String dni) {
+        this(name, email , dni, new ArrayList<>());
     }
 
     /**
@@ -29,7 +33,7 @@ public class Cashier extends AbstractUser {
      *
      * @return Lista de tickets del cajero.
      */
-    public List<Ticket> getTickets() {
+    public List<TicketDTO> getTickets() {
         return tickets;
     }
 
@@ -38,7 +42,7 @@ public class Cashier extends AbstractUser {
      *
      * @param ticket Ticket a añadir.
      */
-    public void addTicket(Ticket ticket) {
+    public void addTicket(TicketDTO ticket) {
         this.tickets.add(ticket);
     }
 
@@ -50,7 +54,7 @@ public class Cashier extends AbstractUser {
     @Override
     public String toString() {
         return "Cash{" +
-                "identifier='" + getId() + '\'' +
+                "identifier='" + getDNI() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 "}";

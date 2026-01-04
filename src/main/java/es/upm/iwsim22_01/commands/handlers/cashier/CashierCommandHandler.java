@@ -3,8 +3,8 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.TicketManager;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.TicketService;
 
 public class CashierCommandHandler implements CommandHandler {
 
@@ -18,7 +18,7 @@ public class CashierCommandHandler implements CommandHandler {
 
     private final CommandDispatcher cashierCommandDispatcher = new CommandDispatcher(ERROR_INCORRECT_USE_CASHIER, ERROR_INCORRECT_USE_CASHIER);
 
-    public CashierCommandHandler(CashierManager cashierManager, TicketManager ticketManager) {
+    public CashierCommandHandler(CashierService cashierManager, TicketService ticketManager) {
         cashierCommandDispatcher.addCommand(ADD, new CashierAddCommandHandler(cashierManager));
         cashierCommandDispatcher.addCommand(REMOVE, new CashierRemoveCommandHandler(cashierManager, ticketManager));
         cashierCommandDispatcher.addCommand(LIST, new CashierListCommandHandler(cashierManager));

@@ -1,36 +1,58 @@
-package es.upm.iwsim22_01.manager;
+package es.upm.iwsim22_01.service.service;
 
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.data.models.Ticket;
+import es.upm.iwsim22_01.data.repository.TicketRepository;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 /**
- * Gestor de tickets, encargado de la creación y validación de instancias de {@link Ticket}.
+ * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
  * Permite generar tickets con identificadores únicos y validar su formato.
  */
-public class TicketManager extends AbstractManager<Ticket, Integer> {
+public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
+
+    public TicketService() {
+        super(new TicketRepository());
+    }
+
+    @Override
+    protected TicketDTO toDto(Ticket model) {
+        return new TicketDTO(
+                model.getId(),
+                model.getInitialDate(),
+                model.getFinalDate()
+        );
+    }
+
+    @Override
+    protected Ticket toModel(TicketDTO dto) {
+        /*return new Ticket(
+                dto.getId(),
+                dto.getInitialDate(),
+                dto.getFinalDate()
+        );*/
+        throw new RuntimeException("NO IMPLEMENTADO");
+    }
 
     /**
      * Añade un nuevo ticket al sistema con el identificador especificado.
      *
      * @param id Identificador único del ticket (debe ser un número positivo con un máximo de {@value #TICKET_ID_LENGTH} dígitos).
-     * @return La instancia de {@link Ticket} creada.
+     * @return La instancia de {@link TicketDTO} creada.
      * @throws IllegalArgumentException Si el formato del identificador no es válido.
      */
-    public Ticket addTicket(int id) {
+    public TicketDTO addTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
-        Ticket ticket = new Ticket(id);
-
-        add(ticket, id);
-        return ticket;
+        return add(new TicketDTO(id));
     }
 
     /**
      * Añade un nuevo ticket al sistema generando automáticamente un identificador único.
      *
-     * @return La instancia de {@link Ticket} creada.
+     * @return La instancia de {@link TicketDTO} creada.
      */
-    public Ticket addTicket() {
+    public TicketDTO addTicket() {
         return addTicket(createNewId());
     }
 
@@ -56,7 +78,7 @@ public class TicketManager extends AbstractManager<Ticket, Integer> {
 
         do {
             id = (int) (Math.random() * Math.pow(10, TICKET_ID_LENGTH));
-        } while (existId(id));
+        } while (existsId(id));
 
         return id;
     }

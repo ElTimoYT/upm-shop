@@ -1,10 +1,10 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 /**
  * Enumeración que representa las categorías de productos disponibles en el sistema.
  * Cada categoría está asociada a un descuento específico.
  */
-public enum Category {
+public enum CategoryDTO {
     MERCH(0),
     STATIONARY(0.05),
     CLOTHES(0.07),
@@ -19,7 +19,7 @@ public enum Category {
      *
      * @param discount Descuento asociado a la categoría.
      */
-    Category(double discount) {
+    CategoryDTO(double discount) {
         this.discount = discount;
     }
 

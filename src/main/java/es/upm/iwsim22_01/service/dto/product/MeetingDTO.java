@@ -1,15 +1,15 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Clase que representa un producto de tipo reunión, especialización de {@link ProductService}.
+ * Clase que representa un producto de tipo reunión, especialización de {@link AbstractServiceDTO}.
  * Implementa reglas específicas para validar la fecha y hora de las reuniones,
  * asegurando que se cumplan los plazos mínimos de reserva y cancelación.
  */
-public class Meeting extends ProductService{
+public class MeetingDTO extends AbstractServiceDTO {
     /**
      * Constructor de la clase Meeting.
      *
@@ -19,8 +19,8 @@ public class Meeting extends ProductService{
      * @param maxPers          Número máximo de participantes.
      * @param expirationDate   Fecha y hora de caducidad/reserva del servicio.
      */
-    public Meeting(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate){
-        super(id,name, pricePerPerson,maxPers,expirationDate);
+    public MeetingDTO(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id, name, pricePerPerson, maxPers, expirationDate, participantsAmount);
     }
 
     /**

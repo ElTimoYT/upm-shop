@@ -2,8 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.TicketManager;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.TicketService;
 
 public class CashierRemoveCommandHandler implements CommandHandler {
 
@@ -14,10 +14,10 @@ public class CashierRemoveCommandHandler implements CommandHandler {
             CASHIER_REMOVE_OK = "cash remove: ok",
             CASHIER_REMOVE_FAIL = "cash remove: fail";
 
-    private CashierManager cashierManager;
-    private TicketManager ticketManager;
+    private CashierService cashierManager;
+    private TicketService ticketManager;
 
-    public CashierRemoveCommandHandler(CashierManager cashierManager, TicketManager ticketManager) {
+    public CashierRemoveCommandHandler(CashierService cashierManager, TicketService ticketManager) {
         this.cashierManager = cashierManager;
         this.ticketManager = ticketManager;
     }
@@ -34,7 +34,7 @@ public class CashierRemoveCommandHandler implements CommandHandler {
             return;
         }
 
-        if (!cashierManager.existId(id)) {
+        if (!cashierManager.existsId(id)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }

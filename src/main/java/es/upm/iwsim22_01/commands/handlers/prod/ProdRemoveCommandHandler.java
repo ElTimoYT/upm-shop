@@ -2,17 +2,17 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 public class ProdRemoveCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE_REMOVE = "Incorrect use: prod remove <id>";
     private static final String ERROR_PRODUCT_NOT_FOUND = "Product not found";
     private static final String PROD_REMOVE_OK =  "prod remove: ok";
 
-    private final ProductManager productManager;
+    private final ProductService productManager;
 
-    public ProdRemoveCommandHandler(ProductManager productManager) {
+    public ProdRemoveCommandHandler(ProductService productManager) {
         this.productManager = productManager;
     }
 
@@ -23,12 +23,12 @@ public class ProdRemoveCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (!productManager.existId(productId)) {
+        if (!productManager.existsId(productId)) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
 
-        AbstractProduct product = productManager.get(productId);
+        AbstractProductDTO product = productManager.get(productId);
 
         productManager.remove(productId);
 

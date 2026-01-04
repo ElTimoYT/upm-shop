@@ -3,11 +3,11 @@ package es.upm.iwsim22_01.service.dto.product;
 import java.time.LocalDateTime;
 
 /**
- * Clase que representa un producto de catering, especialización de {@link ProductServiceDTO}.
+ * Clase que representa un producto de catering, especialización de {@link AbstractServiceDTO}.
  * Implementa la validación específica para productos de catering, asegurando que la fecha de caducidad
  * sea al menos 3 días posterior a la fecha actual.
  */
-public class CateringDTO extends ProductServiceDTO {
+public class CateringDTO extends AbstractServiceDTO {
     /**
      * Constructor de la clase Catering.
      *

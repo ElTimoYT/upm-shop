@@ -52,10 +52,10 @@ public class ClientDTO extends AbstractUserDTO {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + getId() +
+                "id=" + getDNI() +
                 ",name=" + getName() +
                 ",email=" + getEmail() +
-                ",cash=" + cashierWhoRegisters.getId() +
+                ",cash=" + cashierWhoRegisters.getDNI() +
                 '}';
     }
 }

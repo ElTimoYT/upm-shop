@@ -20,15 +20,19 @@ public class TicketDTO {
     private TicketState ticketState = TicketState.EMPTY;
     private final List<TicketLine> items = new ArrayList<>();
 
+    public TicketDTO(int id, Date initialDate, Date finalDate) {
+        this.id = id;
+        this.initialDate = initialDate;
+        this.finalDate = finalDate;
+    }
+
     /**
      * Constructor de la clase Ticket.
      *
      * @param id Identificador único del ticket.
      */
     public TicketDTO(int id) {
-        this.id = id;
-
-        initialDate = new Date();
+        this(id, new Date(), null);
     }
 
     /**
@@ -235,6 +239,10 @@ public class TicketDTO {
         return initialDate;
     }
 
+    public Date getFinalDate() {
+        return finalDate;
+    }
+
     /**
      * Devuelve el identificador del ticket formateado.
      *
@@ -283,7 +291,7 @@ public class TicketDTO {
             double discountPerItem = perItemDiscount(product, counts);
 
 
-            if (product instanceof ProductServiceDTO service) {
+            if (product instanceof AbstractServiceDTO service) {
                 sb.append(service.printTicketWithPeople()).append("\n");
                 continue;
             }
@@ -333,7 +341,7 @@ public class TicketDTO {
         for (TicketLine line : items) {
             AbstractProductDTO product = line.product;
 
-            if (product instanceof ProductServiceDTO ps) {
+            if (product instanceof AbstractServiceDTO ps) {
                 if (!ps.checkTime()) {
                     return false;
                 }

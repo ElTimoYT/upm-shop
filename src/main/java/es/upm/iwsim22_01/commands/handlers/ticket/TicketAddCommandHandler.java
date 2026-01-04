@@ -8,7 +8,7 @@ import es.upm.iwsim22_01.service.service.TicketService;
 import es.upm.iwsim22_01.service.dto.TicketDTO;
 import es.upm.iwsim22_01.service.dto.product.PersonalizableProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.product.ProductServiceDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractServiceDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.ArrayList;
@@ -45,19 +45,19 @@ public class TicketAddCommandHandler implements CommandHandler {
     public void runCommand(CommandTokens tokens) {
         try {
             int ticketId = tokens.nextInt();
-            if (!ticketManager.existId(ticketId)) {
+            if (!ticketManager.existsId(ticketId)) {
                 System.out.println(ERROR_TICKET_NOT_FOUND);
                 return;
             }
 
             String cashierId = tokens.next();
-            if (!cashierManager.existId(cashierId)) {
+            if (!cashierManager.existsId(cashierId)) {
                 System.out.println(ERROR_CASHIER_NOT_FOUND);
                 return;
             }
 
             int productId = tokens.nextInt();
-            if (!productManager.existId(productId)) {
+            if (!productManager.existsId(productId)) {
                 System.out.println(ERROR_PRODUCT_NOT_FOUND);
                 return;
             }
@@ -77,7 +77,7 @@ public class TicketAddCommandHandler implements CommandHandler {
             }
 
             if(ticket.getState() != TicketDTO.TicketState.CLOSED){
-                if (product instanceof ProductServiceDTO productService) {
+                if (product instanceof AbstractServiceDTO productService) {
                     if (!productService.checkTime()) {
                         System.out.println(ERROR_INVALID_DATE);
                         return;

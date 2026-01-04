@@ -27,9 +27,9 @@ public class App {
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
     private static ProductService productManager = new ProductService();
-    private static CashierService cashierManager = new CashierService();
-    private static ClientService clientManager = new ClientService(cashierManager);
     private static TicketService ticketManager = new TicketService();
+    private static CashierService cashierManager = new CashierService(ticketManager);
+    private static ClientService clientManager = new ClientService(cashierManager);
 
     /**
      * Método principal de la aplicación.

@@ -35,7 +35,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existId(productId)) {
+        if (productManager.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }

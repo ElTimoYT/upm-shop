@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Clase que representa un producto de tipo reunión, especialización de {@link ProductServiceDTO}.
+ * Clase que representa un producto de tipo reunión, especialización de {@link AbstractServiceDTO}.
  * Implementa reglas específicas para validar la fecha y hora de las reuniones,
  * asegurando que se cumplan los plazos mínimos de reserva y cancelación.
  */
-public class MeetingDTO extends ProductServiceDTO {
+public class MeetingDTO extends AbstractServiceDTO {
     /**
      * Constructor de la clase Meeting.
      *

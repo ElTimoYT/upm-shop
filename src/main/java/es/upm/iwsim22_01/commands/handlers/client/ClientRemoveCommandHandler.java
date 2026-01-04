@@ -26,7 +26,7 @@ public class ClientRemoveCommandHandler  implements CommandHandler {
         try {
             String id = tokens.next();
 
-            if (!clientManager.existId(id)) {
+            if (!clientManager.existsId(id)) {
                 System.out.println(ERROR_ID_NOT_FOUND);
                 return;
             }

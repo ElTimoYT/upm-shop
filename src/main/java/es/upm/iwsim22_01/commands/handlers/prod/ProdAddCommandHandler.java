@@ -34,7 +34,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existId(productId)) {
+        if (productManager.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -92,7 +92,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             }
 
         } else {
-            created = productManager.addProduct(productId, productName, category, price);
+            created = productManager.addUnitProduct(productId, productName, category, price);
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);

@@ -31,13 +31,13 @@ public class TicketPrintCommandHandler implements CommandHandler {
     public void runCommand(CommandTokens tokens) {
         try {
             int ticketId = tokens.nextInt();
-            if (!ticketManager.existId(ticketId)) {
+            if (!ticketManager.existsId(ticketId)) {
                 System.out.println(ERROR_TICKET_NOT_FOUND);
                 return;
             }
 
             String cashierId = tokens.next();
-            if (!cashierManager.existId(cashierId)) {
+            if (!cashierManager.existsId(cashierId)) {
                 System.out.println(ERROR_CASHIER_NOT_FOUND);
                 return;
             }

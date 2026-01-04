@@ -1,5 +1,8 @@
 package es.upm.iwsim22_01.service.service;
 
+import es.upm.iwsim22_01.data.models.Cashier;
+import es.upm.iwsim22_01.data.repository.CashierRepository;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.regex.Pattern;
@@ -8,9 +11,43 @@ import java.util.regex.Pattern;
  * Gestor de cajeros, encargado de la creación, validación y eliminación de instancias de {@link CashierDTO}.
  * Extiende {@link AbstractService} para heredar funcionalidades básicas de gestión de entidades.
  */
-public class CashierService extends AbstractService<CashierDTO, String> {
+public class CashierService extends AbstractService<Cashier, CashierDTO, String> {
     private static final int CASHIER_ID_LENGTH = 7;
     private static final Pattern CASHIER_EMAIL_REGEX = Pattern.compile("^[\\w-.]+@upm.es$");
+
+    private final TicketService ticketService;
+
+    public CashierService(TicketService ticketService) {
+        super(new CashierRepository());
+
+        this.ticketService = ticketService;
+    }
+
+    @Override
+    protected CashierDTO toDto(Cashier model) {
+        return new CashierDTO(
+                model.getName(),
+                model.getEmail(),
+                model.getDNI(),
+                model.getTicketsId()
+                        .stream()
+                        .map(ticketService::get)
+                        .toList()
+                );
+    }
+
+    @Override
+    protected Cashier toModel(CashierDTO dto) {
+        return new Cashier(
+                dto.getName(),
+                dto.getEmail(),
+                dto.getDNI(),
+                dto.getTickets()
+                        .stream()
+                        .map(TicketDTO::getId)
+                        .toList()
+        );
+    }
 
     /**
      * Añade un nuevo cajero al sistema con los datos proporcionados.
@@ -27,10 +64,7 @@ public class CashierService extends AbstractService<CashierDTO, String> {
         }
         if (!checkId(id)) throw new IllegalArgumentException("Invalid ID format");
 
-        CashierDTO cashier = new CashierDTO(name, email, id);
-        add(cashier, id);
-        
-        return cashier;
+        return add(new CashierDTO(name, email, id));
     }
 
     /**
@@ -45,7 +79,7 @@ public class CashierService extends AbstractService<CashierDTO, String> {
         String id;
         do {
             id = createID();
-        } while (existId(id));
+        } while (existsId(id));
 
         return addCashier(name, email, id);
     }

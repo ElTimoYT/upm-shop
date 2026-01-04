@@ -1,13 +1,38 @@
 package es.upm.iwsim22_01.service.service;
 
+import es.upm.iwsim22_01.data.models.Ticket;
+import es.upm.iwsim22_01.data.repository.TicketRepository;
 import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 /**
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
  * Permite generar tickets con identificadores únicos y validar su formato.
  */
-public class TicketService extends AbstractService<TicketDTO, Integer> {
+public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
+
+    public TicketService() {
+        super(new TicketRepository());
+    }
+
+    @Override
+    protected TicketDTO toDto(Ticket model) {
+        return new TicketDTO(
+                model.getId(),
+                model.getInitialDate(),
+                model.getFinalDate()
+        );
+    }
+
+    @Override
+    protected Ticket toModel(TicketDTO dto) {
+        /*return new Ticket(
+                dto.getId(),
+                dto.getInitialDate(),
+                dto.getFinalDate()
+        );*/
+        throw new RuntimeException("NO IMPLEMENTADO");
+    }
 
     /**
      * Añade un nuevo ticket al sistema con el identificador especificado.
@@ -19,10 +44,7 @@ public class TicketService extends AbstractService<TicketDTO, Integer> {
     public TicketDTO addTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
-        TicketDTO ticket = new TicketDTO(id);
-
-        add(ticket, id);
-        return ticket;
+        return add(new TicketDTO(id));
     }
 
     /**
@@ -56,7 +78,7 @@ public class TicketService extends AbstractService<TicketDTO, Integer> {
 
         do {
             id = (int) (Math.random() * Math.pow(10, TICKET_ID_LENGTH));
-        } while (existId(id));
+        } while (existsId(id));
 
         return id;
     }

@@ -33,7 +33,7 @@ public class ClientAddCommandHandler  implements CommandHandler {
 
             String clientTentativeId = tokens.next();
 
-            if (clientManager.existId(clientTentativeId)) {
+            if (clientManager.existsId(clientTentativeId)) {
                 System.out.println(ERROR_ID_ALREADY_FOUND);
                 return;
             }
@@ -48,7 +48,7 @@ public class ClientAddCommandHandler  implements CommandHandler {
             }
 
             String cashierTentativeId = tokens.next();
-            if (!cashierManager.existId(cashierTentativeId)) {
+            if (!cashierManager.existsId(cashierTentativeId)) {
                 System.out.println(ERROR_NONEXISTANT_CASHIER);
                 return;
             }

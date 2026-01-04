@@ -97,8 +97,8 @@ public class Product {
         if (o == null) return false;
         if (o == this) return true;
 
-        if (o instanceof Product unitProduct) {
-            return unitProduct.getId() == this.getId();
+        if (o instanceof Product product) {
+            return product.getId() == this.getId();
         }
 
         return false;

@@ -34,7 +34,7 @@ public class CashierRemoveCommandHandler implements CommandHandler {
             return;
         }
 
-        if (!cashierManager.existId(id)) {
+        if (!cashierManager.existsId(id)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Incluye información sobre el número máximo de participantes, la fecha de caducidad
  * y el número actual de personas apuntadas al servicio.
  */
-public abstract class ProductServiceDTO extends AbstractProductDTO {
+public abstract class AbstractServiceDTO extends AbstractProductDTO {
     private int maxParticipant;
     private LocalDateTime expirationDate;
     private int participantsAmount;
@@ -21,7 +21,7 @@ public abstract class ProductServiceDTO extends AbstractProductDTO {
      * @param maxParticipant Número máximo de participantes permitidos.
      * @param expirationDate Fecha y hora de caducidad o realización del servicio.
      */
-    public ProductServiceDTO(int id, String name, double price, int maxParticipant, LocalDateTime expirationDate, int participantsAmount){
+    public AbstractServiceDTO(int id, String name, double price, int maxParticipant, LocalDateTime expirationDate, int participantsAmount){
         super(id, name,price);
         this.maxParticipant = maxParticipant;
         this.expirationDate = expirationDate;
@@ -35,6 +35,10 @@ public abstract class ProductServiceDTO extends AbstractProductDTO {
      */
     public LocalDateTime getExpirationDate() {
         return expirationDate;
+    }
+
+    public int getMaxParticipant() {
+        return maxParticipant;
     }
 
     /**

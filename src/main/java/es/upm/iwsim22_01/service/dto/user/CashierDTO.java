@@ -12,6 +12,11 @@ import java.util.List;
 public class CashierDTO extends AbstractUserDTO {
     private List<TicketDTO> tickets;
 
+    public CashierDTO(String name, String email, String dni, List<TicketDTO> tickets) {
+        super(name, email , dni);
+        this.tickets = tickets;
+    }
+
     /**
      * Constructor de la clase Cashier.
      *
@@ -19,9 +24,8 @@ public class CashierDTO extends AbstractUserDTO {
      * @param email Correo electrónico del cajero.
      * @param id Identificador único del cajero.
      */
-    public CashierDTO(String name, String email, String id) {
-        super(name, email , id);
-        this.tickets = new ArrayList<>();
+    public CashierDTO(String name, String email, String dni) {
+        this(name, email , dni, new ArrayList<>());
     }
 
     /**
@@ -50,7 +54,7 @@ public class CashierDTO extends AbstractUserDTO {
     @Override
     public String toString() {
         return "Cash{" +
-                "identifier='" + getId() + '\'' +
+                "identifier='" + getDNI() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 "}";

@@ -27,7 +27,7 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
     public void runCommand(CommandTokens tokens) {
         try {
             String id = tokens.next();
-            if (!cashierManager.existId(id)) {
+            if (!cashierManager.existsId(id)) {
                 System.out.println(CASHIER_NOT_FOUND);
                 return;
             }

@@ -101,6 +101,9 @@ public class ProdUpdateCommandHandler implements CommandHandler {
                 return;
             }
         }
+
+        productManager.update(product);
+
         System.out.println(product);
         System.out.println(PROD_UPDATE_OK);
     }

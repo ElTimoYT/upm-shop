@@ -5,13 +5,13 @@ import java.util.List;
 public class Cashier {
     private String name;
     private String email;
-    private String dni;
+    private String id;
     private List<Integer> tickets;
 
-    public Cashier(String name, String email, String dni, List<Integer> tickets) {
+    public Cashier(String name, String email, String id, List<Integer> tickets) {
         this.name = name;
         this.email = email;
-        this.dni = dni;
+        this.id = id;
         this.tickets = tickets;
     }
 
@@ -32,11 +32,11 @@ public class Cashier {
     }
 
     public String getDNI() {
-        return dni;
+        return id;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<Integer> getTicketsId() {

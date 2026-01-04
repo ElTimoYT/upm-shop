@@ -8,18 +8,18 @@ package es.upm.iwsim22_01.service.dto.user;
 public abstract class AbstractUserDTO {
     private String name;
     private String email;
-    private String dni;
+    private String id;
 
     /**
      * Constructor de la clase AbstractUser.
      *
      * @param name Nombre del usuario.
      * @param email Correo electrónico del usuario.
-     * @param dni Identificador único del usuario.
+     * @param id Identificador único del usuario.
      */
-    public AbstractUserDTO(String name, String email, String dni) {
+    public AbstractUserDTO(String name, String email, String id) {
         this.name= name;
-        this.dni = dni;
+        this.id = id;
         this.email= email;
     }
 
@@ -37,8 +37,8 @@ public abstract class AbstractUserDTO {
      *
      * @return El identificador del usuario.
      */
-    public String getDNI(){
-        return dni;
+    public String getId(){
+        return id;
     }
 
     /**

@@ -111,6 +111,7 @@ public class TicketAddCommandHandler implements CommandHandler {
                     }
                 }
 
+                ticketService.update(ticket);
                 System.out.println(ticket.printTicket());
                 System.out.println(TICKET_ADD_OK);
             } else{

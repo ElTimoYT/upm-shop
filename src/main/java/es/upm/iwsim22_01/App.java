@@ -29,7 +29,7 @@ public class App {
     private static ProductService productService = new ProductService();
     private static TicketService ticketService = new TicketService(productService);
     private static CashierService cashierService = new CashierService(ticketService);
-    private static ClientService clientService = new ClientService(cashierService);
+    private static ClientService clientService = new ClientService(cashierService, ticketService);
 
     /**
      * Método principal de la aplicación.

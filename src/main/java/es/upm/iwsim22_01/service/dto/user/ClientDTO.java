@@ -11,7 +11,13 @@ import java.util.List;
  */
 public class ClientDTO extends AbstractUserDTO {
     private CashierDTO cashierWhoRegisters;
-    private List<TicketDTO> tickets = new ArrayList<>();
+    private List<TicketDTO> tickets;
+
+    public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters, List<TicketDTO> tickets) {
+        super(name, email, DNI);
+        this.cashierWhoRegisters = cashierWhoRegisters;
+        this.tickets = tickets;
+    }
 
     /**
      * Constructor de la clase Client.
@@ -22,8 +28,7 @@ public class ClientDTO extends AbstractUserDTO {
      * @param cashierWhoRegisters Cajero que registró al cliente.
      */
     public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters) {
-        super(name, email, DNI);
-        this.cashierWhoRegisters = cashierWhoRegisters;
+        this(name, DNI, email, cashierWhoRegisters, new ArrayList<>());
     }
 
     /**
@@ -42,6 +47,10 @@ public class ClientDTO extends AbstractUserDTO {
      */
     public void addTicket(TicketDTO ticket) {
         tickets.add(ticket);
+    }
+
+    public List<TicketDTO> getTickets() {
+        return new ArrayList<>(tickets);
     }
 
     /**

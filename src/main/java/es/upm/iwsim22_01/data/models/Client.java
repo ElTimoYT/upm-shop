@@ -1,16 +1,21 @@
 package es.upm.iwsim22_01.data.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Client {
     private String name;
     private String email;
     private String dni;
     private String cashierWhoRegisters;
+    private List<Integer> tickets;
 
-    public Client(String name, String dni, String email, String cashierWhoRegisters) {
+    public Client(String name, String dni, String email, String cashierWhoRegisters, List<Integer> tickets) {
         this.name = name;
         this.email = email;
         this.dni = dni;
         this.cashierWhoRegisters = cashierWhoRegisters;
+        this.tickets = tickets == null ? new ArrayList<>() : tickets;
     }
 
     public String getName() {
@@ -43,6 +48,14 @@ public class Client {
 
     public void setCashierWhoRegisters(String cashierWhoRegisters) {
         this.cashierWhoRegisters = cashierWhoRegisters;
+    }
+
+    public List<Integer> getTicketsId() {
+        return tickets;
+    }
+
+    public void setTickets(List<Integer> tickets) {
+        this.tickets = tickets;
     }
 
     @Override

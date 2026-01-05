@@ -343,6 +343,15 @@ public class TicketDTO {
         return getFormattedId();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return  false;
+        if (o == this) return true;
+        if (!(o instanceof TicketDTO ticketDTO)) return false;
+
+        return id == ticketDTO.id;
+    }
+
     /**
      * Enumeración que representa los posibles estados de un ticket.
      */

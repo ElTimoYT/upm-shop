@@ -2,9 +2,11 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Client;
 import es.upm.iwsim22_01.data.repository.ClientRepository;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
@@ -17,15 +19,17 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
         NIE_PATTERN = Pattern.compile("^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$");
 
     private final CashierService cashierService;
+    private final TicketService ticketService;
 
     /**
      * Constructor de la clase.
      *
      * @param cashierService Gestor de cajeros necesario para validar la existencia del cajero que registra al cliente.
      */
-    public ClientService(CashierService cashierService) {
+    public ClientService(CashierService cashierService, TicketService ticketService) {
         super(new ClientRepository());
         this.cashierService = cashierService;
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -34,7 +38,12 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
                 model.getName(),
                 model.getDNI(),
                 model.getEmail(),
-                cashierService.get(model.getCashierWhoRegisters())
+                cashierService.get(model.getCashierWhoRegisters()),
+                new ArrayList<>(model.getTicketsId()
+                        .stream()
+                        .map(ticketService::get)
+                        .toList()
+                )
         );
     }
 
@@ -44,7 +53,11 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
                 dto.getName(),
                 dto.getId(),
                 dto.getEmail(),
-                dto.getCashier().getId()
+                dto.getCashier().getId(),
+                dto.getTickets()
+                        .stream()
+                        .map(TicketDTO::getId)
+                        .toList()
         );
     }
 

@@ -3,19 +3,18 @@ package es.upm.iwsim22_01.data.repository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import es.upm.iwsim22_01.data.repository.adapters.DateAdapter;
 import es.upm.iwsim22_01.data.repository.adapters.LocalDateTimeAdapter;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractRepository<T, K> implements Repository<T, K> {
     protected static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Date.class, new DateAdapter())
             .create();
 
     protected Map<K, T> cache;

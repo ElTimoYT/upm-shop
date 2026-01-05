@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.data.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class Ticket {
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.ticketState = ticketState;
-        this.products = products;
+        this.products = products == null ? new ArrayList<>() : products;
     }
 
     public int getId() {

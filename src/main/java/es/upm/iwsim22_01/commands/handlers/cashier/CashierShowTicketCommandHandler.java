@@ -39,8 +39,8 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
 
             if (tickets != null && !tickets.isEmpty()) {
                 tickets.stream()
-                        .sorted(Comparator.comparing(ticket -> ticket.getId()))
-                        .forEach(t -> System.out.println("  " + t.getId() + "->" + t.getState()));
+                        .sorted(Comparator.comparing(ticket -> ticket.getFormattedId()))
+                        .forEach(t -> System.out.println("  " + t.getFormattedId() + "->" + t.getState()));
             }
             System.out.println(CASHIER_SHOW_TICKETS_OK);
         }catch (Exception e) {

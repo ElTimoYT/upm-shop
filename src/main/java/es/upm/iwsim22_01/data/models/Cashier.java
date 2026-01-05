@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.data.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cashier {
@@ -12,7 +13,7 @@ public class Cashier {
         this.name = name;
         this.email = email;
         this.id = id;
-        this.tickets = tickets;
+        this.tickets = tickets == null ? new ArrayList<>() : tickets;
     }
 
     public String getName() {

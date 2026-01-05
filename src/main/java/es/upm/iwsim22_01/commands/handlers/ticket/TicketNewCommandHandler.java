@@ -2,6 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.service.ClientService;
 import es.upm.iwsim22_01.service.service.TicketService;
@@ -67,8 +69,12 @@ public class TicketNewCommandHandler implements CommandHandler {
         }
 
         TicketDTO ticket = ticketService.addTicket();
-        cashierService.get(cashierId).addTicket(ticket);
-        clientService.get(clientId).addTicket(ticket);
+        CashierDTO cashier = cashierService.get(cashierId);
+        cashier.addTicket(ticket);
+        cashierService.update(cashier);
+        ClientDTO client = clientService.get(clientId);
+        client.addTicket(ticket);
+        clientService.update(client);
         System.out.println("Ticket: " + ticket);
         System.out.println("  Total price: 0.0");
         System.out.println("  Total discount: 0.0");
@@ -100,8 +106,12 @@ public class TicketNewCommandHandler implements CommandHandler {
         }
 
         TicketDTO ticket = ticketService.addTicket(ticketId);
-        cashierService.get(cashierId).addTicket(ticket);
-        clientService.get(clientId).addTicket(ticket);
+        CashierDTO cashier = cashierService.get(cashierId);
+        cashier.addTicket(ticket);
+        cashierService.update(cashier);
+        ClientDTO client = clientService.get(clientId);
+        client.addTicket(ticket);
+        clientService.update(client);
         System.out.println(TICKET + ticket.getFormattedId());
         System.out.println(NEW_TICKET_DATA);
         System.out.println(TICKET_NEW_OK);

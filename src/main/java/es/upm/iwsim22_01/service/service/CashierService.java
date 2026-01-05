@@ -5,6 +5,7 @@ import es.upm.iwsim22_01.data.repository.CashierRepository;
 import es.upm.iwsim22_01.service.dto.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
@@ -29,11 +30,12 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
                 model.getName(),
                 model.getEmail(),
                 model.getDNI(),
-                model.getTicketsId()
+                new ArrayList<>(model.getTicketsId()
                         .stream()
                         .map(ticketService::get)
                         .toList()
-                );
+                )
+            );
     }
 
     @Override

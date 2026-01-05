@@ -61,6 +61,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
             }
 
             ticket.removeProduct(product);
+            ticketService.update(ticket);
             System.out.println(ticket.printTicket());
 
             System.out.println(TICKET_REMOVAL_OK);

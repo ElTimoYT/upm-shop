@@ -13,8 +13,11 @@ import java.time.LocalDateTime;
 public class ProductService extends AbstractService<Product, AbstractProductDTO, Integer> {
     private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
 
+    private final ProductRepository productRepository;
+
     public ProductService() {
         super(new ProductRepository());
+        this.productRepository = (ProductRepository) super.repository;
     }
 
     @Override

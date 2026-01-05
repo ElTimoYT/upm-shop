@@ -13,7 +13,7 @@ import java.util.*;
  * @param <K> tipo de la clave que identifica cada elemento
  */
 public abstract class AbstractService<M, D, K> {
-     protected final Repository<M, K> repository;
+    protected final Repository<M, K> repository;
 
     protected AbstractService(Repository<M, K> repository) {
         this.repository = repository;

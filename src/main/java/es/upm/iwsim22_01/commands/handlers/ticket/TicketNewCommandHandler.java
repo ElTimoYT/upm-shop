@@ -2,12 +2,15 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
+import es.upm.iwsim22_01.data.models.Client;
+import es.upm.iwsim22_01.service.dto.ticket.CommonTicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.CompanyTicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.service.ClientService;
 import es.upm.iwsim22_01.service.service.TicketService;
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -19,7 +22,7 @@ public class TicketNewCommandHandler implements CommandHandler {
             ERROR_INVALID_ID = "Invalid id",
             ERROR_INVALID_ID_FORMAT = "Ticket id format is invalid",
 
-            TICKET = "Ticket: ",
+    TICKET = "Ticket: ",
             NEW_TICKET_DATA = """
                           Total price: 0.0
                           Total discount: 0.0
@@ -68,13 +71,18 @@ public class TicketNewCommandHandler implements CommandHandler {
             return;
         }
 
-        TicketDTO ticket = ticketService.addTicket();
+        // Decidimos el tipo de ticket en función del identificador del cliente.
+        // (En el enunciado se ha simplificado la jerarquía de clientes, así que
+        // inferimos si es empresa/particular por el patrón del ID).
+        ClientDTO client = clientService.get(clientId);
+        TicketDTO ticket = createTicketByClientType(client, ticketService.createNewId());
         CashierDTO cashier = cashierService.get(cashierId);
         cashier.addTicket(ticket);
         cashierService.update(cashier);
-        ClientDTO client = clientService.get(clientId);
         client.addTicket(ticket);
         clientService.update(client);
+
+
         System.out.println("Ticket: " + ticket);
         System.out.println("  Total price: 0.0");
         System.out.println("  Total discount: 0.0");
@@ -105,15 +113,32 @@ public class TicketNewCommandHandler implements CommandHandler {
             return;
         }
 
-        TicketDTO ticket = ticketService.addTicket(ticketId);
         CashierDTO cashier = cashierService.get(cashierId);
+        ClientDTO client = clientService.get(clientId);
+
+        // Decide el tipo de ticket según el tipo de cliente
+        TicketDTO ticket = createTicketByClientType(client, ticketId);
+
         cashier.addTicket(ticket);
         cashierService.update(cashier);
-        ClientDTO client = clientService.get(clientId);
+
         client.addTicket(ticket);
         clientService.update(client);
+
         System.out.println(TICKET + ticket.getFormattedId());
         System.out.println(NEW_TICKET_DATA);
         System.out.println(TICKET_NEW_OK);
+    }
+
+    /**
+     * Crea un ticket común o de compañía según el tipo de cliente.
+     * @param client   El cliente para el cual se crea el ticket.
+     * @param ticketId El identificador del ticket.
+     * @return Un TicketDTO del tipo adecuado.
+     */
+    private TicketDTO createTicketByClientType(ClientDTO client, int ticketId) {
+        return client.getClientType() == Client.ClientType.COMPANY
+                ? new CompanyTicketDTO(ticketId)
+                : new CommonTicketDTO(ticketId);
     }
 }

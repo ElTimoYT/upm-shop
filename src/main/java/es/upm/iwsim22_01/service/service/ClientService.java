@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Client;
 import es.upm.iwsim22_01.data.repository.ClientRepository;
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 

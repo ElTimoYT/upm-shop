@@ -1,6 +1,6 @@
 package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;

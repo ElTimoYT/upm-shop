@@ -5,7 +5,7 @@ import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.service.ProductService;
 import es.upm.iwsim22_01.service.service.TicketService;
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.product.PersonalizableProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractServiceDTO;
@@ -25,9 +25,10 @@ public class TicketAddCommandHandler implements CommandHandler {
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
             ERROR_INVALID_DATE = "Date of the product already passed",
             ERROR_CASHIER_NOT_ASSIGNED = "Cashier is not assigned to this ticket",
+            ERROR_PRODUCT_NOT_ALLOWED = "Product not allowed for this ticket type",
             ERROR_PARAM_NOT_VALID = "Command param %s not valid, the command will ignore this param\n",
 
-            TICKET_CLOSED = "Ticket closed",
+    TICKET_CLOSED = "Ticket closed",
             TICKET_ADD_OK = "ticket add: ok";
 
 
@@ -77,13 +78,14 @@ public class TicketAddCommandHandler implements CommandHandler {
             }
 
             if(ticket.getState() != TicketDTO.TicketState.CLOSED){
+                boolean added;
                 if (product instanceof AbstractServiceDTO productService) {
                     if (!productService.isValid()) {
                         System.out.println(ERROR_INVALID_DATE);
                         return;
                     }
                     productService.setParticipantsAmount(amount + productService.getParticipantsAmount());
-                    ticket.addProduct(productService, amount);
+                    added = ticket.addProduct(productService, amount);
 
                 }else{
                     if (tokens.hasNext()) {
@@ -101,14 +103,19 @@ public class TicketAddCommandHandler implements CommandHandler {
                                 }
                             }
                             String[] lines = personalization.toArray(new String[0]);
-                            ticket.addProduct(personalizableProduct, amount, lines);
+                            added = ticket.addProduct(personalizableProduct, amount, lines);
                         } else {
                             System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
                             return;
                         }
                     } else {
-                        ticket.addProduct(product, amount);
+                        added = ticket.addProduct(product, amount);
                     }
+                }
+
+                if (!added) {
+                    System.out.println(ERROR_PRODUCT_NOT_ALLOWED);
+                    return;
                 }
 
                 ticketService.update(ticket);
@@ -123,6 +130,5 @@ public class TicketAddCommandHandler implements CommandHandler {
             System.out.println(ERROR_INCORRECT_USE_TICKET_ADD);
         }
     }
-
 
 }

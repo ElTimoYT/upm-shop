@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.data.models.Client;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,16 @@ public class ClientDTO extends AbstractUserDTO {
         super(name, email, DNI);
         this.cashierWhoRegisters = cashierWhoRegisters;
         this.tickets = tickets;
+    }
+
+    private Client.ClientType clientType;
+
+    public Client.ClientType getClientType() {
+        return clientType;
+    }
+
+    public void setClientType(Client.ClientType clientType) {
+        this.clientType = clientType;
     }
 
     /**

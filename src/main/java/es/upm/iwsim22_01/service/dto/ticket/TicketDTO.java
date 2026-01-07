@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.service.dto;
+package es.upm.iwsim22_01.service.dto.ticket;
 
 import es.upm.iwsim22_01.service.dto.product.*;
 
@@ -19,6 +19,14 @@ public class TicketDTO {
     private Date finalDate;
     private TicketState state;
     private final List<AbstractProductDTO> products;
+    private TicketType ticketType;
+
+    public enum TicketType {
+        COMMON,
+        COMPANY
+    }
+
+
 
     public TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products) {
         this.id = id;
@@ -39,6 +47,14 @@ public class TicketDTO {
      */
     public TicketDTO(int id) {
         this(id, new Date(), null);
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    protected void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
     }
 
     /**

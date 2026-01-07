@@ -10,13 +10,18 @@ public class Ticket {
     private Date finalDate;
     private String ticketState;
     private List<Product> products;
+    private String ticketType;
 
-    public Ticket(int id, Date initialDate, Date finalDate, String ticketState, List<Product> products) {
+    public Ticket(int id, Date initialDate, Date finalDate, String ticketState, List<Product> products, String string) {
         this.id = id;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.ticketState = ticketState;
         this.products = products == null ? new ArrayList<>() : products;
+    }
+
+    public String getTicketType() {
+        return ticketType;
     }
 
     public int getId() {

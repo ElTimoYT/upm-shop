@@ -3038,3 +3038,14 @@
 {"ts":1767656772226,"action":"FILE_OPENED","file":"/src/main/java/es/upm/iwsim22_01/service/service/AbstractService.java","tags":{"FILE_LINE_OF_CODE":"65"}}
 {"ts":1767656779302,"action":"FILE_CLOSED","file":"/src/main/java/es/upm/iwsim22_01/service/service/AbstractService.java","tags":{"FILE_LINE_OF_CODE":"65"}}
 {"ts":1767656779302,"action":"FILE_OPENED","file":"/src/main/java/es/upm/iwsim22_01/service/service/ProductService.java","tags":{"FILE_LINE_OF_CODE":"156"}}
+{"ts":1767656808992,"action":"IDE_DEACTIVATED"}
+{"ts":1767656821141,"action":"IDE_ACTIVATED"}
+{"ts":1767656825845,"action":"FILE_CLOSED","file":"/src/main/java/es/upm/iwsim22_01/service/service/ProductService.java","tags":{"FILE_LINE_OF_CODE":"157"}}
+{"ts":1767656825845,"action":"FILE_OPENED","file":"/data/products/products.json","tags":{"FILE_LINE_OF_CODE":"13"}}
+{"ts":1767656832019,"action":"IDE_DEACTIVATED"}
+{"ts":1767797760707,"action":"IDE_ACTIVATED"}
+{"ts":1767797779894,"action":"FILE_CLOSED","file":"/data/products/products.json","tags":{"FILE_LINE_OF_CODE":"13"}}
+{"ts":1767797779943,"action":"FILE_OPENED","file":"/.gitignore","tags":{"FILE_LINE_OF_CODE":"39"}}
+{"ts":1767797828578,"action":"IDE_DEACTIVATED"}
+{"ts":1767797852747,"action":"IDE_ACTIVATED"}
+{"ts":1767797858208,"action":"IDE_DEACTIVATED"}

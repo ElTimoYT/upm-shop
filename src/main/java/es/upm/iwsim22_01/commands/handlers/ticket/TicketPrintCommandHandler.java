@@ -2,10 +2,10 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.user.Cashier;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -19,31 +19,31 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
             TICKET_PRINT_OK = "ticket print: ok";
 
-    private final TicketManager ticketManager;
-    private final CashierManager cashierManager;
+    private final TicketService ticketService;
+    private final CashierService cashierService;
 
-    public TicketPrintCommandHandler(TicketManager ticketManager, CashierManager cashierManager) {
-        this.ticketManager = ticketManager;
-        this.cashierManager = cashierManager;
+    public TicketPrintCommandHandler(TicketService ticketService, CashierService cashierService) {
+        this.ticketService = ticketService;
+        this.cashierService = cashierService;
     }
 
     @Override
     public void runCommand(CommandTokens tokens) {
         try {
             int ticketId = tokens.nextInt();
-            if (!ticketManager.existId(ticketId)) {
+            if (!ticketService.existsId(ticketId)) {
                 System.out.println(ERROR_TICKET_NOT_FOUND);
                 return;
             }
 
             String cashierId = tokens.next();
-            if (!cashierManager.existId(cashierId)) {
+            if (!cashierService.existsId(cashierId)) {
                 System.out.println(ERROR_CASHIER_NOT_FOUND);
                 return;
             }
 
-            Ticket ticket = ticketManager.get(ticketId);
-            Cashier cashier = cashierManager.get(cashierId);
+            TicketDTO ticket = ticketService.get(ticketId);
+            CashierDTO cashier = cashierService.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
                 return;
@@ -56,6 +56,7 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
             System.out.println(ticket.printTicket());
             ticket.closeTicket();
+            ticketService.update(ticket);
             System.out.println(TICKET_PRINT_OK);
         } catch (NoSuchElementException | IllegalArgumentException exception) {
             System.out.println(ERROR_INCORRECT_USE_TICKET_PRINT);

@@ -2,10 +2,12 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.ClientManager;
-import es.upm.iwsim22_01.manager.TicketManager;
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -25,14 +27,14 @@ public class TicketNewCommandHandler implements CommandHandler {
                     """,
             TICKET_NEW_OK = "ticket new: ok";
 
-    private final TicketManager ticketManager;
-    private final CashierManager cashierManager;
-    private final ClientManager clientManager;
+    private final TicketService ticketService;
+    private final CashierService cashierService;
+    private final ClientService clientService;
 
-    public TicketNewCommandHandler(TicketManager ticketManager, CashierManager cashierManager, ClientManager clientManager) {
-        this.ticketManager = ticketManager;
-        this.cashierManager = cashierManager;
-        this.clientManager = clientManager;
+    public TicketNewCommandHandler(TicketService ticketService, CashierService cashierService, ClientService clientService) {
+        this.ticketService = ticketService;
+        this.cashierService = cashierService;
+        this.clientService = clientService;
     }
 
     @Override
@@ -55,20 +57,24 @@ public class TicketNewCommandHandler implements CommandHandler {
 
     private void newTicketCommandWithoutId(CommandTokens tokens) {
         String cashierId = tokens.next();
-        if (!cashierManager.existId(cashierId)) {
+        if (!cashierService.existsId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
         String clientId = tokens.next();
-        if (!clientManager.existId(clientId)) {
+        if (!clientService.existsId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
 
-        Ticket ticket = ticketManager.addTicket();
-        cashierManager.get(cashierId).addTicket(ticket);
-        clientManager.get(clientId).addTicket(ticket);
+        TicketDTO ticket = ticketService.addTicket();
+        CashierDTO cashier = cashierService.get(cashierId);
+        cashier.addTicket(ticket);
+        cashierService.update(cashier);
+        ClientDTO client = clientService.get(clientId);
+        client.addTicket(ticket);
+        clientService.update(client);
         System.out.println("Ticket: " + ticket);
         System.out.println("  Total price: 0.0");
         System.out.println("  Total discount: 0.0");
@@ -78,30 +84,34 @@ public class TicketNewCommandHandler implements CommandHandler {
 
     private void newTicketCommandWithId(CommandTokens tokens) {
         int ticketId = tokens.nextInt();
-        if (ticketManager.existId(ticketId)) {
+        if (ticketService.existsId(ticketId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
-        if (!ticketManager.checkId(ticketId)){
+        if (!ticketService.checkId(ticketId)){
             System.out.println(ERROR_INVALID_ID_FORMAT);
             return;
         }
 
         String cashierId = tokens.next();
-        if (!cashierManager.existId(cashierId)) {
+        if (!cashierService.existsId(cashierId)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
 
         String clientId = tokens.next();
-        if (!clientManager.existId(clientId)) {
+        if (!clientService.existsId(clientId)) {
             System.out.println(ERROR_CLIENT_NOT_FOUND);
             return;
         }
 
-        Ticket ticket = ticketManager.addTicket(ticketId);
-        cashierManager.get(cashierId).addTicket(ticket);
-        clientManager.get(clientId).addTicket(ticket);
+        TicketDTO ticket = ticketService.addTicket(ticketId);
+        CashierDTO cashier = cashierService.get(cashierId);
+        cashier.addTicket(ticket);
+        cashierService.update(cashier);
+        ClientDTO client = clientService.get(clientId);
+        client.addTicket(ticket);
+        clientService.update(client);
         System.out.println(TICKET + ticket.getFormattedId());
         System.out.println(NEW_TICKET_DATA);
         System.out.println(TICKET_NEW_OK);

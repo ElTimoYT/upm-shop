@@ -1,6 +1,6 @@
-package es.upm.iwsim22_01.models;
+package es.upm.iwsim22_01.service.dto;
 
-import es.upm.iwsim22_01.models.product.*;
+import es.upm.iwsim22_01.service.dto.product.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -10,25 +10,35 @@ import java.util.*;
  * Un ticket puede contener múltiples productos, aplicar descuentos por categoría,
  * y gestionar su estado (abierto, cerrado, vacío).
  */
-public class Ticket {
+public class TicketDTO {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yy-MM-dd-HH:mm");
     public static final int MAX_PRODUCTS = 100;
 
     private final int id;
     private final Date initialDate;
     private Date finalDate;
-    private TicketState ticketState = TicketState.EMPTY;
-    private final List<TicketLine> items = new ArrayList<>();
+    private TicketState state;
+    private final List<AbstractProductDTO> products;
+
+    public TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products) {
+        this.id = id;
+        this.initialDate = initialDate;
+        this.finalDate = finalDate;
+        this.state = state;
+        this.products = products;
+    }
+
+    public TicketDTO(int id, Date initialDate, Date finalDate) {
+        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>());
+    }
 
     /**
      * Constructor de la clase Ticket.
      *
      * @param id Identificador único del ticket.
      */
-    public Ticket(int id) {
-        this.id = id;
-
-        initialDate = new Date();
+    public TicketDTO(int id) {
+        this(id, new Date(), null);
     }
 
     /**
@@ -40,6 +50,10 @@ public class Ticket {
         return id;
     }
 
+    public List<AbstractProductDTO> getProducts() {
+        return new ArrayList<>(products);
+    }
+
     /**
      * Calcula el número total de unidades en el ticket.
      *
@@ -48,8 +62,8 @@ public class Ticket {
     private int totalUnits() {
         int totalUnits = 0;
 
-        for (TicketLine item : items) {
-            totalUnits += item.amount;
+        for (AbstractProductDTO product : products) {
+            totalUnits += product.getAmount();
         }
 
         return totalUnits;
@@ -60,14 +74,14 @@ public class Ticket {
      *
      * @return Mapa con la cantidad de productos por categoría.
      */
-    private Map<Category, Integer> countCategory() {
-        Map<Category, Integer> amounts = new EnumMap<>(Category.class);
-        for (Category category : Category.values()) amounts.put(category, 0);
+    private Map<CategoryDTO, Integer> countCategory() {
+        Map<CategoryDTO, Integer> amounts = new EnumMap<>(CategoryDTO.class);
+        for (CategoryDTO category : CategoryDTO.values()) amounts.put(category, 0);
 
-        for (TicketLine item : items) if (item.product instanceof UnitProduct unitProduct) {
-            Category category = unitProduct.getCategory();
+        for (AbstractProductDTO product : products) if (product instanceof UnitProductDTO unitProduct) {
+            CategoryDTO category = unitProduct.getCategory();
 
-            amounts.put(category, amounts.get(category) + item.amount);
+            amounts.put(category, amounts.get(category) + product.getAmount());
         }
 
         return amounts;
@@ -80,9 +94,9 @@ public class Ticket {
      * @param counts Mapa con la cantidad de productos por categoría.
      * @return Descuento aplicable al producto.
      */
-    private double perItemDiscount(AbstractProduct product, Map<Category, Integer> counts) {
-        if (product instanceof UnitProduct unitProduct) {
-            Category category = unitProduct.getCategory();
+    private double perItemDiscount(AbstractProductDTO product, Map<CategoryDTO, Integer> counts) {
+        if (product instanceof UnitProductDTO unitProduct) {
+            CategoryDTO category = unitProduct.getCategory();
             int n = counts.getOrDefault(category, 0);
             if (n < 2) {
                 return 0.0;
@@ -110,8 +124,8 @@ public class Ticket {
      */
     private double totalPrice() {
         double total = 0.0;
-        for (TicketLine item : items) {
-            total += item.amount * item.product.getPrice();
+        for (AbstractProductDTO product : products) {
+            total += product.getAmount() * product.getPrice();
         }
 
         return total;
@@ -124,11 +138,11 @@ public class Ticket {
      */
 
     private double discountPrice() {
-        Map<Category, Integer> counts = countCategory();
+        Map<CategoryDTO, Integer> counts = countCategory();
         double discount = 0.0;
-        for (TicketLine item : items) {
-            double perItem = perItemDiscount(item.product, counts);
-            discount += perItem * item.amount;
+        for (AbstractProductDTO product : products) {
+            double perItem = perItemDiscount(product, counts);
+            discount += perItem * product.getAmount();
         }
         return round1(discount);
     }
@@ -136,24 +150,25 @@ public class Ticket {
     /**
      * Añade un producto al ticket.
      *
-     * @param product Producto a añadir.
+     * @param productToAdd Producto a añadir.
      * @param quantity Cantidad del producto.
      * @return true si el producto se añadió correctamente, false en caso contrario.
      */
-    public boolean addProduct(AbstractProduct product, int quantity) {
-        if (product == null || quantity <= 0) return false;
+    public boolean addProduct(AbstractProductDTO productToAdd, int quantity) {
+        if (productToAdd == null || quantity <= 0) return false;
 
         int remaining = MAX_PRODUCTS - totalUnits();
         if (quantity > remaining) return false;
 
-        TicketLine item = new TicketLine(product, quantity);
-        if (items.contains(item)) {
-            items.get(items.indexOf(item)).amount += item.amount;
+        AbstractProductDTO product = productToAdd.clone();
+        if (products.contains(product)) {
+            products.get(products.indexOf(product)).addAmount(quantity);
         } else {
-            items.add(item);
+            product.addAmount(quantity);
+            products.add(product);
         }
 
-        ticketState = TicketState.OPEN;
+        state = TicketState.OPEN;
         return true;
     }
 
@@ -165,7 +180,7 @@ public class Ticket {
      * @param lines Líneas de personalización.
      * @return true si el producto se añadió correctamente, false en caso contrario.
      */
-    public boolean addProduct(PersonalizableProduct personalizableProduct, int quantity, String[] lines) {
+    public boolean addProduct(PersonalizableProductDTO personalizableProduct, int quantity, String[] lines) {
         if (personalizableProduct == null || quantity <= 0) return false;
         if (lines == null) lines = new String[0];
         if (personalizableProduct.getMaxPers() < lines.length) return false;
@@ -180,19 +195,15 @@ public class Ticket {
         }
 
         double basePrice = personalizableProduct.getPrice();
-        double recargado = basePrice * (1 + 0.10 * numTexts);
+        double newPrice = basePrice * (1 + 0.10 * numTexts);
 
-        PersonalizableProduct ticketProduct = new PersonalizableProduct(
-                personalizableProduct.getId(),
-                personalizableProduct.getName(),
-                personalizableProduct.getCategory(),
-                recargado,
-                personalizableProduct.getMaxPers()
-        );
+        PersonalizableProductDTO product = personalizableProduct.clone();
+        product.addAmount(quantity);
+        product.setPrice(newPrice);
+        product.setLines(lines);
 
-        TicketLine item = new PersonalizableProductTicketLine(ticketProduct, quantity, lines);
-        items.add(item);
-        ticketState = TicketState.OPEN;
+        products.add(product);
+        state = TicketState.OPEN;
         return true;
     }
 
@@ -201,18 +212,18 @@ public class Ticket {
      *
      * @param product Producto a eliminar.
      */
-    public void removeProduct(AbstractProduct product) {
-        items.remove(new TicketLine(product, 0));
+    public void removeProduct(AbstractProductDTO product) {
+        products.remove(product);
     }
 
     /**
      * Cierra el ticket, estableciendo la fecha de cierre y cambiando su estado a CLOSED.
      */
     public void closeTicket() {
-        if (ticketState.equals(TicketState.CLOSED)) return;
+        if (state.equals(TicketState.CLOSED)) return;
 
         finalDate = new Date();
-        ticketState = TicketState.CLOSED;
+        state = TicketState.CLOSED;
     }
 
     /**
@@ -221,7 +232,7 @@ public class Ticket {
      * @return Estado del ticket.
      */
     public TicketState getState() {
-        return ticketState;
+        return state;
     }
 
     /**
@@ -233,6 +244,10 @@ public class Ticket {
         return initialDate;
     }
 
+    public Date getFinalDate() {
+        return finalDate;
+    }
+
     /**
      * Devuelve el identificador del ticket formateado.
      *
@@ -241,7 +256,7 @@ public class Ticket {
     public String getFormattedId() {
         StringBuilder formattedId = new StringBuilder();
 
-        if (ticketState.equals(TicketState.EMPTY)) {
+        if (state.equals(TicketState.EMPTY)) {
             formattedId
                 .append(DATE_FORMAT.format(initialDate))
                 .append("-");
@@ -249,7 +264,7 @@ public class Ticket {
 
         formattedId.append(getId());
 
-        if (ticketState.equals(TicketState.CLOSED)) {
+        if (state.equals(TicketState.CLOSED)) {
             if (finalDate != null) {
                 formattedId.append("-")
                         .append(DATE_FORMAT.format(finalDate));
@@ -268,40 +283,25 @@ public class Ticket {
         StringBuilder sb = new StringBuilder();
         sb.append("Ticket: ").append(getFormattedId()).append("\n");
 
-        Map<Category, Integer> counts = countCategory();
-        List<TicketLine> sortedItems = new ArrayList<>(items);
+        Map<CategoryDTO, Integer> counts = countCategory();
+        List<AbstractProductDTO> sortedItems = new ArrayList<>(products);
         sortedItems.sort(Comparator.comparing(
-                line -> line.product.getName(),
+                AbstractProductDTO::getName,
                 String.CASE_INSENSITIVE_ORDER
         ));
 
-        for (TicketLine line : sortedItems) {
-            AbstractProduct product = line.product;
-            int quantity = line.amount;
+        for (AbstractProductDTO product : sortedItems) {
             double discountPerItem = perItemDiscount(product, counts);
 
 
-            if (product instanceof ProductService service) {
+            if (product instanceof AbstractServiceDTO service) {
                 sb.append(service.printTicketWithPeople()).append("\n");
                 continue;
             }
 
 
-            for (int i = 0; i < quantity; i++) {
+            for (int i = 0; i < product.getAmount(); i++) {
                 String productText = product.toString();
-                if (line instanceof PersonalizableProductTicketLine persLine) {
-                    List<String> pers = new ArrayList<>();
-                    for (String text : persLine.lines) {
-                        if (text != null && !text.isBlank()) {
-                            pers.add(text.trim());
-                        }
-                    }
-                    if (!pers.isEmpty()) {
-                        String withPers = productText.substring(0, productText.length() - 1) +
-                                ", personalizationList:" + pers + "}";
-                        productText = withPers;
-                    }
-                }
                 sb.append(productText);
                 if (discountPerItem > 0) {
                     sb.append(" **discount -").append(round1(discountPerItem));
@@ -328,16 +328,7 @@ public class Ticket {
      * @return true si todos los productos de servicio son válidos, false en caso contrario.
      */
     public boolean areAllServiceProductsValid() {
-        for (TicketLine line : items) {
-            AbstractProduct product = line.product;
-
-            if (product instanceof ProductService ps) {
-                if (!ps.checkTime()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return products.stream().allMatch(AbstractProductDTO::isValid);
     }
 
     /**
@@ -350,41 +341,13 @@ public class Ticket {
         return getFormattedId();
     }
 
-    /**
-     * Clase interna que representa una línea de ticket (producto y cantidad).
-     */
-    private static class TicketLine {
-        private final AbstractProduct product;
-        private int amount;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return  false;
+        if (o == this) return true;
+        if (!(o instanceof TicketDTO ticketDTO)) return false;
 
-        private TicketLine(AbstractProduct product, int amount) {
-            this.product = product;
-            this.amount = amount;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (object == null) return false;
-            if (object == this) return true;
-
-            if (object instanceof TicketLine ticketLine) {
-                return ticketLine.product.getId() == this.product.getId();
-            }
-
-            return false;
-        }
-    }
-
-    /**
-     * Clase interna que representa una línea de ticket para productos personalizables.
-     */
-    private static class PersonalizableProductTicketLine extends TicketLine {
-        private final String[] lines;
-
-        private PersonalizableProductTicketLine(PersonalizableProduct product, int amount, String[] lines) {
-            super(product, amount);
-            this.lines = lines;
-        }
+        return id == ticketDTO.id;
     }
 
     /**

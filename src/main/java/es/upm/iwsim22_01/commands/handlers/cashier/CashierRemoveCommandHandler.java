@@ -2,24 +2,29 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.manager.TicketManager;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.service.TicketService;
 
 public class CashierRemoveCommandHandler implements CommandHandler {
 
     private static final String
             ERROR_INCORRECT_USE_CASHIER_REMOVE = "Incorrect use: cash remove <id>",
             ERROR_CASHIER_NOT_FOUND = "Cashier not found",
+            ERROR_CASHIER_WITH_CLIENTS = "Cannot remove a cashier with clients",
 
             CASHIER_REMOVE_OK = "cash remove: ok",
             CASHIER_REMOVE_FAIL = "cash remove: fail";
 
-    private CashierManager cashierManager;
-    private TicketManager ticketManager;
+    private CashierService cashierService;
+    private ClientService clientService;
+    private TicketService ticketService;
 
-    public CashierRemoveCommandHandler(CashierManager cashierManager, TicketManager ticketManager) {
-        this.cashierManager = cashierManager;
-        this.ticketManager = ticketManager;
+    public CashierRemoveCommandHandler(CashierService cashierService, ClientService clientService, TicketService ticketService) {
+        this.cashierService = cashierService;
+        this.clientService = clientService;
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -34,14 +39,25 @@ public class CashierRemoveCommandHandler implements CommandHandler {
             return;
         }
 
-        if (!cashierManager.existId(id)) {
+        if (!cashierService.existsId(id)) {
             System.out.println(ERROR_CASHIER_NOT_FOUND);
             return;
         }
+        CashierDTO cashierDTO = cashierService.get(id);
 
-        boolean removed = cashierManager.removeCashierAndTickets(id, ticketManager);
 
-        if (removed) System.out.println(CASHIER_REMOVE_OK);
-        else System.out.println(CASHIER_REMOVE_FAIL);
+        if (clientService.getAll()
+                .stream()
+                .anyMatch(clientDTO -> clientDTO.getCashier().equals(cashierDTO))
+        ) {
+            System.out.println(ERROR_CASHIER_WITH_CLIENTS);
+            return;
+        }
+
+        cashierDTO.getTickets().forEach(ticketDTO -> ticketService.remove(ticketDTO.getId()));
+
+        cashierService.remove(id);
+        System.out.println(cashierDTO);
+        System.out.println(CASHIER_REMOVE_OK);
     }
 }

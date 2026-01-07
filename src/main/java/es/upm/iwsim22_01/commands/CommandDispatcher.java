@@ -18,7 +18,7 @@ public class CommandDispatcher {
 
     private static final String ERROR_NO_COMMAND_FOUND = "No command found",
             ERROR_UNKNOWN_COMMAND = "Unknown command",
-            ERROR_UNEXPECTED_EXCEPTION = "Unexpected exception.";
+            ERROR_UNEXPECTED_EXCEPTION = "Unexpected error.";
 
 
     private final Map<String, CommandHandler> COMMANDS = new TreeMap<>();

@@ -6,7 +6,7 @@ package "commands" {
     + next(): String
     + nextInt(): int
     + nextDouble(): double
-    + nextAsIntegerId(ProductManager, boolean, String, String): Integer
+    + nextAsIntegerId(ProductService, boolean, String, String): Integer
     + nextCategory(): Category
     + nextDate(): LocalDateTime
     + hasNext(): boolean
@@ -34,32 +34,32 @@ package "handlers" {
       }
 
       class ProdAddCommandHandler {
-        - productManager: ProductManager
+        - productService: ProductService
         + runCommand(CommandTokens)
       }
 
       class ProdListCommandHandler {
-        - productManager: ProductManager
+        - productService: ProductService
         + runCommand(CommandTokens)
       }
 
       class ProdRemoveCommandHandler {
-        - productManager: ProductManager
+        - productService: ProductService
         + runCommand(CommandTokens)
       }
 
       class ProdUpdateCommandHnadler {
-        - productManager: ProductManager
+        - productService: ProductService
         + runCommand(CommandTokens)
       }
 
       class ProdAddFoodCommandHandler {
-        - productManager: ProductManager
+        - productService: ProductService
         + runCommand(CommandTokens)
       }
 
       class ProdAddMeetingCommandHandler {
-        - productManager: ProductManager
+        - productService: ProductService
         + runCommand(CommandTokens)
       }
 
@@ -69,23 +69,23 @@ package "handlers" {
       }
 
       class CashierAddCommandHandler {
-        - cashierManager: CashierManager
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
       class CashierRemoveCommandHandler {
-        - cashierManager: CashierManager
-        - ticketManager: TicketManager
+        - cashierService: CashierService
+        - ticketService: TicketService
         + runCommand(CommandTokens)
       }
 
       class CashierListCommandHandler {
-        - cashierManager: CashierManager
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
       class CashierShowTicketCommandHandler {
-        - cashierManager: CashierManager
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
@@ -95,18 +95,18 @@ package "handlers" {
       }
 
       class ClientAddCommandHandler {
-        - clientManager: ClientManager
-        - cashierManager: CashierManager
+        - clientService: ClientService
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
       class ClientRemoveCommandHandler {
-        - clientManager: ClientManager
+        - clientService: ClientService
         + runCommand(CommandTokens)
       }
 
       class ClientListCommandHandler {
-        - clientManager: ClientManager
+        - clientService: ClientService
         + runCommand(CommandTokens)
       }
 
@@ -116,34 +116,34 @@ package "handlers" {
       }
 
       class TicketNewCommandHandler {
-        - ticketManager: TicketManager
-        - cashierManager: CashierManager
-        - clientManager: ClientManager
+        - ticketService: TicketService
+        - cashierService: CashierService
+        - clientService: ClientService
         + runCommand(CommandTokens)
       }
 
       class TicketAddCommandHandler {
-        - ticketManager: TicketManager
-        - productManager: ProductManager
-        - cashierManager: CashierManager
+        - ticketService: TicketService
+        - productService: ProductService
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
       class TicketRemoveCommandHandler {
-        - ticketManager: TicketManager
-        - productManager: ProductManager
-        - cashierManager: CashierManager
+        - ticketService: TicketService
+        - productService: ProductService
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
       class TicketPrintCommandHandler {
-        - ticketManager: TicketManager
-        - cashierManager: CashierManager
+        - ticketService: TicketService
+        - cashierService: CashierService
         + runCommand(CommandTokens)
       }
 
       class TicketListCommandHandler {
-        - ticketManager: TicketManager
+        - ticketService: TicketService
         + runCommand(CommandTokens)
       }
 
@@ -162,7 +162,7 @@ package "handlers" {
 }
 
 package managers {
-  abstract class AbstractManager<T, K> {
+  abstract class AbstractService<T, K> {
     - elements: Map<K, T>
     + add(T, K)
     + remove(K): T
@@ -172,7 +172,7 @@ package managers {
     + getSize(): int
   }
 
-  class ProductManager {
+  class ProductService {
     - MAX_PRODUCTS: int
     - MAX_NAME_LENGTH: int
     + addProduct(int, String, Category, double): Product
@@ -184,30 +184,30 @@ package managers {
     + isProductListFull(): boolean
   }
 
-  class CashierManager {
+  class CashierService {
     - CASHIER_ID_LENGTH: int
     - CASHIER_EMAIL_REGEX: Pattern
     + addCashier(String, String, String): Cashier
     + addCashier(String, String): Cashier
-    + removeCashierAndTickets(String, TicketManager): boolean
+    + removeCashierAndTickets(String, TicketService): boolean
     + checkId(String): boolean
     - createID(): String
   }
 
-  class ClientManager {
+  class ClientService {
     - EMAIL_PATTERN: Pattern
     - DNI_PATTERN: Pattern
     - NIE_PATTERN: Pattern
-    - cashierManager: CashierManager
+    - cashierService: CashierService
     + addClient(String, String, String, String): Client
     + checkDNI(String): boolean
     + checkEmail(String): boolean
   }
 
-  class TicketManager {
+  class TicketService {
     - TICKET_ID_LENGTH: int
-    - clientManager: ClientManager
-    - cashierManager: CashierManager
+    - clientService: ClientService
+    - cashierService: CashierService
     + addTicket(int): Ticket
     + addTicket(): Ticket
     + checkId(int): boolean
@@ -314,10 +314,10 @@ package products {
 class App {
     - menu: boolean
     - dispatcher: CommandDispatcher
-    - productManager: ProductManager
-    - cashierManager: CashierManager
-    - clientManager: ClientManager
-    - ticketManager: TicketManager
+    - productService: ProductService
+    - cashierService: CashierService
+    - clientService: ClientService
+    - ticketService: TicketService
     + main(String[])
     + exitMenu()
 }
@@ -382,10 +382,10 @@ models ..> handlers
 
 CommandTokens ..> Category
 
-AbstractManager <|-- ProductManager
-AbstractManager <|-- ClientManager
-AbstractManager <|-- TicketManager
-AbstractManager <|-- CashierManager
+AbstractService <|-- ProductService
+AbstractService <|-- ClientService
+AbstractService <|-- TicketService
+AbstractService <|-- CashierService
 
 AbstractProduct <|-- UnitProduct
 AbstractProduct <|-- ProductService
@@ -393,10 +393,10 @@ ProductService <|-- Catering
 ProductService <|-- Meeting
 UnitProduct <|-- PersonalizableProduct
 
-ProductManager o-- AbstractProduct
-CashierManager o-- Cashier
-ClientManager o-- Client
-TicketManager o-- Ticket
+ProductService o-- AbstractProduct
+CashierService o-- Cashier
+ClientService o-- Client
+TicketService o-- Ticket
 
 Ticket *-- AbstractProduct: contains
 Cashier --> "0..*" Ticket : tickets
@@ -406,14 +406,14 @@ Client --> Cashier : registeredBy
 AbstractUser <|-- Cashier
 AbstractUser <|-- Client
 
-TicketManager ..> ClientManager
-TicketManager ..> CashierManager
-CashierManager ..> TicketManager
+TicketService ..> ClientService
+TicketService ..> CashierService
+CashierService ..> TicketService
 
 App ..> CommandDispatcher
-App ..> ProductManager
-App ..> CashierManager
-App ..> ClientManager
-App ..> TicketManager
+App ..> ProductService
+App ..> CashierService
+App ..> ClientService
+App ..> TicketService
 
 @enduml

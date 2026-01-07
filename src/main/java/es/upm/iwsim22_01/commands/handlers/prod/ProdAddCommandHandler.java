@@ -2,9 +2,9 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.Category;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 public class ProdAddCommandHandler implements CommandHandler {
     private static final String
@@ -18,12 +18,12 @@ public class ProdAddCommandHandler implements CommandHandler {
             PROD_ADD_OK ="Prod add ok";
 
 
-    private final ProductManager productManager;
+    private final ProductService productService;
 
     @Override
     public void runCommand(CommandTokens tokens) {
 
-        if (productManager.isProductListFull()) {
+        if (productService.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
@@ -34,7 +34,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existId(productId)) {
+        if (productService.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -46,7 +46,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
         String productName = tokens.next();
-        if (!productManager.isNameValid(productName)) {
+        if (!productService.isNameValid(productName)) {
             System.out.println(ERROR_INVALID_NAME);
             return;
         }
@@ -60,7 +60,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             }
             return;
         }
-        Category category = tokens.nextCategory();
+        CategoryDTO category = tokens.nextCategory();
 
         //price
         if (!tokens.hasNextDouble()) {
@@ -74,7 +74,7 @@ public class ProdAddCommandHandler implements CommandHandler {
         double price = tokens.nextDouble();
 
         //crear producto
-        AbstractProduct created;
+        AbstractProductDTO created;
 
         if (tokens.hasNext()) {
 
@@ -88,18 +88,18 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productManager.addCustomizableProduct(productId, productName, category, price, maxPers);
+                created = productService.addPersonalizableProduct(productId, productName, category, price, maxPers);
             }
 
         } else {
-            created = productManager.addProduct(productId, productName, category, price);
+            created = productService.addUnitProduct(productId, productName, category, price);
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);
 
     }
 
-    public ProdAddCommandHandler(ProductManager productManager) {
-        this.productManager = productManager;
+    public ProdAddCommandHandler(ProductService productService) {
+        this.productService = productService;
     }
 }

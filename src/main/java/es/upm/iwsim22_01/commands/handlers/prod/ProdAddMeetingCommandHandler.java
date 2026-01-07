@@ -2,14 +2,14 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.ProductManager;
-import es.upm.iwsim22_01.models.product.AbstractProduct;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 import java.time.LocalDateTime;
 
 
 public class ProdAddMeetingCommandHandler implements CommandHandler {
-    private ProductManager productManager;
+    private ProductService productService;
     private static final String ERROR_INCORRECT_USE_ADDM =
             "Incorrect use: prod addMeeting [<id>] \"<name>\" <price> <expiration: yyyy-MM-dd> <max_people>";
     private static final String ERROR_INVALID_ID = "Invalid id";
@@ -21,7 +21,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        if (productManager.isProductListFull()) {
+        if (productService.isProductListFull()) {
             System.out.println(ERROR_MAX_PRODUCTS);
             return;
         }
@@ -32,7 +32,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
         int productId = tokens.nextInt();
-        if (productManager.existId(productId)) {
+        if (productService.existsId(productId)) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
@@ -50,7 +50,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
         double price = tokens.nextDouble();
-        if (!productManager.isPriceValid(price)) {
+        if (!productService.isPriceValid(price)) {
             System.out.println(ERROR_INVALID_PRICE);
             return;
         }
@@ -74,16 +74,16 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
             return;
         }
 
-        AbstractProduct meeting;
-        meeting = productManager.addMeetingProduct(productId, name, price, expiration, maxPeople);
+        AbstractProductDTO meeting;
+        meeting = productService.addMeetingProduct(productId, name, price, expiration, maxPeople);
 
         System.out.println(meeting);
         System.out.println(PROD_ADD_OK);
 
     }
 
-    public ProdAddMeetingCommandHandler(ProductManager productManager) {
-        this.productManager = productManager;
+    public ProdAddMeetingCommandHandler(ProductService productService) {
+        this.productService = productService;
 
     }
 }

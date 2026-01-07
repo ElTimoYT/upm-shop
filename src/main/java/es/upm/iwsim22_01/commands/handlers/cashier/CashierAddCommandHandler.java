@@ -2,8 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.manager.CashierManager;
-import es.upm.iwsim22_01.models.user.Cashier;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 public class CashierAddCommandHandler implements CommandHandler {
 
@@ -14,10 +14,10 @@ public class CashierAddCommandHandler implements CommandHandler {
             CASHIER_ADD_OK = "cash add: ok",
             CASHIER_ADD_FAIL = "cash add: fail";
 
-    private CashierManager cashierManager;
+    private CashierService cashierService;
 
-    public CashierAddCommandHandler(CashierManager cashierManager) {
-        this.cashierManager = cashierManager;
+    public CashierAddCommandHandler(CashierService cashierService) {
+        this.cashierService = cashierService;
     }
 
     @Override
@@ -25,18 +25,18 @@ public class CashierAddCommandHandler implements CommandHandler {
         String id = null;
         String name;
         String email;
-        Cashier cashier;
+        CashierDTO cashier;
 
         int remaining = tokens.getRemainingTokens();
         try {
             if (remaining == 3) {
                 id = tokens.next();
-                if (cashierManager.existId(id)) {
+                if (cashierService.existsId(id)) {
                     System.out.println(ERROR_INVALID_ID);
                     return;
                 }
 
-                if (!cashierManager.checkId(id)){
+                if (!cashierService.checkId(id)){
                     System.out.println(ERROR_INVALID_ID_FORMAT);
                     return;
                 }
@@ -44,11 +44,11 @@ public class CashierAddCommandHandler implements CommandHandler {
                 name = tokens.next();
                 email = tokens.next();
 
-                cashier = cashierManager.addCashier(name, email, id);
+                cashier = cashierService.addCashier(name, email, id);
             } else if (remaining == 2) {
                 name = tokens.next();
                 email = tokens.next();
-                cashier = cashierManager.addCashier(name, email);
+                cashier = cashierService.addCashier(name, email);
             } else {
                 System.out.println(ERROR_INCORRECT_USE_CASHIER_ADD);
                 return;

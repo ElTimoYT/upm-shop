@@ -1,10 +1,9 @@
 package es.upm.iwsim22_01.commands;
 
-import es.upm.iwsim22_01.models.product.Category;
+import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -168,10 +167,10 @@ public class CommandTokens {
      *
      * @return Optional con la categoría válida, vacío si no coincide con ninguna
      */
-    private Optional<Category> tryParseCategory() {
+    private Optional<CategoryDTO> tryParseCategory() {
         try {
             String normalized = currentToken.trim().toUpperCase();
-            return Optional.of(Category.valueOf(normalized));
+            return Optional.of(CategoryDTO.valueOf(normalized));
         } catch (IllegalArgumentException exception) {
             return Optional.empty();
         }
@@ -183,10 +182,10 @@ public class CommandTokens {
      * @return categoría representada por el token actual
      * @throws IllegalArgumentException si el token no es una categoría válida
      */
-    public Category nextCategory() {
+    public CategoryDTO nextCategory() {
         checkToken();
 
-        Optional<Category> optionalCategory = tryParseCategory();
+        Optional<CategoryDTO> optionalCategory = tryParseCategory();
         if (optionalCategory.isEmpty()) {
             throw new IllegalArgumentException("Next token is not a category: " + currentToken);
         }

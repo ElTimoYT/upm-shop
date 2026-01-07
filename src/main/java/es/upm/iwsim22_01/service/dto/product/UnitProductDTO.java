@@ -1,11 +1,17 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 /**
  * Clase que representa un producto unitario, especialización de AbstractProduct.
  * Incluye información sobre la categoría del producto, que determina el descuento aplicable.
  */
-public class UnitProduct extends AbstractProduct {
-    private Category category;
+public class UnitProductDTO extends AbstractProductDTO {
+    private CategoryDTO category;
+
+    public UnitProductDTO(int id, String name, CategoryDTO category, double price, int amount) {
+        super(id,  name, price, amount);
+
+        this.category = category;
+    }
 
     /**
      * Constructor de la clase UnitProduct.
@@ -15,7 +21,7 @@ public class UnitProduct extends AbstractProduct {
      * @param category Categoría del producto.
      * @param price Precio del producto.
      */
-    public UnitProduct(int id, String name, Category category, double price) {
+    public UnitProductDTO(int id, String name, CategoryDTO category, double price) {
         super(id,  name, price);
 
         this.category = category;
@@ -26,7 +32,7 @@ public class UnitProduct extends AbstractProduct {
      *
      * @return La categoría del producto.
      */
-    public Category getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
@@ -35,7 +41,7 @@ public class UnitProduct extends AbstractProduct {
      *
      * @param category Nueva categoría para el producto.
      */
-    public void setCategory(Category category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 

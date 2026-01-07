@@ -1,24 +1,28 @@
-package es.upm.iwsim22_01.models.product;
+package es.upm.iwsim22_01.service.dto.product;
 
 import java.time.LocalDateTime;
 
 /**
- * Clase que representa un producto de catering, especialización de {@link ProductService}.
+ * Clase que representa un producto de catering, especialización de {@link AbstractServiceDTO}.
  * Implementa la validación específica para productos de catering, asegurando que la fecha de caducidad
  * sea al menos 3 días posterior a la fecha actual.
  */
-public class Catering extends ProductService {
+public class CateringDTO extends AbstractServiceDTO {
+    public CateringDTO(int id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id,name, price, amount, maxPers, expirationDate, participantsAmount);
+    }
+
     /**
      * Constructor de la clase Catering.
      *
      * @param id               Identificador único del producto.
      * @param name             Nombre del producto.
-     * @param pricePerPerson   Precio por persona.
+     * @param price   Precio por persona.
      * @param maxPers          Número máximo de personas.
      * @param expirationDate   Fecha de caducidad del producto.
      */
-    public Catering(int id, String name, double pricePerPerson, int maxPers, LocalDateTime expirationDate){
-        super(id,name, pricePerPerson, maxPers, expirationDate);
+    public CateringDTO(int id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+        super(id,name, price, maxPers, expirationDate, participantsAmount);
     }
 
     /**
@@ -28,8 +32,8 @@ public class Catering extends ProductService {
      * @return {@code true} si la fecha de caducidad es válida, {@code false} en caso contrario.
      */
     @Override
-    public boolean checkTime() {
-        if (!super.checkTime()) {
+    public boolean isValid() {
+        if (!super.isValid()) {
             return false;
         }
 

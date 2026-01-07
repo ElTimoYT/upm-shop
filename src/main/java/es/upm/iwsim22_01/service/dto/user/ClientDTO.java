@@ -1,6 +1,6 @@
-package es.upm.iwsim22_01.models.user;
+package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.models.Ticket;
+import es.upm.iwsim22_01.service.dto.TicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,15 @@ import java.util.List;
  * Clase que representa a un cliente en el sistema, especialización de AbstractUser.
  * Un cliente está asociado a un cajero que lo registró y puede tener múltiples tickets.
  */
-public class Client extends AbstractUser {
-    private Cashier cashierWhoRegisters;
-    private List<Ticket> tickets = new ArrayList<>();
+public class ClientDTO extends AbstractUserDTO {
+    private CashierDTO cashierWhoRegisters;
+    private List<TicketDTO> tickets;
+
+    public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters, List<TicketDTO> tickets) {
+        super(name, email, DNI);
+        this.cashierWhoRegisters = cashierWhoRegisters;
+        this.tickets = tickets;
+    }
 
     /**
      * Constructor de la clase Client.
@@ -21,9 +27,8 @@ public class Client extends AbstractUser {
      * @param email Correo electrónico del cliente.
      * @param cashierWhoRegisters Cajero que registró al cliente.
      */
-    public Client(String name, String DNI, String email, Cashier cashierWhoRegisters) {
-        super(name, email, DNI);
-        this.cashierWhoRegisters = cashierWhoRegisters;
+    public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters) {
+        this(name, DNI, email, cashierWhoRegisters, new ArrayList<>());
     }
 
     /**
@@ -31,7 +36,7 @@ public class Client extends AbstractUser {
      *
      * @return El cajero asociado al cliente.
      */
-    public Cashier getCashier() {
+    public CashierDTO getCashier() {
         return cashierWhoRegisters;
     }
 
@@ -40,8 +45,12 @@ public class Client extends AbstractUser {
      *
      * @param ticket Ticket a añadir.
      */
-    public void addTicket(Ticket ticket) {
+    public void addTicket(TicketDTO ticket) {
         tickets.add(ticket);
+    }
+
+    public List<TicketDTO> getTickets() {
+        return new ArrayList<>(tickets);
     }
 
     /**

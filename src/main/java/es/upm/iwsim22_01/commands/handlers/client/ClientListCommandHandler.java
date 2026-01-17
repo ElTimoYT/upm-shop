@@ -3,18 +3,18 @@ package es.upm.iwsim22_01.commands.handlers.client;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.dto.user.AbstractUserDTO;
-import es.upm.iwsim22_01.service.inventory.ClientInventory;
+import es.upm.iwsim22_01.service.service.ClientService;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class ClientListCommandHandler  implements CommandHandler {
-    private final ClientInventory clientService;
+    private final ClientService clientService;
 
     private static final String CLIENTS = "Clients: ", OK_CLIENT_LIST = "client list: ok";
 
-    public ClientListCommandHandler(ClientInventory clientService) {
+    public ClientListCommandHandler(ClientService clientService) {
         this.clientService = clientService;
     }
 

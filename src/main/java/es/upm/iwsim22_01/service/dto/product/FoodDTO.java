@@ -3,12 +3,12 @@ package es.upm.iwsim22_01.service.dto.product;
 import java.time.LocalDateTime;
 
 /**
- * Clase que representa un producto de catering, especialización de {@link AbstractTypeDTO}.
+ * Clase que representa un producto de catering, especialización de {@link AbstractPeopleProductDTO}.
  * Implementa la validación específica para productos de catering, asegurando que la fecha de caducidad
  * sea al menos 3 días posterior a la fecha actual.
  */
-public class CateringDTO extends AbstractTypeDTO {
-    public CateringDTO(int id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+public class FoodDTO extends AbstractPeopleProductDTO {
+    public FoodDTO(String id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id,name, price, amount, maxPers, expirationDate, participantsAmount);
     }
 
@@ -21,7 +21,7 @@ public class CateringDTO extends AbstractTypeDTO {
      * @param maxPers          Número máximo de personas.
      * @param expirationDate   Fecha de caducidad del producto.
      */
-    public CateringDTO(int id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+    public FoodDTO(String id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id,name, price, maxPers, expirationDate, participantsAmount);
     }
 

@@ -2,10 +2,10 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.ProductInventory;
-import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.product.UnitProductDTO;
+import es.upm.iwsim22_01.service.dto.product.ProductDTO;
 
 public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String ERROR_INCORRECT_USE_UPDATE =
@@ -20,19 +20,20 @@ public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String PROD_UPDATE_PARAMETER_CATEGORY = "CATEGORY";
     private static final String PROD_UPDATE_PARAMETER_PRICE = "PRICE";
 
-    private ProductInventory productService;
+    private ProductService productService;
     @Override
     public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNextInt()) {
             System.out.println(ERROR_INCORRECT_USE_UPDATE);
             return;
         }
+
         int productId = tokens.nextInt();
-        if (!productService.existsId(productId)) {
+        if (!productService.existsId(String.valueOf(productId))) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
-        AbstractProductDTO product = productService.get(productId);
+        AbstractProductDTO product = productService.get(String.valueOf(productId));
 
        //param
         if (!tokens.hasNext()) {
@@ -65,15 +66,15 @@ public class ProdUpdateCommandHandler implements CommandHandler {
                     return;
                 }
 
-                if (!(product instanceof UnitProductDTO unitProduct)) {
+                if (!(product instanceof ProductDTO unitProduct)) {
                     System.out.println("This product type has no category");
                     return;
                 }
-                if (!tokens.hasNextCategory()) {
+                if (!tokens.hasNextProductCategory()) {
                     System.out.println(ERROR_INVALID_CATEGORY);
                     return;
                 }
-                CategoryDTO category = tokens.nextCategory();
+                ProductCategoryDTO category = tokens.nextProductCategory();
                 unitProduct.setCategory(category);
             }
 
@@ -108,7 +109,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
         System.out.println(PROD_UPDATE_OK);
     }
 
-    public ProdUpdateCommandHandler(ProductInventory productService) {
+    public ProdUpdateCommandHandler(ProductService productService) {
         this.productService = productService;
     }
 

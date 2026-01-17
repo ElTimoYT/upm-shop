@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Clase que representa un producto de tipo reunión, especialización de {@link AbstractTypeDTO}.
+ * Clase que representa un producto de tipo reunión, especialización de {@link AbstractPeopleProductDTO}.
  * Implementa reglas específicas para validar la fecha y hora de las reuniones,
  * asegurando que se cumplan los plazos mínimos de reserva y cancelación.
  */
-public class MeetingDTO extends AbstractTypeDTO {
-    public MeetingDTO(int id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+public class MeetingDTO extends AbstractPeopleProductDTO {
+    public MeetingDTO(String id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id, name, price, amount, maxPers, expirationDate, participantsAmount);
     }
 
@@ -23,7 +23,7 @@ public class MeetingDTO extends AbstractTypeDTO {
      * @param maxPers          Número máximo de participantes.
      * @param expirationDate   Fecha y hora de caducidad/reserva del servicio.
      */
-    public MeetingDTO(int id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
+    public MeetingDTO(String id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id, name, price, maxPers, expirationDate, participantsAmount);
     }
 

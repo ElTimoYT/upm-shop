@@ -1,7 +1,7 @@
 package es.upm.iwsim22_01.commands.handlers;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
-import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
 
 public class HelpCommandHandler implements CommandHandler {
     private static final String HELP_MESSAGE = """
@@ -35,7 +35,7 @@ public class HelpCommandHandler implements CommandHandler {
     public void runCommand(CommandTokens tokens) {
         System.out.print(HELP_MESSAGE);
 
-        CategoryDTO[] categories = CategoryDTO.values();
+        ProductCategoryDTO[] categories = ProductCategoryDTO.values();
         for (int i = 0; i < categories.length; i++) {
             System.out.print(categories[i]);
             if (i < categories.length - 1) System.out.print(", ");

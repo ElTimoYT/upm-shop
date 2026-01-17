@@ -3,10 +3,10 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.CashierInventory;
-import es.upm.iwsim22_01.service.inventory.ClientInventory;
-import es.upm.iwsim22_01.service.inventory.ProductInventory;
-import es.upm.iwsim22_01.service.inventory.TicketInventory;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.service.TicketService;
 
 public class TicketCommandHandler implements CommandHandler {
     private static final String
@@ -20,7 +20,7 @@ public class TicketCommandHandler implements CommandHandler {
 
     private final CommandDispatcher ticketCommandDispatcher = new CommandDispatcher(ERROR_INCORRECT_USE_TICKET, ERROR_INCORRECT_USE_TICKET);
 
-    public TicketCommandHandler(TicketInventory ticketService, ProductInventory productService, CashierInventory cashierService, ClientInventory clientService) {
+    public TicketCommandHandler(TicketService ticketService, ProductService productService, CashierService cashierService, ClientService clientService) {
         ticketCommandDispatcher.addCommand(NEW, new TicketNewCommandHandler(ticketService, cashierService, clientService));
         ticketCommandDispatcher.addCommand(ADD, new TicketAddCommandHandler(ticketService, productService, cashierService));
         ticketCommandDispatcher.addCommand(REMOVE, new TicketRemoveCommandHandler(ticketService, productService, cashierService));

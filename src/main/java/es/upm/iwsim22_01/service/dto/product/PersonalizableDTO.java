@@ -1,20 +1,22 @@
 package es.upm.iwsim22_01.service.dto.product;
 
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
+
 import java.util.Arrays;
 
 /**
  * Clase que representa un producto personalizable, especialización de UnitProduct.
  * Permite definir un número máximo de caracteres para la personalización del producto.
  */
-public class PersonalizableProductDTO extends UnitProductDTO implements Cloneable {
+public class PersonalizableDTO extends ProductDTO implements Cloneable {
     private String[] lines;
 
-    public PersonalizableProductDTO(int id, String name, CategoryDTO category, double price, int amount, String[] lines){
+    public PersonalizableDTO(String id, String name, ProductCategoryDTO category, double price, int amount, String[] lines){
         super(id, name, category, price, amount);
         this.lines = lines;
     }
 
-    public PersonalizableProductDTO(int id, String name, CategoryDTO category, double price, String[] lines){
+    public PersonalizableDTO(String id, String name, ProductCategoryDTO category, double price, String[] lines){
         super(id, name, category, price);
         this.lines = lines;
     }
@@ -28,7 +30,7 @@ public class PersonalizableProductDTO extends UnitProductDTO implements Cloneabl
      * @param price Precio del producto.
      * @param maxPers Número máximo de caracteres permitidos para la personalización.
      */
-    public PersonalizableProductDTO(int id, String name, CategoryDTO category, double price, int maxPers){
+    public PersonalizableDTO(String id, String name, ProductCategoryDTO category, double price, int maxPers){
         this(id, name, category, price, new String[maxPers]);
     }
 
@@ -71,8 +73,8 @@ public class PersonalizableProductDTO extends UnitProductDTO implements Cloneabl
     }
 
     @Override
-    public PersonalizableProductDTO clone() {
-        PersonalizableProductDTO clone = (PersonalizableProductDTO) super.clone();
+    public PersonalizableDTO clone() {
+        PersonalizableDTO clone = (PersonalizableDTO) super.clone();
         clone.lines = Arrays.copyOf(lines, lines.length);
         return clone;
     }

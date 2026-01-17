@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.commands;
 
-import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ServiceCategoryDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -167,10 +168,10 @@ public class CommandTokens {
      *
      * @return Optional con la categoría válida, vacío si no coincide con ninguna
      */
-    private Optional<CategoryDTO> tryParseCategory() {
+    private Optional<ProductCategoryDTO> tryParseProductCategory() {
         try {
             String normalized = currentToken.trim().toUpperCase();
-            return Optional.of(CategoryDTO.valueOf(normalized));
+            return Optional.of(ProductCategoryDTO.valueOf(normalized));
         } catch (IllegalArgumentException exception) {
             return Optional.empty();
         }
@@ -182,12 +183,12 @@ public class CommandTokens {
      * @return categoría representada por el token actual
      * @throws IllegalArgumentException si el token no es una categoría válida
      */
-    public CategoryDTO nextCategory() {
+    public ProductCategoryDTO nextProductCategory() {
         checkToken();
 
-        Optional<CategoryDTO> optionalCategory = tryParseCategory();
+        Optional<ProductCategoryDTO> optionalCategory = tryParseProductCategory();
         if (optionalCategory.isEmpty()) {
-            throw new IllegalArgumentException("Next token is not a category: " + currentToken);
+            throw new IllegalArgumentException("Next token is not a product category: " + currentToken);
         }
 
         consumeToken();
@@ -199,8 +200,50 @@ public class CommandTokens {
      *
      * @return true si el token es una categoría del enum Category, false en caso contrario
      */
-    public boolean hasNextCategory() {
-        return hasNext() && tryParseCategory().isPresent();
+    public boolean hasNextProductCategory() {
+        return hasNext() && tryParseProductCategory().isPresent();
+    }
+
+    /**
+     * Intenta interpretar el token actual como categoría del enum Category.
+     * El valor se normaliza a mayúsculas antes de comparar.
+     *
+     * @return Optional con la categoría válida, vacío si no coincide con ninguna
+     */
+    private Optional<ServiceCategoryDTO> tryParseServiceCategory() {
+        try {
+            String normalized = currentToken.trim().toUpperCase();
+            return Optional.of(ServiceCategoryDTO.valueOf(normalized));
+        } catch (IllegalArgumentException exception) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Devuelve el token actual como categoría del enum Category y avanza al siguiente.
+     *
+     * @return categoría representada por el token actual
+     * @throws IllegalArgumentException si el token no es una categoría válida
+     */
+    public ServiceCategoryDTO nextServiceCategory() {
+        checkToken();
+
+        Optional<ServiceCategoryDTO> optionalCategory = tryParseServiceCategory();
+        if (optionalCategory.isEmpty()) {
+            throw new IllegalArgumentException("Next token is not a service category: " + currentToken);
+        }
+
+        consumeToken();
+        return optionalCategory.get();
+    }
+
+    /**
+     * Indica si el token actual es una categoría válida.
+     *
+     * @return true si el token es una categoría del enum Category, false en caso contrario
+     */
+    public boolean hasNextServiceCategory() {
+        return hasNext() && tryParseServiceCategory().isPresent();
     }
 
     /**

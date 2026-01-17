@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.TicketInventory;
+import es.upm.iwsim22_01.service.service.TicketService;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.Comparator;
@@ -13,9 +13,9 @@ public class TicketListCommandHandler implements CommandHandler {
             TICKET_LIST_OK = "ticket list: ok",
             TICKET_LIST = "Ticket List:";
 
-    private final TicketInventory ticketService;
+    private final TicketService ticketService;
 
-    public TicketListCommandHandler(TicketInventory ticketService) {
+    public TicketListCommandHandler(TicketService ticketService) {
         this.ticketService = ticketService;
     }
 

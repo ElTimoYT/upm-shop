@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 public class CashierAddCommandHandler implements CommandHandler {
@@ -14,9 +14,9 @@ public class CashierAddCommandHandler implements CommandHandler {
             CASHIER_ADD_OK = "cash add: ok",
             CASHIER_ADD_FAIL = "cash add: fail";
 
-    private CashierInventory cashierService;
+    private CashierService cashierService;
 
-    public CashierAddCommandHandler(CashierInventory cashierService) {
+    public CashierAddCommandHandler(CashierService cashierService) {
         this.cashierService = cashierService;
     }
 

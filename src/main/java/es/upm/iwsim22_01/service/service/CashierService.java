@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.service.inventory;
+package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Cashier;
 import es.upm.iwsim22_01.data.repository.CashierRepository;
@@ -11,15 +11,15 @@ import java.util.regex.Pattern;
 
 /**
  * Gestor de cajeros, encargado de la creación, validación y eliminación de instancias de {@link CashierDTO}.
- * Extiende {@link AbstractInventory} para heredar funcionalidades básicas de gestión de entidades.
+ * Extiende {@link AbstractService} para heredar funcionalidades básicas de gestión de entidades.
  */
-public class CashierInventory extends AbstractInventory<Cashier, CashierDTO, String> {
+public class CashierService extends AbstractService<Cashier, CashierDTO, String> {
     private static final int CASHIER_ID_LENGTH = 7;
     private static final Pattern CASHIER_EMAIL_REGEX = Pattern.compile("^[\\w-.]+@upm.es$");
 
-    private final TicketInventory ticketService;
+    private final TicketService ticketService;
 
-    public CashierInventory(TicketInventory ticketService) {
+    public CashierService(TicketService ticketService) {
         super(new CashierRepository());
 
         this.ticketService = ticketService;

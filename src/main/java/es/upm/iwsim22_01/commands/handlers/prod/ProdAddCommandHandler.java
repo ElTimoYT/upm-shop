@@ -2,8 +2,9 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.ProductInventory;
-import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ServiceCategoryDTO;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 import java.time.LocalDateTime;
@@ -21,72 +22,34 @@ public class ProdAddCommandHandler implements CommandHandler {
             PROD_ADD_OK ="Prod add ok";
 
 
-    private final ProductInventory productInventory;
+    private final ProductService productInventory;
+
+    public ProdAddCommandHandler(ProductService productService) {
+        this.productInventory = productService;
+    }
 
     @Override
     public void runCommand(CommandTokens tokens) {
-
-
         if (tokens.hasNextDate()) {
-
-            if (productInventory.isProductListFull()) {
-                System.out.println(ERROR_MAX_PRODUCTS);
-                return;
-            }
-
-            // expiration
-            LocalDateTime expiration = tokens.nextDate();
-
-            // category
-            if (!tokens.hasNextCategory()) {
-                if (!tokens.hasNext()) {
-                    System.out.println(ERROR_INCORRECT_USE_ADD_SERVICE);
-                } else {
-                    System.out.println(ERROR_INVALID_CATEGORY);
-                }
-                return;
-            }
-            CategoryDTO category = tokens.nextCategory();
-
-            // Validar que la categoría sea de servicio
-            if (!(category == CategoryDTO.INSURANCE
-                    || category == CategoryDTO.TRANSPORT
-                    || category == CategoryDTO.SHOW)) {
-                System.out.println(ERROR_INVALID_CATEGORY);
-                return;
-            }
-
-            // No deben sobrar tokens
-            if (tokens.hasNext()) {
-                System.out.println(ERROR_INCORRECT_USE_ADD_SERVICE);
-                return;
-            }
-
-            AbstractProductDTO created = productInventory.addProductService(expiration, category);
-
-            System.out.println(created);
-            System.out.println(PROD_ADD_OK);
-            return;
+            addService(tokens);
+        } else {
+            addProduct(tokens);
         }
+    }
 
-        if (productInventory.isProductListFull()) {
-            System.out.println(ERROR_MAX_PRODUCTS);
-            return;
-        }
-
+    private void addProduct(CommandTokens tokens) {
         //id
         if (!tokens.hasNextInt()) {
             System.out.println(ERROR_INCORRECT_USE_ADD);
             return;
         }
         int productId = tokens.nextInt();
-        if (productInventory.existsId(productId)) {
+        if (productInventory.existsId(String.valueOf(productId))) {
             System.out.println(ERROR_INVALID_ID);
             return;
         }
 
         //name
-
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADD);
             return;
@@ -98,7 +61,7 @@ public class ProdAddCommandHandler implements CommandHandler {
         }
 
         //category
-        if (!tokens.hasNextCategory()) {
+        if (!tokens.hasNextProductCategory()) {
             if (!tokens.hasNext()) {
                 System.out.println(ERROR_INCORRECT_USE_ADD);
             } else {
@@ -106,7 +69,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             }
             return;
         }
-        CategoryDTO category = tokens.nextCategory();
+        ProductCategoryDTO category = tokens.nextProductCategory();
 
         //price
         if (!tokens.hasNextDouble()) {
@@ -134,23 +97,42 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productInventory.addPersonalizableProduct(productId, productName, category, price, maxPers);
+                created = productInventory.addPersonalizable(productId, productName, category, price, maxPers);
             }
 
         } else {
-            created = productInventory.addUnitProduct(productId, productName, category, price);
+            created = productInventory.addProduct(productId, productName, category, price);
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);
-
     }
 
-    public ProdAddCommandHandler(ProductInventory productService) {
-        this.productInventory = productService;
-    }
+    private void addService(CommandTokens tokens) {
+        // expiration
+        LocalDateTime expiration = tokens.nextDate();
 
-    private static boolean isDateToken(String token) {
-        return token != null && token.matches("\\d{4}-\\d{2}-\\d{2}");
-    }
+        // category
+        if (!tokens.hasNextServiceCategory()) {
+            if (!tokens.hasNext()) {
+                System.out.println(ERROR_INCORRECT_USE_ADD_SERVICE);
+            } else {
+                System.out.println(ERROR_INVALID_CATEGORY);
+            }
+            return;
+        }
 
+        ServiceCategoryDTO category = tokens.nextServiceCategory();
+
+        // No deben sobrar tokens
+        if (tokens.hasNext()) {
+            System.out.println(ERROR_INCORRECT_USE_ADD_SERVICE);
+            return;
+        }
+
+        AbstractProductDTO created = productInventory.addService(category, expiration);
+
+        System.out.println(created);
+        System.out.println(PROD_ADD_OK);
+        return;
+    }
 }

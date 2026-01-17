@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.service.inventory;
+package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Client;
 import es.upm.iwsim22_01.data.repository.ClientRepository;
@@ -8,28 +8,27 @@ import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
 import es.upm.iwsim22_01.service.dto.user.UserDTO;
 
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
  * Gestor de clientes, encargado de la creación, validación y registro de instancias de {@link ClientDTO}.
  * Valida el formato del DNI/NIE, el correo electrónico y la existencia del cajero que realiza el registro.
  */
-public class ClientInventory extends AbstractInventory<Client, ClientDTO, String> {
+public class ClientService extends AbstractService<Client, ClientDTO, String> {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^\\w+@\\w+\\.\\w+$"),
         DNI_PATTERN = Pattern.compile("^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$"),
         NIE_PATTERN = Pattern.compile("^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$"),
             NIF_COMPANY = Pattern.compile("^[ABCDEFGHJNPQRSUVW][0-9]{8}$", Pattern.CASE_INSENSITIVE);
 
-    private final CashierInventory cashierService;
-    private final TicketInventory ticketService;
+    private final CashierService cashierService;
+    private final TicketService ticketService;
 
     /**
      * Constructor de la clase.
      *
      * @param cashierInventory Gestor de cajeros necesario para validar la existencia del cajero que registra al cliente.
      */
-    public ClientInventory(CashierInventory cashierInventory, TicketInventory ticketService) {
+    public ClientService(CashierService cashierInventory, TicketService ticketService) {
         super(new ClientRepository());
         this.cashierService = cashierInventory;
         this.ticketService = ticketService;

@@ -1,25 +1,24 @@
-package es.upm.iwsim22_01.service.inventory;
+package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Ticket;
 import es.upm.iwsim22_01.data.repository.TicketRepository;
-import es.upm.iwsim22_01.service.dto.ticket.CommonTicketDTO;
-import es.upm.iwsim22_01.service.dto.ticket.CompanyTicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.OnlyProductsTicket;
+import es.upm.iwsim22_01.service.dto.ticket.OnlyServicesTicket;
+import es.upm.iwsim22_01.service.dto.ticket.ServicesAndProductsTicket;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
-
-import java.util.ArrayList;
 
 /**
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
  * Permite generar tickets con identificadores únicos y validar su formato.
  */
-public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Integer> {
+public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
 
-    private final ProductInventory productService;
+    private final ProductService productService;
 
-    public TicketInventory(ProductInventory productService) {
+    public TicketService(ProductService productService) {
         super(new TicketRepository());
 
         this.productService = productService;
@@ -65,28 +64,34 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
         );
     }
 
-    /**
-     * Añade un nuevo ticket al sistema con el identificador especificado.
-     *
-     * @param id Identificador único del ticket (debe ser un número positivo con un máximo de {@value #TICKET_ID_LENGTH} dígitos).
-     * @return La instancia de {@link TicketDTO} creada.
-     * @throws IllegalArgumentException Si el formato del identificador no es válido.
-     */
-    public TicketDTO addTicket(int id) {
+    public TicketDTO addOnlyProductsTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
-        // Por defecto (cuando el comando no especifica tipo), creamos un ticket común.
-        // Esto evita instancias con ticketType == null que luego romperían en toModel().
-        return add(new CommonTicketDTO(id));
+        return add(new OnlyProductsTicket(id));
     }
 
-    /**
-     * Añade un nuevo ticket al sistema generando automáticamente un identificador único.
-     *
-     * @return La instancia de {@link TicketDTO} creada.
-     */
-    public TicketDTO addTicket() {
-        return addTicket(createNewId());
+    public TicketDTO addOnlyProductsTicket() {
+        return addOnlyProductsTicket(createNewId());
+    }
+
+    public TicketDTO addOnlyServicesTicket(int id) {
+        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
+
+        return add(new OnlyServicesTicket(id));
+    }
+
+    public TicketDTO addOnlyServicesTicket() {
+        return addOnlyServicesTicket(createNewId());
+    }
+
+    public TicketDTO addServicesAndProductsTicket(int id) {
+        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
+
+        return add(new ServicesAndProductsTicket(id));
+    }
+
+    public TicketDTO addServicesAndProductsTicket() {
+        return addServicesAndProductsTicket(createNewId());
     }
 
     /**
@@ -114,22 +119,5 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
         } while (existsId(id));
 
         return id;
-    }
-
-    public TicketDTO addTicketForClient(ClientDTO client) {
-        int id = createNewId();
-        return addTicketForClient(client, id);
-    }
-
-    public TicketDTO addTicketForClient(ClientDTO client, int ticketId) {
-        TicketDTO ticket = createTicketByClientType(client, ticketId);
-        return add(ticket);
-    }
-
-    private TicketDTO createTicketByClientType(ClientDTO client, int ticketId) {
-        if (client instanceof CompanyDTO) {
-            return new CompanyTicketDTO(ticketId);
-        }
-        return new CommonTicketDTO(ticketId);
     }
 }

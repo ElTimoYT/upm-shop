@@ -1,23 +1,24 @@
-    package es.upm.iwsim22_01.service.inventory;
+    package es.upm.iwsim22_01.service.service;
 
     import es.upm.iwsim22_01.data.models.*;
     import es.upm.iwsim22_01.data.repository.ProductRepository;
     import es.upm.iwsim22_01.service.dto.product.*;
+    import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
+    import es.upm.iwsim22_01.service.dto.product.category.ServiceCategoryDTO;
+    import es.upm.iwsim22_01.service.dto.product.service.ServiceDTO;
 
     import java.time.LocalDateTime;
-    import java.util.LinkedHashMap;
-    import java.util.Map;
 
     /**
      * Gestor de productos, encargado de la creación, validación y registro de instancias de {@link AbstractProductDTO}.
      * Permite añadir diferentes tipos de productos al sistema, validando sus parámetros y restricciones.
      */
-    public class ProductInventory extends AbstractInventory<Product, AbstractProductDTO, Integer> {
+    public class ProductService extends AbstractService<Product, AbstractProductDTO, String> {
         private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
 
         private final ProductRepository productRepository;
 
-        public ProductInventory() {
+        public ProductService() {
             super(new ProductRepository());
             this.productRepository = (ProductRepository) super.repository;
         }
@@ -25,20 +26,22 @@
         @Override
         protected AbstractProductDTO toDto(Product model) {
             return switch (model.getType()) {
-                case UNIT_PRODUCT -> new UnitProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount());
-                case PERSONALIZABLE_PRODUCT -> new PersonalizableProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount(), model.getLines());
-                case CATERING -> new CateringDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
+                case UNIT_PRODUCT -> new ProductDTO(model.getId(), model.getName(), ProductCategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount());
+                case PERSONALIZABLE_PRODUCT -> new PersonalizableDTO(model.getId(), model.getName(), ProductCategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount(), model.getLines());
+                case CATERING -> new FoodDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
                 case MEETING -> new MeetingDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
+                case SERVICE -> new ServiceDTO(model.getId(), model.getExpirationDate().toLocalDate(), ServiceCategoryDTO.valueOf(model.getCategory()));
             };
         }
 
         @Override
         protected Product toModel(AbstractProductDTO dto) {
             return switch (dto) {
-                case PersonalizableProductDTO personalizableProductDTO -> Product.createPersonalizable(personalizableProductDTO.getId(), personalizableProductDTO.getName(), personalizableProductDTO.getCategory().toString(), personalizableProductDTO.getPrice(), personalizableProductDTO.getAmount(), personalizableProductDTO.getLines());
-                case UnitProductDTO unitProductDTO -> Product.createUnit(unitProductDTO.getId(), unitProductDTO.getName(), unitProductDTO.getCategory().toString(), unitProductDTO.getPrice(), unitProductDTO.getAmount());
-                case CateringDTO cateringDTO -> Product.createCatering(cateringDTO.getId(), cateringDTO.getName(), cateringDTO.getPrice(), cateringDTO.getAmount(), cateringDTO.getMaxParticipant(), cateringDTO.getExpirationDate(), cateringDTO.getParticipantsAmount());
+                case PersonalizableDTO personalizableDTO -> Product.createPersonalizable(personalizableDTO.getId(), personalizableDTO.getName(), personalizableDTO.getCategory().toString(), personalizableDTO.getPrice(), personalizableDTO.getAmount(), personalizableDTO.getLines());
+                case ProductDTO productDTO -> Product.createUnit(productDTO.getId(), productDTO.getName(), productDTO.getCategory().toString(), productDTO.getPrice(), productDTO.getAmount());
+                case FoodDTO foodDTO -> Product.createCatering(foodDTO.getId(), foodDTO.getName(), foodDTO.getPrice(), foodDTO.getAmount(), foodDTO.getMaxParticipant(), foodDTO.getExpirationDate(), foodDTO.getParticipantsAmount());
                 case MeetingDTO meetingDTO -> Product.createMeeting(meetingDTO.getId(), meetingDTO.getName(), meetingDTO.getPrice(), meetingDTO.getAmount(), meetingDTO.getMaxParticipant(), meetingDTO.getExpirationDate(), meetingDTO.getParticipantsAmount());
+                case ServiceDTO serviceDTO -> Product.createService(serviceDTO.getId(), serviceDTO.getCategory().toString(), serviceDTO.getExpirationDate().atStartOfDay());
                 default -> throw new IllegalStateException("Unexpected product type: " + dto);
             };
         }
@@ -54,12 +57,12 @@
          * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido o el producto ya existe.
          * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
          */
-        public AbstractProductDTO addUnitProduct(int id, String name, CategoryDTO category, double price) {
+        public AbstractProductDTO addProduct(int id, String name, ProductCategoryDTO category, double price) {
             if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
             if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
             if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
 
-            return add(new UnitProductDTO(id, name, category, price));
+            return add(new ProductDTO(String.valueOf(id), name, category, price));
         }
 
         /**
@@ -74,13 +77,13 @@
          * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido, el producto ya existe o maxText es menor que 1.
          * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
          */
-        public AbstractProductDTO addPersonalizableProduct(int id, String name, CategoryDTO category, double price, int maxText){
+        public AbstractProductDTO addPersonalizable(int id, String name, ProductCategoryDTO category, double price, int maxText){
             if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
             if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
             if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
             if (maxText < 1) throw new IllegalArgumentException("Max pers " + maxText + " cannot be less than 1.");
 
-            return add(new PersonalizableProductDTO(id, name, category, price, maxText));
+            return add(new PersonalizableDTO(String.valueOf(id), name, category, price, maxText));
         }
 
         /**
@@ -95,14 +98,14 @@
          * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido, la fecha de caducidad es nula, maxParticipants es menor que 1 o el producto ya existe.
          * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
          */
-        public AbstractProductDTO addFoodProduct(int id, String name, double price, LocalDateTime expirationDate, int maxParticipants){
+        public AbstractProductDTO addFood(int id, String name, double price, LocalDateTime expirationDate, int maxParticipants){
             if (!isPriceValid(price)) throw new IllegalArgumentException("Product price " + price + " cannot be negative.");
             if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
             if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
             if (maxParticipants < 1) throw new IllegalArgumentException("Max participants " + maxParticipants + " must be >= 1.");
             if (expirationDate == null) throw new IllegalArgumentException("Invalid expiration date.");
 
-            return add(new CateringDTO(id, name, price, maxParticipants, expirationDate, 0));
+            return add(new FoodDTO(String.valueOf(id), name, price, maxParticipants, expirationDate, 0));
         }
 
         /**
@@ -117,33 +120,20 @@
          * @throws IllegalArgumentException Si el precio es negativo, el nombre no es válido, la fecha de caducidad es nula, maxParticipants es menor que 1 o el producto ya existe.
          * @throws RuntimeException Si se ha alcanzado el número máximo de productos permitidos.
          */
-        public AbstractProductDTO addMeetingProduct(int id, String name, double pricePerPerson, LocalDateTime expirationDate, int maxParticipants){
+        public AbstractProductDTO addMeeting(int id, String name, double pricePerPerson, LocalDateTime expirationDate, int maxParticipants){
             if (!isPriceValid(pricePerPerson)) throw new IllegalArgumentException("Product price " + pricePerPerson + " cannot be negative.");
             if (!isNameValid(name)) throw new IllegalArgumentException("Product name \"" + name + "\" is invalid.");
             if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
             if (maxParticipants < 1) throw new IllegalArgumentException("Max participants " + maxParticipants + " must be >= 1.");
             if (expirationDate == null) throw new IllegalArgumentException("Invalid expiration date.");
 
-            return add(new MeetingDTO(id, name, pricePerPerson, maxParticipants, expirationDate, 0));
+            return add(new MeetingDTO(String.valueOf(id), name, pricePerPerson, maxParticipants, expirationDate, 0));
         }
-        private int nextServiceId = 1;
-        private final Map<Integer, ProductService> services = new LinkedHashMap<>();
 
-        public AbstractProductDTO addProductService(LocalDateTime expiration, CategoryDTO category) {
+        public AbstractProductDTO addService(ServiceCategoryDTO category, LocalDateTime expirationDate) {
             if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
-            if (expiration == null) throw new IllegalArgumentException("Invalid expiration date.");
 
-            // Validar que category es de servicio
-            if (!(category == CategoryDTO.INSURANCE || category == CategoryDTO.TRANSPORT || category == CategoryDTO.SHOW)) {
-                throw new IllegalArgumentException("Category not valid");
-            }
-
-            int id = nextServiceId++;
-            ProductService ps = new ProductService(id, expiration.toLocalDate(), category);
-
-            services.put(id, ps);
-
-            return ps;
+            return add(new ServiceDTO(productRepository.nextAutoincrementId() + "S", expirationDate.toLocalDate(), category));
         }
 
         /**
@@ -172,6 +162,6 @@
          * @return {@code true} si el número de productos es mayor o igual a {@value #MAX_PRODUCTS}.
          */
         public boolean isProductListFull() {
-            return getSize() >= ProductInventory.MAX_PRODUCTS;
+            return getSize() >= ProductService.MAX_PRODUCTS;
         }
 }

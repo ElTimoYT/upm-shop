@@ -3,10 +3,10 @@ package es.upm.iwsim22_01.data.models;
 import java.time.LocalDateTime;
 
 public class Product {
-    private int id;
+    private String id;
     private String name;
-    private double price;
-    private int amount;
+    private Double price;
+    private Integer amount;
 
     private ProductType type;
 
@@ -21,7 +21,7 @@ public class Product {
     private LocalDateTime expirationDate;
     private Integer participantsAmount;
 
-    public Product(ProductType type, int id, String name, double price, int amount, String category, String[] lines, Integer maxParticipant, LocalDateTime expirationDate, Integer participantsAmount) {
+    public Product(ProductType type, String id, String name, Double price, Integer amount, String category, String[] lines, Integer maxParticipant, LocalDateTime expirationDate, Integer participantsAmount) {
         this.type = type;
         this.id = id;
         this.name = name;
@@ -34,23 +34,27 @@ public class Product {
         this.participantsAmount = participantsAmount;
     }
 
-    public static Product createUnit(int id, String name, String category, double price, int amount) {
+    public static Product createUnit(String id, String name, String category, double price, int amount) {
         return new Product(ProductType.UNIT_PRODUCT, id, name, price, amount, category, null, null, null, null);
     }
 
-    public static Product createPersonalizable(int id, String name, String category, double price, int amount, String[] lines) {
+    public static Product createPersonalizable(String id, String name, String category, double price, int amount, String[] lines) {
         return new Product(ProductType.PERSONALIZABLE_PRODUCT, id, name, price, amount, category, lines, null, null, null);
     }
 
-    public static Product createCatering(int id, String name, double price, int amount, int maxParticipant, LocalDateTime expirationDate, int participantsAmount) {
+    public static Product createCatering(String id, String name, double price, int amount, int maxParticipant, LocalDateTime expirationDate, int participantsAmount) {
         return new Product(ProductType.CATERING, id, name, price, amount, null, null, maxParticipant, expirationDate, participantsAmount);
     }
 
-    public static Product createMeeting(int id, String name, double price, int amount, int maxParticipant, LocalDateTime expirationDate, int participantsAmount) {
+    public static Product createMeeting(String id, String name, double price, int amount, int maxParticipant, LocalDateTime expirationDate, int participantsAmount) {
         return new Product(ProductType.MEETING, id, name, price, amount, null, null, maxParticipant, expirationDate, participantsAmount);
     }
 
-    public int getId() {
+    public static Product createService(String id, String category, LocalDateTime expirationDate) {
+        return new Product(ProductType.SERVICE, id, null, null, null, category, null, null, expirationDate, null);
+    }
+
+    public String getId() {
         return id;
     }
 
@@ -122,6 +126,7 @@ public class Product {
         UNIT_PRODUCT,
         PERSONALIZABLE_PRODUCT,
         CATERING,
-        MEETING;
+        MEETING,
+        SERVICE;
     }
 }

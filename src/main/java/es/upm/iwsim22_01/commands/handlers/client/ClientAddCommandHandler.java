@@ -2,16 +2,15 @@ package es.upm.iwsim22_01.commands.handlers.client;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.CashierInventory;
-import es.upm.iwsim22_01.service.inventory.ClientInventory;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ClientService;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
 import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
 
 public class ClientAddCommandHandler  implements CommandHandler {
-    private final ClientInventory clientService;
-    private final CashierInventory cashierService;
+    private final ClientService clientService;
+    private final CashierService cashierService;
 
     private static final String
             OK_CLIENT_ADD = "client add: ok",
@@ -22,7 +21,7 @@ public class ClientAddCommandHandler  implements CommandHandler {
             ERROR_EMAIL_INVALID = "Email does not adhere to required rules.",
             ERROR_DNI_INVALID = "DNI does not adhere to required rules.";
 
-    public ClientAddCommandHandler(ClientInventory clientService, CashierInventory cashierService) {
+    public ClientAddCommandHandler(ClientService clientService, CashierService cashierService) {
         this.clientService = clientService;
         this.cashierService = cashierService;
     }

@@ -2,13 +2,13 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.inventory.CashierInventory;
-import es.upm.iwsim22_01.service.inventory.ProductInventory;
-import es.upm.iwsim22_01.service.inventory.TicketInventory;
+import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.service.TicketService;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
-import es.upm.iwsim22_01.service.dto.product.PersonalizableProductDTO;
+import es.upm.iwsim22_01.service.dto.product.PersonalizableDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.product.AbstractTypeDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractPeopleProductDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ public class TicketAddCommandHandler implements CommandHandler {
             TICKET_ADD_OK = "ticket add: ok";
 
 
-    private final TicketInventory ticketService;
-    private final ProductInventory productService;
-    private final CashierInventory cashierService;
+    private final TicketService ticketService;
+    private final ProductService productService;
+    private final CashierService cashierService;
 
-    public TicketAddCommandHandler(TicketInventory ticketService, ProductInventory productService, CashierInventory cashierService) {
+    public TicketAddCommandHandler(TicketService ticketService, ProductService productService, CashierService cashierService) {
         this.ticketService = ticketService;
         this.productService = productService;
         this.cashierService = cashierService;
@@ -57,7 +57,7 @@ public class TicketAddCommandHandler implements CommandHandler {
                 return;
             }
 
-            int productId = tokens.nextInt();
+            String productId = tokens.next();
             if (!productService.existsId(productId)) {
                 System.out.println(ERROR_PRODUCT_NOT_FOUND);
                 return;
@@ -79,17 +79,18 @@ public class TicketAddCommandHandler implements CommandHandler {
 
             if(ticket.getState() != TicketDTO.TicketState.CLOSED){
                 boolean added;
-                if (product instanceof AbstractTypeDTO productService) {
-                    if (!productService.isValid()) {
+                if (product instanceof AbstractPeopleProductDTO peopleProduct) {
+                    if (!peopleProduct.isValid()) {
                         System.out.println(ERROR_INVALID_DATE);
                         return;
                     }
-                    productService.setParticipantsAmount(amount + productService.getParticipantsAmount());
-                    added = ticket.addProduct(productService, amount);
+                    AbstractPeopleProductDTO newPeopleProduct = (AbstractPeopleProductDTO) peopleProduct.clone();
+                    newPeopleProduct.setParticipantsAmount(amount + peopleProduct.getParticipantsAmount());
+                    added = ticket.addProduct(newPeopleProduct, amount);
 
                 }else{
                     if (tokens.hasNext()) {
-                        if (product instanceof PersonalizableProductDTO personalizableProduct) {
+                        if (product instanceof PersonalizableDTO personalizableProduct) {
                             List<String> personalization = new ArrayList<>();
                             while (tokens.hasNext()) {
                                 String token = tokens.next();
@@ -103,13 +104,15 @@ public class TicketAddCommandHandler implements CommandHandler {
                                 }
                             }
                             String[] lines = personalization.toArray(new String[0]);
-                            added = ticket.addProduct(personalizableProduct, amount, lines);
+                            PersonalizableDTO personalizableToAdd = personalizableProduct.clone();
+                            personalizableToAdd.setLines(lines);
+                            added = ticket.addProduct(personalizableToAdd, amount);
                         } else {
                             System.out.println(ERROR_PRODUCT_IS_NO_PERSONALIZABLE);
                             return;
                         }
                     } else {
-                        added = ticket.addProduct(product, amount);
+                        added = ticket.addProduct(product.clone(), amount);
                     }
                 }
 

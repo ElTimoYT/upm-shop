@@ -7,12 +7,12 @@ import java.util.Objects;
  * Define los atributos y métodos básicos comunes a todos los tipos de productos.
  */
 public abstract class AbstractProductDTO implements Cloneable {
-    protected final int id;
+    protected final String id;
     protected String name;
     protected double price;
     protected int amount;
 
-    public AbstractProductDTO(int id, String name, double price, int amount) {
+    public AbstractProductDTO(String id, String name, double price, int amount) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -26,7 +26,7 @@ public abstract class AbstractProductDTO implements Cloneable {
      * @param name Nombre del producto.
      * @param price Precio del producto.
      */
-    public AbstractProductDTO(int id, String name, double price) {
+    public AbstractProductDTO(String id, String name, double price) {
         this(id, name, price, 0);
     }
 
@@ -35,7 +35,7 @@ public abstract class AbstractProductDTO implements Cloneable {
      *
      * @return El identificador del producto.
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -81,10 +81,6 @@ public abstract class AbstractProductDTO implements Cloneable {
 
     public void addAmount(int amountToAdd) {
         amount += amountToAdd;
-    }
-
-    public boolean isValid() {
-        return true;
     }
 
     /**

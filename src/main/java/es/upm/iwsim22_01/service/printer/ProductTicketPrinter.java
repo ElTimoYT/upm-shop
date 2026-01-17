@@ -1,7 +1,7 @@
 package es.upm.iwsim22_01.service.printer;
 
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.product.AbstractTypeDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractPeopleProductDTO;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class ProductTicketPrinter implements TicketPrinter {
         sb.append("Ticket: ").append(ticket.getFormattedId()).append("\n");
 
         List<AbstractProductDTO> items = new ArrayList<>(ticket.getProducts());
-        items.removeIf(p -> p instanceof AbstractTypeDTO); // quitamos servicios
+        items.removeIf(p -> p instanceof AbstractPeopleProductDTO); // quitamos servicios
 
         items.sort(Comparator.comparing(AbstractProductDTO::getName, String.CASE_INSENSITIVE_ORDER));
 

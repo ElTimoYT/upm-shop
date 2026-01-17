@@ -2,8 +2,8 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.inventory.TicketInventory;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
@@ -19,10 +19,10 @@ public class TicketPrintCommandHandler implements CommandHandler {
 
             TICKET_PRINT_OK = "ticket print: ok";
 
-    private final TicketService ticketService;
-    private final CashierService cashierService;
+    private final TicketInventory ticketService;
+    private final CashierInventory cashierService;
 
-    public TicketPrintCommandHandler(TicketService ticketService, CashierService cashierService) {
+    public TicketPrintCommandHandler(TicketInventory ticketService, CashierInventory cashierService) {
         this.ticketService = ticketService;
         this.cashierService = cashierService;
     }

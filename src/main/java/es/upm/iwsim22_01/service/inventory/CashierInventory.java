@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.service.service;
+package es.upm.iwsim22_01.service.inventory;
 
 import es.upm.iwsim22_01.data.models.Cashier;
 import es.upm.iwsim22_01.data.repository.CashierRepository;
@@ -6,19 +6,20 @@ import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
  * Gestor de cajeros, encargado de la creación, validación y eliminación de instancias de {@link CashierDTO}.
- * Extiende {@link AbstractService} para heredar funcionalidades básicas de gestión de entidades.
+ * Extiende {@link AbstractInventory} para heredar funcionalidades básicas de gestión de entidades.
  */
-public class CashierService extends AbstractService<Cashier, CashierDTO, String> {
+public class CashierInventory extends AbstractInventory<Cashier, CashierDTO, String> {
     private static final int CASHIER_ID_LENGTH = 7;
     private static final Pattern CASHIER_EMAIL_REGEX = Pattern.compile("^[\\w-.]+@upm.es$");
 
-    private final TicketService ticketService;
+    private final TicketInventory ticketService;
 
-    public CashierService(TicketService ticketService) {
+    public CashierInventory(TicketInventory ticketService) {
         super(new CashierRepository());
 
         this.ticketService = ticketService;
@@ -26,16 +27,22 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
 
     @Override
     protected CashierDTO toDto(Cashier model) {
+        List<TicketDTO> tickets = new ArrayList<>();
+
+        if (model.getTicketsId() != null) {
+            for (Integer tid : model.getTicketsId()) {
+                if (tid != null && ticketService.existsId(tid)) {
+                    tickets.add(ticketService.get(tid));
+                }
+            }
+        }
+
         return new CashierDTO(
                 model.getName(),
                 model.getEmail(),
                 model.getDNI(),
-                new ArrayList<>(model.getTicketsId()
-                        .stream()
-                        .map(ticketService::get)
-                        .toList()
-                )
-            );
+                tickets
+        );
     }
 
     @Override

@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.inventory.ProductInventory;
 import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 import es.upm.iwsim22_01.service.dto.product.UnitProductDTO;
@@ -20,7 +20,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
     private static final String PROD_UPDATE_PARAMETER_CATEGORY = "CATEGORY";
     private static final String PROD_UPDATE_PARAMETER_PRICE = "PRICE";
 
-    private ProductService productService;
+    private ProductInventory productService;
     @Override
     public void runCommand(CommandTokens tokens) {
         if (!tokens.hasNextInt()) {
@@ -108,7 +108,7 @@ public class ProdUpdateCommandHandler implements CommandHandler {
         System.out.println(PROD_UPDATE_OK);
     }
 
-    public ProdUpdateCommandHandler(ProductService productService) {
+    public ProdUpdateCommandHandler(ProductInventory productService) {
         this.productService = productService;
     }
 

@@ -1,4 +1,4 @@
-package es.upm.iwsim22_01.service.service;
+package es.upm.iwsim22_01.service.inventory;
 
 import es.upm.iwsim22_01.data.repository.Repository;
 
@@ -12,10 +12,10 @@ import java.util.*;
  * @param <D> tipo de los DTOs de los elementos gestionados
  * @param <K> tipo de la clave que identifica cada elemento
  */
-public abstract class AbstractService<M, D, K> {
+public abstract class AbstractInventory<M, D, K> {
     protected final Repository<M, K> repository;
 
-    protected AbstractService(Repository<M, K> repository) {
+    protected AbstractInventory(Repository<M, K> repository) {
         this.repository = repository;
     }
 

@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.Collection;
@@ -12,9 +12,9 @@ public class CashierListCommandHandler implements CommandHandler {
 
 private static final String CASHIER_LIST_OK = "cash list: ok";
 
-    private final CashierService cashierService;
+    private final CashierInventory cashierService;
 
-    public CashierListCommandHandler(CashierService cashierService) {
+    public CashierListCommandHandler(CashierInventory cashierService) {
         this.cashierService = cashierService;
     }
 

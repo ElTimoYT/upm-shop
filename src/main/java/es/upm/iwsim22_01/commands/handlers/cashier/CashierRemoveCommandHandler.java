@@ -3,9 +3,9 @@ package es.upm.iwsim22_01.commands.handlers.cashier;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.ClientService;
-import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.inventory.ClientInventory;
+import es.upm.iwsim22_01.service.inventory.TicketInventory;
 
 public class CashierRemoveCommandHandler implements CommandHandler {
 
@@ -17,11 +17,11 @@ public class CashierRemoveCommandHandler implements CommandHandler {
             CASHIER_REMOVE_OK = "cash remove: ok",
             CASHIER_REMOVE_FAIL = "cash remove: fail";
 
-    private CashierService cashierService;
-    private ClientService clientService;
-    private TicketService ticketService;
+    private CashierInventory cashierService;
+    private ClientInventory clientService;
+    private TicketInventory ticketService;
 
-    public CashierRemoveCommandHandler(CashierService cashierService, ClientService clientService, TicketService ticketService) {
+    public CashierRemoveCommandHandler(CashierInventory cashierService, ClientInventory clientService, TicketInventory ticketService) {
         this.cashierService = cashierService;
         this.clientService = clientService;
         this.ticketService = ticketService;

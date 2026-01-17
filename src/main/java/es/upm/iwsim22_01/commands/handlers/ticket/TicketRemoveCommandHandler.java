@@ -2,9 +2,9 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.ProductService;
-import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.inventory.ProductInventory;
+import es.upm.iwsim22_01.service.inventory.TicketInventory;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
@@ -21,11 +21,11 @@ public class TicketRemoveCommandHandler implements CommandHandler {
 
             TICKET_REMOVAL_OK = "ticket remove: ok";
 
-    private final TicketService ticketService;
-    private final ProductService productService;
-    private final CashierService cashierService;
+    private final TicketInventory ticketService;
+    private final ProductInventory productService;
+    private final CashierInventory cashierService;
 
-    public TicketRemoveCommandHandler(TicketService ticketService, ProductService productService, CashierService cashierService) {
+    public TicketRemoveCommandHandler(TicketInventory ticketService, ProductInventory productService, CashierInventory cashierService) {
         this.ticketService = ticketService;
         this.productService = productService;
         this.cashierService = cashierService;

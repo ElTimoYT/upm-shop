@@ -9,7 +9,6 @@ public class Client {
     private String dni;
     private String cashierWhoRegisters;
     private List<Integer> tickets;
-    private ClientType clientType;
 
     public Client(String name, String dni, String email, String cashierWhoRegisters, List<Integer> tickets) {
         this.name = name;
@@ -17,11 +16,7 @@ public class Client {
         this.dni = dni;
         this.cashierWhoRegisters = cashierWhoRegisters;
         this.tickets = tickets == null ? new ArrayList<>() : tickets;
-        if (dni.length() == 9 && Character.isLetter(dni.charAt(8))) {
-            this.clientType = ClientType.PERSON;
-        } else {
-            this.clientType = ClientType.COMPANY;
-        }
+        this.dni=dni;
     }
 
     public String getName() {
@@ -64,9 +59,6 @@ public class Client {
         this.tickets = tickets;
     }
 
-    public ClientType getClientType() {
-        return clientType;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -79,8 +71,6 @@ public class Client {
 
         return false;
     }
-
-    public enum ClientType { PERSON, COMPANY }
 
 
 }

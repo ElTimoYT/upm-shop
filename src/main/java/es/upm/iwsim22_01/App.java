@@ -12,10 +12,10 @@ import es.upm.iwsim22_01.commands.handlers.cashier.CashierCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.client.ClientCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.prod.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ticket.TicketCommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.ClientService;
-import es.upm.iwsim22_01.service.service.ProductService;
-import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.inventory.ClientInventory;
+import es.upm.iwsim22_01.service.inventory.ProductInventory;
+import es.upm.iwsim22_01.service.inventory.TicketInventory;
 
 /**
  * Clase principal de la aplicación de gestión de tickets.
@@ -26,10 +26,10 @@ public class App {
     private static boolean menu = true;
     private static CommandDispatcher dispatcher = new CommandDispatcher();
 
-    private static ProductService productService = new ProductService();
-    private static TicketService ticketService = new TicketService(productService);
-    private static CashierService cashierService = new CashierService(ticketService);
-    private static ClientService clientService = new ClientService(cashierService, ticketService);
+    private static ProductInventory productService = new ProductInventory();
+    private static TicketInventory ticketService = new TicketInventory(productService);
+    private static CashierInventory cashierService = new CashierInventory(ticketService);
+    private static ClientInventory clientService = new ClientInventory(cashierService, ticketService);
 
     /**
      * Método principal de la aplicación.

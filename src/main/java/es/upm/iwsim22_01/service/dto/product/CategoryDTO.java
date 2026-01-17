@@ -9,7 +9,10 @@ public enum CategoryDTO {
     STATIONARY(0.05),
     CLOTHES(0.07),
     BOOK(0.1),
-    ELECTRONICS(0.03);
+    ELECTRONICS(0.03),
+    INSURANCE(0.15),
+    SHOW(0.15),
+    TRANSPORT(0.15);
 
 
     private final double discount;

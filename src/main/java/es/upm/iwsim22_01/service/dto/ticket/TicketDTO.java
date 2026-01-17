@@ -25,26 +25,19 @@ public class TicketDTO {
         COMMON,
         COMPANY
     }
-
-
-
-    public TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products) {
+    public TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products,TicketType ticketType) {
         this.id = id;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.state = state;
         this.products = products;
+        this.ticketType = ticketType;
     }
 
     public TicketDTO(int id, Date initialDate, Date finalDate) {
-        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>());
+        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>(), TicketType.COMMON);
     }
 
-    /**
-     * Constructor de la clase Ticket.
-     *
-     * @param id Identificador único del ticket.
-     */
     public TicketDTO(int id) {
         this(id, new Date(), null);
     }
@@ -53,6 +46,9 @@ public class TicketDTO {
         return ticketType;
     }
 
+    public TicketState getTicketState() {
+        return state;
+    }
     protected void setTicketType(TicketType ticketType) {
         this.ticketType = ticketType;
     }
@@ -310,7 +306,7 @@ public class TicketDTO {
             double discountPerItem = perItemDiscount(product, counts);
 
 
-            if (product instanceof AbstractServiceDTO service) {
+            if (product instanceof AbstractTypeDTO service) {
                 sb.append(service.printTicketWithPeople()).append("\n");
                 continue;
             }

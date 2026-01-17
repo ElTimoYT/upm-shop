@@ -2,14 +2,14 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.inventory.ProductInventory;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 
 import java.time.LocalDateTime;
 
 
 public class ProdAddMeetingCommandHandler implements CommandHandler {
-    private ProductService productService;
+    private ProductInventory productService;
     private static final String ERROR_INCORRECT_USE_ADDM =
             "Incorrect use: prod addMeeting [<id>] \"<name>\" <price> <expiration: yyyy-MM-dd> <max_people>";
     private static final String ERROR_INVALID_ID = "Invalid id";
@@ -82,7 +82,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
 
     }
 
-    public ProdAddMeetingCommandHandler(ProductService productService) {
+    public ProdAddMeetingCommandHandler(ProductInventory productService) {
         this.productService = productService;
 
     }

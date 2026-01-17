@@ -2,13 +2,13 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.ProductService;
-import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.inventory.ProductInventory;
+import es.upm.iwsim22_01.service.inventory.TicketInventory;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.product.PersonalizableProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.product.AbstractServiceDTO;
+import es.upm.iwsim22_01.service.dto.product.AbstractTypeDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ public class TicketAddCommandHandler implements CommandHandler {
             TICKET_ADD_OK = "ticket add: ok";
 
 
-    private final TicketService ticketService;
-    private final ProductService productService;
-    private final CashierService cashierService;
+    private final TicketInventory ticketService;
+    private final ProductInventory productService;
+    private final CashierInventory cashierService;
 
-    public TicketAddCommandHandler(TicketService ticketService, ProductService productService, CashierService cashierService) {
+    public TicketAddCommandHandler(TicketInventory ticketService, ProductInventory productService, CashierInventory cashierService) {
         this.ticketService = ticketService;
         this.productService = productService;
         this.cashierService = cashierService;
@@ -79,7 +79,7 @@ public class TicketAddCommandHandler implements CommandHandler {
 
             if(ticket.getState() != TicketDTO.TicketState.CLOSED){
                 boolean added;
-                if (product instanceof AbstractServiceDTO productService) {
+                if (product instanceof AbstractTypeDTO productService) {
                     if (!productService.isValid()) {
                         System.out.println(ERROR_INVALID_DATE);
                         return;

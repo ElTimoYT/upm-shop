@@ -1,10 +1,12 @@
-package es.upm.iwsim22_01.service.service;
+package es.upm.iwsim22_01.service.inventory;
 
 import es.upm.iwsim22_01.data.models.Ticket;
 import es.upm.iwsim22_01.data.repository.TicketRepository;
 import es.upm.iwsim22_01.service.dto.ticket.CommonTicketDTO;
 import es.upm.iwsim22_01.service.dto.ticket.CompanyTicketDTO;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
+import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
 
 import java.util.ArrayList;
 
@@ -12,12 +14,12 @@ import java.util.ArrayList;
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
  * Permite generar tickets con identificadores únicos y validar su formato.
  */
-public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
+public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
 
-    private final ProductService productService;
+    private final ProductInventory productService;
 
-    public TicketService(ProductService productService) {
+    public TicketInventory(ProductInventory productService) {
         super(new TicketRepository());
 
         this.productService = productService;
@@ -25,40 +27,42 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
 
     @Override
     protected TicketDTO toDto(Ticket model) {
-        TicketDTO.TicketType type = TicketDTO.TicketType.valueOf(model.getTicketType());
+        if (model == null) throw new IllegalArgumentException("Ticket model is null");
 
-        var products = new ArrayList<>(model.getProducts()
-                .stream()
-                .map(productService::toDto)
-                .toList());
+        String typeStr = model.getTicketType();
+        TicketDTO.TicketType type = (typeStr == null || typeStr.isBlank())
+                ? TicketDTO.TicketType.COMMON   // default para tickets antiguos
+                : TicketDTO.TicketType.valueOf(typeStr);
 
-        return switch (type) {
-            case COMMON -> new es.upm.iwsim22_01.service.dto.ticket.CommonTicketDTO(
-                    model.getId(),
-                    model.getInitialDate(),
-                    model.getFinalDate(),
-                    TicketDTO.TicketState.valueOf(model.getTicketState()),
-                    products
-            );
-            case COMPANY -> new es.upm.iwsim22_01.service.dto.ticket.CompanyTicketDTO(
-                    model.getId(),
-                    model.getInitialDate(),
-                    model.getFinalDate(),
-                    TicketDTO.TicketState.valueOf(model.getTicketState()),
-                    products
-            );
-        };
+        return new TicketDTO(
+                model.getId(),
+                model.getInitialDate(),
+                model.getFinalDate(),
+                TicketDTO.TicketState.valueOf(model.getTicketState()),
+                model.getProducts().stream().map(productService::toDto).toList(),
+                type
+        );
+
     }
 
     @Override
     protected Ticket toModel(TicketDTO dto) {
+        if (dto == null) throw new IllegalArgumentException("TicketDTO is null");
+        if (dto.getTicketType() == null) {
+            throw new IllegalStateException("TicketDTO.ticketType is null BEFORE saving, id=" + dto.getId());
+        }
+
+        if (dto.getTicketType() == null) {
+            throw new IllegalStateException("TicketDTO.ticketType is null for id=" + dto.getId());
+        }
+
         return new Ticket(
                 dto.getId(),
                 dto.getInitialDate(),
                 dto.getFinalDate(),
-                dto.getState().toString(),
+                dto.getState().name(),
                 dto.getProducts().stream().map(productService::toModel).toList(),
-                dto.getTicketType().toString()
+                dto.getTicketType().name() // ✅ COMMON/COMPANY garantizado
         );
     }
 
@@ -113,21 +117,20 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
         return id;
     }
 
-    public TicketDTO addCommonTicket(int id) {
-        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
-        return add(new CommonTicketDTO(id));
+    public TicketDTO addTicketForClient(ClientDTO client) {
+        int id = createNewId();              // tu generador de ID (7 dígitos)
+        return addTicketForClient(client, id);
     }
 
-    public TicketDTO addCompanyTicket(int id) {
-        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
-        return add(new CompanyTicketDTO(id));
+    public TicketDTO addTicketForClient(ClientDTO client, int ticketId) {
+        TicketDTO ticket = createTicketByClientType(client, ticketId);
+        return add(ticket);
     }
 
-    public TicketDTO addCommonTicket() {
-        return addCommonTicket(createNewId());
-    }
-
-    public TicketDTO addCompanyTicket() {
-        return addCompanyTicket(createNewId());
+    private TicketDTO createTicketByClientType(ClientDTO client, int ticketId) {
+        if (client instanceof CompanyDTO) {
+            return new CompanyTicketDTO(ticketId);
+        }
+        return new CommonTicketDTO(ticketId);
     }
 }

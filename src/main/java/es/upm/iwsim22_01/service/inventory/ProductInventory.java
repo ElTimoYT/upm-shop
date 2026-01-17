@@ -1,21 +1,23 @@
-    package es.upm.iwsim22_01.service.service;
+    package es.upm.iwsim22_01.service.inventory;
 
     import es.upm.iwsim22_01.data.models.*;
     import es.upm.iwsim22_01.data.repository.ProductRepository;
     import es.upm.iwsim22_01.service.dto.product.*;
 
     import java.time.LocalDateTime;
+    import java.util.LinkedHashMap;
+    import java.util.Map;
 
     /**
      * Gestor de productos, encargado de la creación, validación y registro de instancias de {@link AbstractProductDTO}.
      * Permite añadir diferentes tipos de productos al sistema, validando sus parámetros y restricciones.
      */
-    public class ProductService extends AbstractService<Product, AbstractProductDTO, Integer> {
+    public class ProductInventory extends AbstractInventory<Product, AbstractProductDTO, Integer> {
         private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
 
         private final ProductRepository productRepository;
 
-        public ProductService() {
+        public ProductInventory() {
             super(new ProductRepository());
             this.productRepository = (ProductRepository) super.repository;
         }
@@ -124,6 +126,25 @@
 
             return add(new MeetingDTO(id, name, pricePerPerson, maxParticipants, expirationDate, 0));
         }
+        private int nextServiceId = 1;
+        private final Map<Integer, ProductService> services = new LinkedHashMap<>();
+
+        public AbstractProductDTO addProductService(LocalDateTime expiration, CategoryDTO category) {
+            if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
+            if (expiration == null) throw new IllegalArgumentException("Invalid expiration date.");
+
+            // Validar que category es de servicio
+            if (!(category == CategoryDTO.INSURANCE || category == CategoryDTO.TRANSPORT || category == CategoryDTO.SHOW)) {
+                throw new IllegalArgumentException("Category not valid");
+            }
+
+            int id = nextServiceId++;
+            ProductService ps = new ProductService(id, expiration.toLocalDate(), category);
+
+            services.put(id, ps);
+
+            return ps;
+        }
 
         /**
          * Valida el nombre de un producto.
@@ -151,6 +172,6 @@
          * @return {@code true} si el número de productos es mayor o igual a {@value #MAX_PRODUCTS}.
          */
         public boolean isProductListFull() {
-            return getSize() >= ProductService.MAX_PRODUCTS;
+            return getSize() >= ProductInventory.MAX_PRODUCTS;
         }
 }

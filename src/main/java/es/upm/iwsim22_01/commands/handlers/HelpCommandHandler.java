@@ -6,14 +6,14 @@ import es.upm.iwsim22_01.service.dto.product.CategoryDTO;
 public class HelpCommandHandler implements CommandHandler {
     private static final String HELP_MESSAGE = """
             Commands:
-                  client add "<nombre>" <DNI> <email> <cashId>
+                  client add "<nombre>" (<DNI>|<NIF>) <email> <cashId>
                   client remove <DNI>
                   client list
                   cash add [<id>] "<nombre>"<email>
                   cash remove <id>
                   cash list
                   cash tickets <id>
-                  ticket new [<id>] <cashId> <userId>
+                  ticket new [<id>] <cashId> <userId> -[c|p|s] (default -p option)
                   ticket add <ticketId><cashId> <prodId> <amount> [--p<txt> --p<txt>]
                   ticket remove <ticketId><cashId> <prodId>
                   ticket print <ticketId> <cashId>

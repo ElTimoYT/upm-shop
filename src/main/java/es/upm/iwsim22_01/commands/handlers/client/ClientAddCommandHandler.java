@@ -2,15 +2,16 @@ package es.upm.iwsim22_01.commands.handlers.client;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.ClientService;
+import es.upm.iwsim22_01.service.inventory.CashierInventory;
+import es.upm.iwsim22_01.service.inventory.ClientInventory;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 public class ClientAddCommandHandler  implements CommandHandler {
-    private final ClientService clientService;
-    private final CashierService cashierService;
+    private final ClientInventory clientService;
+    private final CashierInventory cashierService;
 
     private static final String
             OK_CLIENT_ADD = "client add: ok",
@@ -21,7 +22,7 @@ public class ClientAddCommandHandler  implements CommandHandler {
             ERROR_EMAIL_INVALID = "Email does not adhere to required rules.",
             ERROR_DNI_INVALID = "DNI does not adhere to required rules.";
 
-    public ClientAddCommandHandler(ClientService clientService, CashierService cashierService) {
+    public ClientAddCommandHandler(ClientInventory clientService, CashierInventory cashierService) {
         this.clientService = clientService;
         this.cashierService = cashierService;
     }
@@ -37,7 +38,11 @@ public class ClientAddCommandHandler  implements CommandHandler {
                 System.out.println(ERROR_ID_ALREADY_FOUND);
                 return;
             }
-            if (!clientService.checkDNI(clientTentativeId)) {
+
+            boolean isCompany = clientService.checkNIF(clientTentativeId); // 👈 nuevo
+            boolean isUser = clientService.checkDNI(clientTentativeId);
+
+            if (!isCompany && !isUser) {
                 System.out.println(ERROR_DNI_INVALID);
                 return;
             }
@@ -53,7 +58,12 @@ public class ClientAddCommandHandler  implements CommandHandler {
                 return;
             }
 
-            ClientDTO client = clientService.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            ClientDTO client;
+            if (isCompany) {
+                client = clientService.addCompany(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            } else {
+                client = clientService.addUser(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            }
             System.out.println(client);
             System.out.println(OK_CLIENT_ADD);
         } catch (NoSuchElementException | IllegalArgumentException exception) {

@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.prod;
 import es.upm.iwsim22_01.commands.CommandDispatcher;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.service.ProductService;
+import es.upm.iwsim22_01.service.inventory.ProductInventory;
 
 public class ProdCommandHandler implements CommandHandler {
     private static final String
@@ -18,7 +18,7 @@ public class ProdCommandHandler implements CommandHandler {
 
     private final CommandDispatcher productCommandDispatcher = new  CommandDispatcher(ERROR_INCORRECT_USE, ERROR_INCORRECT_USE);
     
-    public ProdCommandHandler(ProductService productService) {
+    public ProdCommandHandler(ProductInventory productService) {
         productCommandDispatcher.addCommand(ADD, new ProdAddCommandHandler(productService));
         productCommandDispatcher.addCommand(LIST, new ProdListCommandHandler(productService));
         productCommandDispatcher.addCommand(REMOVE, new ProdRemoveCommandHandler(productService));

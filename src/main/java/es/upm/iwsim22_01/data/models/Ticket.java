@@ -18,10 +18,15 @@ public class Ticket {
         this.finalDate = finalDate;
         this.ticketState = ticketState;
         this.products = products == null ? new ArrayList<>() : products;
+        this.ticketType = ticketType;
     }
 
     public String getTicketType() {
         return ticketType;
+    }
+
+    public void setTicketType(String ticketType) {
+        this.ticketType = ticketType;
     }
 
     public int getId() {

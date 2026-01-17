@@ -171,6 +171,7 @@ public class TicketDTO {
      */
     public boolean addProduct(AbstractProductDTO productToAdd, int quantity) {
         if (productToAdd == null || quantity <= 0) return false;
+        if (productToAdd instanceof Validable validable && !validable.isValid()) return false;
 
         int remaining = MAX_PRODUCTS - totalUnits();
         if (quantity > remaining) return false;

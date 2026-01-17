@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class ProdAddCommandHandler implements CommandHandler {
     private static final String
-            ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add <id> \"<name>\" <category> <price>",
+            ERROR_INCORRECT_USE_ADD = "Incorrect use: prod add [<id>] \"<name>\" <category> <price> || (\"<name>\" <category> )",
             ERROR_INCORRECT_USE_ADD_SERVICE = "Incorrect use: prod add <expiration:yyyy-MM-dd> <category>",
             ERROR_MAX_PRODUCTS = "Maximum number of products exceeded.",
             ERROR_INVALID_ID = "Id not valid",
@@ -22,10 +22,10 @@ public class ProdAddCommandHandler implements CommandHandler {
             PROD_ADD_OK ="Prod add ok";
 
 
-    private final ProductService productInventory;
+    private final ProductService productService;
 
     public ProdAddCommandHandler(ProductService productService) {
-        this.productInventory = productService;
+        this.productService = productService;
     }
 
     @Override
@@ -39,14 +39,13 @@ public class ProdAddCommandHandler implements CommandHandler {
 
     private void addProduct(CommandTokens tokens) {
         //id
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_ADD);
-            return;
-        }
-        int productId = tokens.nextInt();
-        if (productInventory.existsId(String.valueOf(productId))) {
-            System.out.println(ERROR_INVALID_ID);
-            return;
+        Integer productId = null;
+        if (tokens.hasNextInt()) {
+            productId = tokens.nextInt();
+            if (productService.existsId(String.valueOf(productId))) {
+                System.out.println(ERROR_INVALID_ID);
+                return;
+            }
         }
 
         //name
@@ -55,7 +54,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
         String productName = tokens.next();
-        if (!productInventory.isNameValid(productName)) {
+        if (!productService.isNameValid(productName)) {
             System.out.println(ERROR_INVALID_NAME);
             return;
         }
@@ -97,11 +96,11 @@ public class ProdAddCommandHandler implements CommandHandler {
                 System.out.println(ERROR_INVALID_MAXPERS);
                 return;
             } else {
-                created = productInventory.addPersonalizable(productId, productName, category, price, maxPers);
+                created = productId == null ? productService.addPersonalizable(productName, category, price, maxPers) :  productService.addPersonalizable(productId, productName, category, price, maxPers);
             }
 
         } else {
-            created = productInventory.addProduct(productId, productName, category, price);
+            created = productId == null ? productService.addProduct(productName, category, price) :   productService.addProduct(productId, productName, category, price);
         }
         System.out.println(created);
         System.out.println(PROD_ADD_OK);
@@ -129,7 +128,7 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
 
-        AbstractProductDTO created = productInventory.addService(category, expiration);
+        AbstractProductDTO created = productService.addService(category, expiration);
 
         System.out.println(created);
         System.out.println(PROD_ADD_OK);

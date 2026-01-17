@@ -25,7 +25,7 @@ public class TicketAddCommandHandler implements CommandHandler {
             ERROR_PRODUCT_NOT_FOUND = "Product not found",
             ERROR_INVALID_DATE = "Date of the product already passed",
             ERROR_CASHIER_NOT_ASSIGNED = "Cashier is not assigned to this ticket",
-            ERROR_PRODUCT_NOT_ALLOWED = "Product not allowed for this ticket type",
+            ERROR_PRODUCT_NOT_ALLOWED = "Product not allowed for this ticket",
             ERROR_PARAM_NOT_VALID = "Command param %s not valid, the command will ignore this param\n",
 
     TICKET_CLOSED = "Ticket closed",
@@ -87,7 +87,6 @@ public class TicketAddCommandHandler implements CommandHandler {
                     AbstractPeopleProductDTO newPeopleProduct = (AbstractPeopleProductDTO) peopleProduct.clone();
                     newPeopleProduct.setParticipantsAmount(amount + peopleProduct.getParticipantsAmount());
                     added = ticket.addProduct(newPeopleProduct, amount);
-
                 }else{
                     if (tokens.hasNext()) {
                         if (product instanceof PersonalizableDTO personalizableProduct) {

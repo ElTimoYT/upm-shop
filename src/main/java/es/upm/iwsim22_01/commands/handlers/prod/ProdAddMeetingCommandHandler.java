@@ -27,14 +27,13 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
         }
 
         //id
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_ADDM);
-            return;
-        }
-        int productId = tokens.nextInt();
-        if (productService.existsId(String.valueOf(productId))) {
-            System.out.println(ERROR_INVALID_ID);
-            return;
+        Integer productId = null;
+        if (tokens.hasNextInt()) {
+            productId = tokens.nextInt();
+            if (productService.existsId(String.valueOf(productId))) {
+                System.out.println(ERROR_INVALID_ID);
+                return;
+            }
         }
 
         if (!tokens.hasNext()) {
@@ -75,7 +74,7 @@ public class ProdAddMeetingCommandHandler implements CommandHandler {
         }
 
         AbstractProductDTO meeting;
-        meeting = productService.addMeeting(productId, name, price, expiration, maxPeople);
+        meeting = productId == null ? productService.addMeeting(name, price ,expiration, maxPeople) :  productService.addMeeting(productId, name, price, expiration, maxPeople);
 
         System.out.println(meeting);
         System.out.println(PROD_ADD_OK);

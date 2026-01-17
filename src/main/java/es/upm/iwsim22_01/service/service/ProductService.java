@@ -14,7 +14,7 @@
      * Permite añadir diferentes tipos de productos al sistema, validando sus parámetros y restricciones.
      */
     public class ProductService extends AbstractService<Product, AbstractProductDTO, String> {
-        private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100;
+        private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100, PRODUCT_RANDOM_ID_LENGTH = 3;
 
         private final ProductRepository productRepository;
 
@@ -65,6 +65,10 @@
             return add(new ProductDTO(String.valueOf(id), name, category, price));
         }
 
+        public AbstractProductDTO addProduct(String name, ProductCategoryDTO category, double price) {
+            return addProduct(createNewId(), name, category, price);
+        }
+
         /**
          * Añade un producto personalizable al sistema.
          *
@@ -84,6 +88,10 @@
             if (maxText < 1) throw new IllegalArgumentException("Max pers " + maxText + " cannot be less than 1.");
 
             return add(new PersonalizableDTO(String.valueOf(id), name, category, price, maxText));
+        }
+
+        public AbstractProductDTO addPersonalizable(String name, ProductCategoryDTO category, double price, int maxText) {
+            return addPersonalizable(createNewId(), name, category, price, maxText);
         }
 
         /**
@@ -108,6 +116,10 @@
             return add(new FoodDTO(String.valueOf(id), name, price, maxParticipants, expirationDate, 0));
         }
 
+        public AbstractProductDTO addFood(String name, double price, LocalDateTime expirationDate, int maxParticipants){
+            return addFood(name, price, expirationDate, maxParticipants);
+        }
+
         /**
          * Añade un producto de reunión al sistema.
          *
@@ -128,6 +140,10 @@
             if (expirationDate == null) throw new IllegalArgumentException("Invalid expiration date.");
 
             return add(new MeetingDTO(String.valueOf(id), name, pricePerPerson, maxParticipants, expirationDate, 0));
+        }
+
+        public AbstractProductDTO addMeeting(String name, double pricePerPerson, LocalDateTime expirationDate, int maxParticipants){
+            return addMeeting(name, pricePerPerson, expirationDate, maxParticipants);
         }
 
         public AbstractProductDTO addService(ServiceCategoryDTO category, LocalDateTime expirationDate) {
@@ -163,5 +179,15 @@
          */
         public boolean isProductListFull() {
             return getSize() >= ProductService.MAX_PRODUCTS;
+        }
+
+        public int createNewId() {
+            int id;
+
+            do {
+                id = (int) (Math.random() * Math.pow(10, PRODUCT_RANDOM_ID_LENGTH));
+            } while (existsId(String.valueOf(id)));
+
+            return id;
         }
 }

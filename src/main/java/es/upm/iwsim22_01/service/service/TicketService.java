@@ -2,12 +2,21 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Ticket;
 import es.upm.iwsim22_01.data.repository.TicketRepository;
+import es.upm.iwsim22_01.service.dto.product.FoodDTO;
+import es.upm.iwsim22_01.service.dto.product.MeetingDTO;
+import es.upm.iwsim22_01.service.dto.product.PersonalizableDTO;
+import es.upm.iwsim22_01.service.dto.product.ProductDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ServiceCategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.service.ServiceDTO;
 import es.upm.iwsim22_01.service.dto.ticket.OnlyProductsTicket;
 import es.upm.iwsim22_01.service.dto.ticket.OnlyServicesTicket;
 import es.upm.iwsim22_01.service.dto.ticket.ServicesAndProductsTicket;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
+
+import static es.upm.iwsim22_01.data.models.Product.ProductType.PERSONALIZABLE_PRODUCT;
 
 /**
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
@@ -26,20 +35,11 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
 
     @Override
     protected TicketDTO toDto(Ticket model) {
-
-        String typeStr = model.getTicketType();
-        TicketDTO.TicketType type = (typeStr == null || typeStr.isBlank())
-                ? TicketDTO.TicketType.COMMON   // default para tickets antiguos
-                : TicketDTO.TicketType.valueOf(typeStr);
-
-        return new TicketDTO(
-                model.getId(),
-                model.getInitialDate(),
-                model.getFinalDate(),
-                TicketDTO.TicketState.valueOf(model.getTicketState()),
-                model.getProducts().stream().map(productService::toDto).toList(),
-                type
-        );
+        return switch (model.getTicketType()) {
+            case ONLY_PRODUCTS -> new OnlyProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), model.getProducts().stream().map(productService::toDto).toList());
+            case ONLY_SERVICES -> new OnlyServicesTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), model.getProducts().stream().map(productService::toDto).toList());
+            case SERVICES_AND_PRODUCTS -> new ServicesAndProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), model.getProducts().stream().map(productService::toDto).toList());
+        };
 
     }
 
@@ -60,7 +60,11 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
                 dto.getFinalDate(),
                 dto.getState().name(),
                 dto.getProducts().stream().map(productService::toModel).toList(),
-                dto.getTicketType().name()
+                switch (dto.getTicketType()) {
+                    case ONLY_PRODUCTS -> Ticket.TicketType.ONLY_PRODUCTS;
+                    case ONLY_SERVICES -> Ticket.TicketType.ONLY_SERVICES;
+                    case SERVICES_AND_PRODUCTS -> Ticket.TicketType.SERVICES_AND_PRODUCTS;
+                }
         );
     }
 

@@ -27,11 +27,12 @@ public class TicketDTO {
     private TicketType ticketType;
 
     public enum TicketType {
-        COMMON,
-        COMPANY
+        ONLY_PRODUCTS,
+        ONLY_SERVICES,
+        SERVICES_AND_PRODUCTS;
     }
 
-    public TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products, TicketType ticketType) {
+    protected TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products, TicketType ticketType) {
         this.id = id;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
@@ -40,12 +41,8 @@ public class TicketDTO {
         this.ticketType = ticketType;
     }
 
-    public TicketDTO(int id, Date initialDate, Date finalDate) {
-        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>(), TicketType.COMMON);
-    }
-
-    public TicketDTO(int id) {
-        this(id, new Date(), null);
+    protected TicketDTO(int id, Date initialDate, Date finalDate, TicketType ticketType) {
+        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>(), ticketType);
     }
 
     public TicketType getTicketType() {

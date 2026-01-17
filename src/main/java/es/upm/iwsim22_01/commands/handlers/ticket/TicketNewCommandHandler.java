@@ -44,11 +44,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         this.clientService = clientService;
     }
     private boolean isCompanyClient(ClientDTO client) {
-        // Opción 1 (recomendada): por subtipo real
         return client instanceof CompanyDTO;
-
-        // Si NO tienes CompanyDTO como subtipo, usa patrón:
-        // return clientService.checkNIF(client.getId());  // o client.getDNI()
     }
     private boolean isValidVisualizationForClient(ClientDTO client, String opt) {
         // default -p si no viene flag
@@ -64,9 +60,6 @@ public class TicketNewCommandHandler implements CommandHandler {
         if (opt.equals("-s") || opt.equals("-c")) {
             return isCompanyClient(client);
         }
-
-        // Cualquier cosa rara -> la tratarás como -p o como error (tú decides).
-        // Yo aquí la considero inválida.
         return false;
     }
 
@@ -158,7 +151,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         CashierDTO cashier = cashierService.get(cashierId);
         ClientDTO client = clientService.get(clientId);
 
-        // ✅ Crea ticket según tipo de cliente, usando el ID dado
+        // Crea ticket según tipo de cliente, usando el ID dado
         TicketDTO ticket = ticketService.addTicketForClient(client, ticketId);
 
         cashier.addTicket(ticket);
@@ -184,7 +177,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         CashierDTO cashier = cashierService.get(cashierId);
         ClientDTO client = clientService.get(clientId);
 
-        // ✅ Restricción: si es USER, no se permite -s ni -c
+        // si es USER, no se permite -s ni -c
         if (!isValidVisualizationForClient(client, opt)) {
             System.out.println(ERROR_TICKET_NOT_COMPANY_FOR_VISUALIZATION);
             return;
@@ -234,7 +227,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         CashierDTO cashier = cashierService.get(cashierId);
         ClientDTO client = clientService.get(clientId);
 
-        // ✅ Restricción: si es USER, no se permite -s ni -c
+        // si es USER, no se permite -s ni -c
         if (!isValidVisualizationForClient(client, opt)) {
             System.out.println(ERROR_TICKET_NOT_COMPANY_FOR_VISUALIZATION);
             return;

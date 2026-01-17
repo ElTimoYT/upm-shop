@@ -22,7 +22,6 @@ public class CommonTicketDTO extends TicketDTO {
 
     @Override
     public boolean addProduct(PersonalizableProductDTO personalizableProduct, int quantity, String[] lines) {
-        // Personalizable no es servicio, así que OK
         return super.addProduct(personalizableProduct, quantity, lines);
     }
 

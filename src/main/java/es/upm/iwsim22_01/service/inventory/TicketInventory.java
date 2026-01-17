@@ -27,7 +27,6 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
 
     @Override
     protected TicketDTO toDto(Ticket model) {
-        if (model == null) throw new IllegalArgumentException("Ticket model is null");
 
         String typeStr = model.getTicketType();
         TicketDTO.TicketType type = (typeStr == null || typeStr.isBlank())
@@ -62,7 +61,7 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
                 dto.getFinalDate(),
                 dto.getState().name(),
                 dto.getProducts().stream().map(productService::toModel).toList(),
-                dto.getTicketType().name() // ✅ COMMON/COMPANY garantizado
+                dto.getTicketType().name()
         );
     }
 
@@ -118,7 +117,7 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
     }
 
     public TicketDTO addTicketForClient(ClientDTO client) {
-        int id = createNewId();              // tu generador de ID (7 dígitos)
+        int id = createNewId();
         return addTicketForClient(client, id);
     }
 

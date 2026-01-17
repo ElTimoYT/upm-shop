@@ -50,6 +50,10 @@ public class Product {
         return new Product(ProductType.MEETING, id, name, price, amount, null, null, maxParticipant, expirationDate, participantsAmount);
     }
 
+    public static Product createService(int id, LocalDateTime expirationDate,String category) {
+        return new Product(ProductType.SERVICE, id, "",0,0,category,null,0,expirationDate,null);
+    }
+
     public int getId() {
         return id;
     }
@@ -122,6 +126,7 @@ public class Product {
         UNIT_PRODUCT,
         PERSONALIZABLE_PRODUCT,
         CATERING,
-        MEETING;
+        MEETING,
+        SERVICE;
     }
 }

@@ -1,20 +1,21 @@
 package es.upm.iwsim22_01.service.dto.product;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.logging.SimpleFormatter;
 
 public class ProductService extends AbstractProductDTO {
 
     private final CategoryDTO category;
-    private final LocalDate expirationDate;
-
+    private final LocalDateTime expirationDate;
     private static final DateTimeFormatter EXP_FMT =
-            DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public ProductService(int id, LocalDate expirationDate, CategoryDTO category) {
+    public ProductService(int id, LocalDateTime expirationDate, CategoryDTO category) {
         // Servicios NO tienen nombre ni precio
         super(id, "", 0.0, 0);
         this.category = category;
@@ -25,24 +26,21 @@ public class ProductService extends AbstractProductDTO {
         return category;
     }
 
-    public LocalDate getExpirationDate() {
+    public LocalDateTime getExpirationDate() {
         return expirationDate;
     }
 
     @Override
     public boolean isValid() {
-        return !expirationDate.isBefore(LocalDate.now());
+        return !expirationDate.isBefore(LocalDateTime.now());
     }
 
     @Override
     public String toString() {
-        ZoneId zone = ZoneId.systemDefault(); // CET en tu output
-        ZonedDateTime zdt = expirationDate.atStartOfDay(zone);
-
         return "{class:" + getClass().getSimpleName() +
                 ", id:" + id +
                 ", category:" + category +
-                ", expiration:" + EXP_FMT.format(zdt) +
+                ", expiration:" + expirationDate.format(EXP_FMT) +
                 "}";
     }
 }

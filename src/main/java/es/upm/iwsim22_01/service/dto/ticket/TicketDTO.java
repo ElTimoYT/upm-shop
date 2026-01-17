@@ -45,7 +45,6 @@ public class TicketDTO {
     public TicketType getTicketType() {
         return ticketType;
     }
-
     public TicketState getTicketState() {
         return state;
     }
@@ -71,7 +70,7 @@ public class TicketDTO {
      *
      * @return Número total de unidades.
      */
-    private int totalUnits() {
+    protected int totalUnits() {
         int totalUnits = 0;
 
         for (AbstractProductDTO product : products) {
@@ -86,7 +85,7 @@ public class TicketDTO {
      *
      * @return Mapa con la cantidad de productos por categoría.
      */
-    private Map<CategoryDTO, Integer> countCategory() {
+    protected Map<CategoryDTO, Integer> countCategory() {
         Map<CategoryDTO, Integer> amounts = new EnumMap<>(CategoryDTO.class);
         for (CategoryDTO category : CategoryDTO.values()) amounts.put(category, 0);
 
@@ -106,7 +105,7 @@ public class TicketDTO {
      * @param counts Mapa con la cantidad de productos por categoría.
      * @return Descuento aplicable al producto.
      */
-    private double perItemDiscount(AbstractProductDTO product, Map<CategoryDTO, Integer> counts) {
+    protected double perItemDiscount(AbstractProductDTO product, Map<CategoryDTO, Integer> counts) {
         if (product instanceof UnitProductDTO unitProduct) {
             CategoryDTO category = unitProduct.getCategory();
             int n = counts.getOrDefault(category, 0);
@@ -125,7 +124,7 @@ public class TicketDTO {
      * @param v Valor a redondear.
      * @return Valor redondeado.
      */
-    private static double round1(double v) {
+    public static double round1(double v) {
         return Math.round(v * 100.0) / 100.0;
     }
 
@@ -134,7 +133,7 @@ public class TicketDTO {
      *
      * @return Precio total sin descuentos.
      */
-    private double totalPrice() {
+    protected double totalPrice() {
         double total = 0.0;
         for (AbstractProductDTO product : products) {
             total += product.getAmount() * product.getPrice();
@@ -149,7 +148,7 @@ public class TicketDTO {
      * @return Descuento total.
      */
 
-    private double discountPrice() {
+    protected double discountPrice() {
         Map<CategoryDTO, Integer> counts = countCategory();
         double discount = 0.0;
         for (AbstractProductDTO product : products) {

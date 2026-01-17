@@ -242,6 +242,7 @@ public class TicketNewCommandHandler implements CommandHandler {
         clientService.update(client);
 
         TicketPrinter printer = resolvePrinter(opt);
+        ticketService.setPrinterForTicket(ticket.getId(), printer);
         System.out.println(printer.print(ticket));
         System.out.println(TICKET_NEW_OK);
     }

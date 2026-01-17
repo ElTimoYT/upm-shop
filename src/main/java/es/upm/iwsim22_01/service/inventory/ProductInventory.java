@@ -8,6 +8,7 @@
     import java.util.LinkedHashMap;
     import java.util.Map;
 
+
     /**
      * Gestor de productos, encargado de la creación, validación y registro de instancias de {@link AbstractProductDTO}.
      * Permite añadir diferentes tipos de productos al sistema, validando sus parámetros y restricciones.
@@ -29,6 +30,7 @@
                 case PERSONALIZABLE_PRODUCT -> new PersonalizableProductDTO(model.getId(), model.getName(), CategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount(), model.getLines());
                 case CATERING -> new CateringDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
                 case MEETING -> new MeetingDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
+                case SERVICE -> new ProductService(model.getId(), model.getExpirationDate(), CategoryDTO.valueOf(model.getCategory()));
             };
         }
 
@@ -39,6 +41,7 @@
                 case UnitProductDTO unitProductDTO -> Product.createUnit(unitProductDTO.getId(), unitProductDTO.getName(), unitProductDTO.getCategory().toString(), unitProductDTO.getPrice(), unitProductDTO.getAmount());
                 case CateringDTO cateringDTO -> Product.createCatering(cateringDTO.getId(), cateringDTO.getName(), cateringDTO.getPrice(), cateringDTO.getAmount(), cateringDTO.getMaxParticipant(), cateringDTO.getExpirationDate(), cateringDTO.getParticipantsAmount());
                 case MeetingDTO meetingDTO -> Product.createMeeting(meetingDTO.getId(), meetingDTO.getName(), meetingDTO.getPrice(), meetingDTO.getAmount(), meetingDTO.getMaxParticipant(), meetingDTO.getExpirationDate(), meetingDTO.getParticipantsAmount());
+                case ProductService productService -> Product.createService(productService.getId(), productService.getExpirationDate(), String.valueOf(productService.getCategory()));
                 default -> throw new IllegalStateException("Unexpected product type: " + dto);
             };
         }
@@ -139,7 +142,7 @@
             }
 
             int id = nextServiceId++;
-            ProductService ps = new ProductService(id, expiration.toLocalDate(), category);
+            ProductService ps = new ProductService(id, expiration.toLocalDate().atStartOfDay(), category);
 
             services.put(id, ps);
 
@@ -174,4 +177,11 @@
         public boolean isProductListFull() {
             return getSize() >= ProductInventory.MAX_PRODUCTS;
         }
+        public boolean existsServiceId(int id) {
+            return services.containsKey(id);
+        }
+        public AbstractProductDTO getServiceDto(int id) {
+            return services.get(id);
+        }
+
 }

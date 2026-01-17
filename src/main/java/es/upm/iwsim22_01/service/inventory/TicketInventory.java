@@ -7,8 +7,12 @@ import es.upm.iwsim22_01.service.dto.ticket.CompanyTicketDTO;
 import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
+import es.upm.iwsim22_01.service.printer.ProductTicketPrinter;
+import es.upm.iwsim22_01.service.printer.TicketPrinter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
@@ -21,42 +25,49 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
 
     public TicketInventory(ProductInventory productService) {
         super(new TicketRepository());
-
         this.productService = productService;
     }
+    private final Map<Integer, TicketPrinter> printersByTicketId = new HashMap<>();
 
+    public void setPrinterForTicket(int ticketId, TicketPrinter printer) {
+        if (printer == null) return;
+        printersByTicketId.put(ticketId, printer);
+    }
+
+    public TicketPrinter getPrinterForTicket(int ticketId) {
+        // fallback razonable
+        return printersByTicketId.getOrDefault(ticketId, new ProductTicketPrinter());
+    }
     @Override
     protected TicketDTO toDto(Ticket model) {
+        TicketDTO.TicketType type = TicketDTO.TicketType.valueOf(model.getTicketType());
 
-        String typeStr = model.getTicketType();
-        TicketDTO.TicketType type = (typeStr == null || typeStr.isBlank())
-                ? TicketDTO.TicketType.COMMON   // default para tickets antiguos
-                : TicketDTO.TicketType.valueOf(typeStr);
+        var products = new ArrayList<>(model.getProducts().stream()
+                .map(productService::toDto)
+                .toList());
 
-        return new TicketDTO(
-                model.getId(),
-                model.getInitialDate(),
-                model.getFinalDate(),
-                TicketDTO.TicketState.valueOf(model.getTicketState()),
-                new ArrayList<>(model.getProducts().stream()
-                        .map(productService::toDto)
-                        .toList()),
-                type
-        );
+        TicketDTO.TicketState state = TicketDTO.TicketState.valueOf(model.getTicketState());
+        return switch (type) {
+            case COMPANY -> new CompanyTicketDTO(
+                    model.getId(),
+                    model.getInitialDate(),
+                    model.getFinalDate(),
+                    state,
+                    products
+            );
+            case COMMON -> new CommonTicketDTO(
+                    model.getId(),
+                    model.getInitialDate(),
+                    model.getFinalDate(),
+                    state,
+                    products
+            );
+        };
 
     }
 
     @Override
     protected Ticket toModel(TicketDTO dto) {
-        if (dto == null) throw new IllegalArgumentException("TicketDTO is null");
-        if (dto.getTicketType() == null) {
-            throw new IllegalStateException("TicketDTO.ticketType is null BEFORE saving, id=" + dto.getId());
-        }
-
-        if (dto.getTicketType() == null) {
-            throw new IllegalStateException("TicketDTO.ticketType is null for id=" + dto.getId());
-        }
-
         return new Ticket(
                 dto.getId(),
                 dto.getInitialDate(),

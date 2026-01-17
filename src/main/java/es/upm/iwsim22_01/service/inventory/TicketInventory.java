@@ -38,7 +38,9 @@ public class TicketInventory extends AbstractInventory<Ticket, TicketDTO, Intege
                 model.getInitialDate(),
                 model.getFinalDate(),
                 TicketDTO.TicketState.valueOf(model.getTicketState()),
-                model.getProducts().stream().map(productService::toDto).toList(),
+                new ArrayList<>(model.getProducts().stream()
+                        .map(productService::toDto)
+                        .toList()),
                 type
         );
 

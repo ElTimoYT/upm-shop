@@ -7,7 +7,7 @@ import es.upm.iwsim22_01.service.service.ProductService;
 import es.upm.iwsim22_01.service.service.TicketService;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -46,7 +46,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
                 return;
             }
 
-            int productId = tokens.nextInt();
+            String productId = tokens.next();
             if (!productService.existsId(productId)) {
                 System.out.println(ERROR_PRODUCT_NOT_FOUND);
                 return;

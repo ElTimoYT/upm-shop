@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public class ProdAddFoodCommandHandler implements CommandHandler {
     private static final String ERROR_MAX_PRODUCTS = "Maximum products reached.";
-    private static final String ERROR_INCORRECT_USE_ADDFOOD = "Incorrect use: prod addfood <id> <name> <price> <expirationDate> <maxPeople>";
+    private static final String ERROR_INCORRECT_USE_ADDFOOD = "Incorrect use: prod addfood [<id>] <name> <price> <expirationDate> <maxPeople>";
     private static final String ERROR_INVALID_ID = "Invalid id";
     private static final String ERROR_INVALID_PRICE = "Invalid price";
     private static final String ERROR_INVALID_DATE = "Invalid date";
@@ -30,14 +30,13 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
         }
 
         //id
-        if (!tokens.hasNextInt()) {
-            System.out.println(ERROR_INCORRECT_USE_ADDFOOD);
-            return;
-        }
-        int productId = tokens.nextInt();
-        if (productService.existsId(productId)) {
-            System.out.println(ERROR_INVALID_ID);
-            return;
+        Integer productId = null;
+        if (tokens.hasNextInt()) {
+            productId = tokens.nextInt();
+            if (productService.existsId(String.valueOf(productId))) {
+                System.out.println(ERROR_INVALID_ID);
+                return;
+            }
         }
 
         if (!tokens.hasNext()) {
@@ -84,13 +83,7 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
 
-        AbstractProductDTO food = productService.addFoodProduct(
-                productId,
-                name,
-                price,
-                expiration,
-                maxPeople
-        );
+        AbstractProductDTO food = productId == null ? productService.addFood(name, price, expiration, maxPeople) : productService.addFood(productId, name, price, expiration, maxPeople);
 
         System.out.println(food);
         System.out.println(PROD_ADD_OK);

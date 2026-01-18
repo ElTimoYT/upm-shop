@@ -2,9 +2,23 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Ticket;
 import es.upm.iwsim22_01.data.repository.TicketRepository;
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.product.FoodDTO;
+import es.upm.iwsim22_01.service.dto.product.MeetingDTO;
+import es.upm.iwsim22_01.service.dto.product.PersonalizableDTO;
+import es.upm.iwsim22_01.service.dto.product.ProductDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.category.ServiceCategoryDTO;
+import es.upm.iwsim22_01.service.dto.product.service.ServiceDTO;
+import es.upm.iwsim22_01.service.dto.ticket.OnlyProductsTicket;
+import es.upm.iwsim22_01.service.dto.ticket.OnlyServicesTicket;
+import es.upm.iwsim22_01.service.dto.ticket.ServicesAndProductsTicket;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.user.ClientDTO;
+import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
 
 import java.util.ArrayList;
+
+import static es.upm.iwsim22_01.data.models.Product.ProductType.PERSONALIZABLE_PRODUCT;
 
 /**
  * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
@@ -23,16 +37,12 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
 
     @Override
     protected TicketDTO toDto(Ticket model) {
-        return new TicketDTO(
-                model.getId(),
-                model.getInitialDate(),
-                model.getFinalDate(),
-                TicketDTO.TicketState.valueOf(model.getTicketState()),
-                new ArrayList<>(model.getProducts()
-                        .stream()
-                        .map(productService::toDto)
-                        .toList())
-        );
+        return switch (model.getTicketType()) {
+            case ONLY_PRODUCTS -> new OnlyProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case ONLY_SERVICES -> new OnlyServicesTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case SERVICES_AND_PRODUCTS -> new ServicesAndProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+        };
+
     }
 
     @Override
@@ -41,34 +51,44 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
                 dto.getId(),
                 dto.getInitialDate(),
                 dto.getFinalDate(),
-                dto.getState().toString(),
-                dto.getProducts()
-                        .stream()
-                        .map(productService::toModel)
-                        .toList()
+                dto.getState().name(),
+                dto.getProducts().stream().map(productService::toModel).toList(),
+                switch (dto.getTicketType()) {
+                    case ONLY_PRODUCTS -> Ticket.TicketType.ONLY_PRODUCTS;
+                    case ONLY_SERVICES -> Ticket.TicketType.ONLY_SERVICES;
+                    case SERVICES_AND_PRODUCTS -> Ticket.TicketType.SERVICES_AND_PRODUCTS;
+                }
         );
     }
 
-    /**
-     * Añade un nuevo ticket al sistema con el identificador especificado.
-     *
-     * @param id Identificador único del ticket (debe ser un número positivo con un máximo de {@value #TICKET_ID_LENGTH} dígitos).
-     * @return La instancia de {@link TicketDTO} creada.
-     * @throws IllegalArgumentException Si el formato del identificador no es válido.
-     */
-    public TicketDTO addTicket(int id) {
+    public TicketDTO addOnlyProductsTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
-        return add(new TicketDTO(id));
+        return add(new OnlyProductsTicket(id));
     }
 
-    /**
-     * Añade un nuevo ticket al sistema generando automáticamente un identificador único.
-     *
-     * @return La instancia de {@link TicketDTO} creada.
-     */
-    public TicketDTO addTicket() {
-        return addTicket(createNewId());
+    public TicketDTO addOnlyProductsTicket() {
+        return addOnlyProductsTicket(createNewId());
+    }
+
+    public TicketDTO addOnlyServicesTicket(int id) {
+        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
+
+        return add(new OnlyServicesTicket(id));
+    }
+
+    public TicketDTO addOnlyServicesTicket() {
+        return addOnlyServicesTicket(createNewId());
+    }
+
+    public TicketDTO addServicesAndProductsTicket(int id) {
+        if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
+
+        return add(new ServicesAndProductsTicket(id));
+    }
+
+    public TicketDTO addServicesAndProductsTicket() {
+        return addServicesAndProductsTicket(createNewId());
     }
 
     /**
@@ -88,7 +108,7 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
      *
      * @return Identificador único generado.
      */
-    private int createNewId() {
+    public int createNewId() {
         int id;
 
         do {

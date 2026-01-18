@@ -3,7 +3,7 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.service.TicketService;
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.Comparator;
 import java.util.List;

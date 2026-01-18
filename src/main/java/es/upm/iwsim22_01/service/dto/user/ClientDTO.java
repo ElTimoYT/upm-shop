@@ -1,6 +1,7 @@
 package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.service.dto.TicketDTO;
+import es.upm.iwsim22_01.data.models.Client;
+import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,9 @@ public class ClientDTO extends AbstractUserDTO {
     public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters, List<TicketDTO> tickets) {
         super(name, email, DNI);
         this.cashierWhoRegisters = cashierWhoRegisters;
-        this.tickets = tickets;
+        this.tickets = (tickets == null) ? new ArrayList<>() : new ArrayList<>(tickets);
     }
+
 
     /**
      * Constructor de la clase Client.
@@ -52,19 +54,15 @@ public class ClientDTO extends AbstractUserDTO {
     public List<TicketDTO> getTickets() {
         return new ArrayList<>(tickets);
     }
-
-    /**
-     * Devuelve una representación en cadena del cliente.
-     *
-     * @return Cadena que representa al cliente, incluyendo su identificador, nombre, correo y cajero asociado.
-     */
-    @Override
     public String toString() {
-        return "Client{" +
-                "id=" + getId() +
-                ",name=" + getName() +
-                ",email=" + getEmail() +
-                ",cash=" + cashierWhoRegisters.getId() +
+        return "ClientDTO{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", dni='" + getId() + '\'' +
+                ", email='" + getEmail() + '\'' +
+                ", cashierWhoRegisters=" + (cashierWhoRegisters != null ? cashierWhoRegisters.getId() : "null") +
                 '}';
     }
+
+
 }

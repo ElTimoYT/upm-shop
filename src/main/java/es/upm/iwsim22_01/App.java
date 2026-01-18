@@ -12,10 +12,7 @@ import es.upm.iwsim22_01.commands.handlers.cashier.CashierCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.client.ClientCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.prod.ProdCommandHandler;
 import es.upm.iwsim22_01.commands.handlers.ticket.TicketCommandHandler;
-import es.upm.iwsim22_01.service.service.CashierService;
-import es.upm.iwsim22_01.service.service.ClientService;
-import es.upm.iwsim22_01.service.service.ProductService;
-import es.upm.iwsim22_01.service.service.TicketService;
+import es.upm.iwsim22_01.service.service.*;
 
 /**
  * Clase principal de la aplicación de gestión de tickets.

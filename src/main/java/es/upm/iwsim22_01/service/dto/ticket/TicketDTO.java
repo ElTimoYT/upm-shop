@@ -1,7 +1,12 @@
-package es.upm.iwsim22_01.service.dto;
+package es.upm.iwsim22_01.service.dto.ticket;
 
+import es.upm.iwsim22_01.service.dto.product.category.Categorizable;
+import es.upm.iwsim22_01.service.dto.product.category.Category;
+import es.upm.iwsim22_01.service.dto.Validable;
 import es.upm.iwsim22_01.service.dto.product.*;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
 
+import java.nio.file.attribute.AttributeView;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -19,26 +24,37 @@ public class TicketDTO {
     private Date finalDate;
     private TicketState state;
     private final List<AbstractProductDTO> products;
+    private TicketType ticketType;
 
-    public TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products) {
+    public enum TicketType {
+        ONLY_PRODUCTS,
+        ONLY_SERVICES,
+        SERVICES_AND_PRODUCTS;
+    }
+
+    protected TicketDTO(int id, Date initialDate, Date finalDate, TicketState state, List<AbstractProductDTO> products, TicketType ticketType) {
         this.id = id;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.state = state;
         this.products = products;
+        this.ticketType = ticketType;
     }
 
-    public TicketDTO(int id, Date initialDate, Date finalDate) {
-        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>());
+    protected TicketDTO(int id, Date initialDate, Date finalDate, TicketType ticketType) {
+        this(id, initialDate, finalDate, TicketState.EMPTY, new ArrayList<>(), ticketType);
     }
 
-    /**
-     * Constructor de la clase Ticket.
-     *
-     * @param id Identificador único del ticket.
-     */
-    public TicketDTO(int id) {
-        this(id, new Date(), null);
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public TicketState getTicketState() {
+        return state;
+    }
+
+    protected void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
     }
 
     /**
@@ -74,14 +90,13 @@ public class TicketDTO {
      *
      * @return Mapa con la cantidad de productos por categoría.
      */
-    private Map<CategoryDTO, Integer> countCategory() {
-        Map<CategoryDTO, Integer> amounts = new EnumMap<>(CategoryDTO.class);
-        for (CategoryDTO category : CategoryDTO.values()) amounts.put(category, 0);
+    private Map<Category, Integer> countCategories() {
+        Map<Category, Integer> amounts = new HashMap<>();
 
-        for (AbstractProductDTO product : products) if (product instanceof UnitProductDTO unitProduct) {
-            CategoryDTO category = unitProduct.getCategory();
+        for (AbstractProductDTO product : products) if (product instanceof Categorizable hasCategory) {
+            Category category = hasCategory.getCategory();
 
-            amounts.put(category, amounts.get(category) + product.getAmount());
+            amounts.put(category, amounts.getOrDefault(category, 0) + product.getAmount());
         }
 
         return amounts;
@@ -94,9 +109,9 @@ public class TicketDTO {
      * @param counts Mapa con la cantidad de productos por categoría.
      * @return Descuento aplicable al producto.
      */
-    private double perItemDiscount(AbstractProductDTO product, Map<CategoryDTO, Integer> counts) {
-        if (product instanceof UnitProductDTO unitProduct) {
-            CategoryDTO category = unitProduct.getCategory();
+    private double perItemDiscount(AbstractProductDTO product, Map<Category, Integer> counts) {
+        if (product instanceof ProductDTO unitProduct) {
+            ProductCategoryDTO category = unitProduct.getCategory();
             int n = counts.getOrDefault(category, 0);
             if (n < 2) {
                 return 0.0;
@@ -138,7 +153,7 @@ public class TicketDTO {
      */
 
     private double discountPrice() {
-        Map<CategoryDTO, Integer> counts = countCategory();
+        Map<Category, Integer> counts = countCategories();
         double discount = 0.0;
         for (AbstractProductDTO product : products) {
             double perItem = perItemDiscount(product, counts);
@@ -156,55 +171,24 @@ public class TicketDTO {
      */
     public boolean addProduct(AbstractProductDTO productToAdd, int quantity) {
         if (productToAdd == null || quantity <= 0) return false;
+        if (productToAdd instanceof Validable validable && !validable.isValid()) return false;
 
         int remaining = MAX_PRODUCTS - totalUnits();
         if (quantity > remaining) return false;
 
-        AbstractProductDTO product = productToAdd.clone();
-        if (products.contains(product)) {
-            products.get(products.indexOf(product)).addAmount(quantity);
+        if (products.contains(productToAdd)) {
+            products.get(products.indexOf(productToAdd)).addAmount(quantity);
         } else {
-            product.addAmount(quantity);
-            products.add(product);
+            productToAdd.addAmount(quantity);
+            products.add(productToAdd);
         }
 
-        state = TicketState.OPEN;
-        return true;
-    }
-
-    /**
-     * Añade un producto personalizable al ticket.
-     *
-     * @param personalizableProduct Producto personalizable a añadir.
-     * @param quantity Cantidad del producto.
-     * @param lines Líneas de personalización.
-     * @return true si el producto se añadió correctamente, false en caso contrario.
-     */
-    public boolean addProduct(PersonalizableProductDTO personalizableProduct, int quantity, String[] lines) {
-        if (personalizableProduct == null || quantity <= 0) return false;
-        if (lines == null) lines = new String[0];
-        if (personalizableProduct.getMaxPers() < lines.length) return false;
-
-        int remaining = MAX_PRODUCTS - totalUnits();
-        if (quantity > remaining) return false;
-
-
-        int numTexts = 0;
-        for (String t : lines) {
-            if (t != null && !t.isBlank()) {
-                numTexts++;
-            }
+        if (productToAdd instanceof PersonalizableDTO personalizableDTO) {
+            double basePrice = productToAdd.getPrice();
+            double newPrice = basePrice * (1 + 0.10 * Arrays.stream(personalizableDTO.getLines()).filter(l -> l != null && !l.isEmpty()).count());
+            productToAdd.setPrice(newPrice);
         }
 
-        double basePrice = personalizableProduct.getPrice();
-        double newPrice = basePrice * (1 + 0.10 * numTexts);
-
-        PersonalizableProductDTO product = personalizableProduct.clone();
-        product.addAmount(quantity);
-        product.setPrice(newPrice);
-        product.setLines(lines);
-
-        products.add(product);
         state = TicketState.OPEN;
         return true;
     }
@@ -285,10 +269,10 @@ public class TicketDTO {
         StringBuilder sb = new StringBuilder();
         sb.append("Ticket: ").append(getFormattedId()).append("\n");
 
-        Map<CategoryDTO, Integer> counts = countCategory();
+        Map<Category, Integer> counts = countCategories();
         List<AbstractProductDTO> sortedItems = new ArrayList<>(products);
         sortedItems.sort(Comparator.comparing(
-                AbstractProductDTO::getName,
+                product -> {return product.getName() == null ? "" : product.getName();},
                 String.CASE_INSENSITIVE_ORDER
         ));
 
@@ -296,7 +280,7 @@ public class TicketDTO {
             double discountPerItem = perItemDiscount(product, counts);
 
 
-            if (product instanceof AbstractServiceDTO service) {
+            if (product instanceof AbstractPeopleProductDTO service) {
                 sb.append(service.printTicketWithPeople()).append("\n");
                 continue;
             }
@@ -330,7 +314,10 @@ public class TicketDTO {
      * @return true si todos los productos de servicio son válidos, false en caso contrario.
      */
     public boolean areAllServiceProductsValid() {
-        return products.stream().allMatch(AbstractProductDTO::isValid);
+        return products.stream()
+                .filter(p -> p instanceof Validable)
+                .map(p -> (Validable) p)
+                .allMatch(Validable::isValid);
     }
 
     /**

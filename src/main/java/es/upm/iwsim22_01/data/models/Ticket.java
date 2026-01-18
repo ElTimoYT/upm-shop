@@ -10,13 +10,23 @@ public class Ticket {
     private Date finalDate;
     private String ticketState;
     private List<Product> products;
+    private TicketType ticketType;
 
-    public Ticket(int id, Date initialDate, Date finalDate, String ticketState, List<Product> products) {
+    public Ticket(int id, Date initialDate, Date finalDate, String ticketState, List<Product> products, TicketType ticketType) {
         this.id = id;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
         this.ticketState = ticketState;
         this.products = products == null ? new ArrayList<>() : products;
+        this.ticketType = ticketType;
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
     }
 
     public int getId() {
@@ -69,5 +79,11 @@ public class Ticket {
         }
 
         return false;
+    }
+
+    public enum TicketType {
+        ONLY_PRODUCTS,
+        ONLY_SERVICES,
+        SERVICES_AND_PRODUCTS;
     }
 }

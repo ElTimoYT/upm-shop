@@ -18,13 +18,13 @@ public class ProdCommandHandler implements CommandHandler {
 
     private final CommandDispatcher productCommandDispatcher = new  CommandDispatcher(ERROR_INCORRECT_USE, ERROR_INCORRECT_USE);
     
-    public ProdCommandHandler(ProductService productService) {
-        productCommandDispatcher.addCommand(ADD, new ProdAddCommandHandler(productService));
-        productCommandDispatcher.addCommand(LIST, new ProdListCommandHandler(productService));
-        productCommandDispatcher.addCommand(REMOVE, new ProdRemoveCommandHandler(productService));
-        productCommandDispatcher.addCommand(ADD_FOOD, new ProdAddFoodCommandHandler(productService));
-        productCommandDispatcher.addCommand(ADD_MEETING, new ProdAddMeetingCommandHandler(productService));
-        productCommandDispatcher.addCommand(UPDATE, new ProdUpdateCommandHandler(productService));
+    public ProdCommandHandler(ProductService productInventory) {
+        productCommandDispatcher.addCommand(ADD, new ProdAddCommandHandler(productInventory));
+        productCommandDispatcher.addCommand(LIST, new ProdListCommandHandler(productInventory));
+        productCommandDispatcher.addCommand(REMOVE, new ProdRemoveCommandHandler(productInventory));
+        productCommandDispatcher.addCommand(ADD_FOOD, new ProdAddFoodCommandHandler(productInventory));
+        productCommandDispatcher.addCommand(ADD_MEETING, new ProdAddMeetingCommandHandler(productInventory));
+        productCommandDispatcher.addCommand(UPDATE, new ProdUpdateCommandHandler(productInventory));
     }
     
     @Override

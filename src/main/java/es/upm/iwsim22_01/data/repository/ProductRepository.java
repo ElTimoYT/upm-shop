@@ -6,7 +6,7 @@ import es.upm.iwsim22_01.data.models.Product;
 import java.io.*;
 import java.util.*;
 
-public class ProductRepository extends AbstractRepository<Product, Integer> {
+public class ProductRepository extends AbstractRepository<Product, String> {
 
     private int autoincrementId = 1;
 
@@ -16,7 +16,7 @@ public class ProductRepository extends AbstractRepository<Product, Integer> {
     }
 
     @Override
-    protected Integer getId(Product product) {
+    protected String getId(Product product) {
         return product.getId();
     }
 

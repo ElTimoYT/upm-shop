@@ -16,6 +16,7 @@ public class Client {
         this.dni = dni;
         this.cashierWhoRegisters = cashierWhoRegisters;
         this.tickets = tickets == null ? new ArrayList<>() : tickets;
+        this.dni=dni;
     }
 
     public String getName() {
@@ -58,6 +59,7 @@ public class Client {
         this.tickets = tickets;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
@@ -69,4 +71,6 @@ public class Client {
 
         return false;
     }
+
+
 }

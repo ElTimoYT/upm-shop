@@ -1,13 +1,16 @@
 package es.upm.iwsim22_01.service.dto.product;
 
+import es.upm.iwsim22_01.service.dto.product.category.Categorizable;
+import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
+
 /**
  * Clase que representa un producto unitario, especialización de AbstractProduct.
  * Incluye información sobre la categoría del producto, que determina el descuento aplicable.
  */
-public class UnitProductDTO extends AbstractProductDTO {
-    private CategoryDTO category;
+public class ProductDTO extends AbstractProductDTO implements Categorizable {
+    private ProductCategoryDTO category;
 
-    public UnitProductDTO(int id, String name, CategoryDTO category, double price, int amount) {
+    public ProductDTO(String id, String name, ProductCategoryDTO category, double price, int amount) {
         super(id,  name, price, amount);
 
         this.category = category;
@@ -21,7 +24,7 @@ public class UnitProductDTO extends AbstractProductDTO {
      * @param category Categoría del producto.
      * @param price Precio del producto.
      */
-    public UnitProductDTO(int id, String name, CategoryDTO category, double price) {
+    public ProductDTO(String id, String name, ProductCategoryDTO category, double price) {
         super(id,  name, price);
 
         this.category = category;
@@ -32,7 +35,8 @@ public class UnitProductDTO extends AbstractProductDTO {
      *
      * @return La categoría del producto.
      */
-    public CategoryDTO getCategory() {
+    @Override
+    public ProductCategoryDTO getCategory() {
         return category;
     }
 
@@ -41,7 +45,7 @@ public class UnitProductDTO extends AbstractProductDTO {
      *
      * @param category Nueva categoría para el producto.
      */
-    public void setCategory(CategoryDTO category) {
+    public void setCategory(ProductCategoryDTO category) {
         this.category = category;
     }
 

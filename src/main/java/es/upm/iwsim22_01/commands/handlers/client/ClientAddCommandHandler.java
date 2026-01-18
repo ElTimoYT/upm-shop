@@ -37,7 +37,11 @@ public class ClientAddCommandHandler  implements CommandHandler {
                 System.out.println(ERROR_ID_ALREADY_FOUND);
                 return;
             }
-            if (!clientService.checkDNI(clientTentativeId)) {
+
+            boolean isCompany = clientService.checkNIF(clientTentativeId); // 👈 nuevo
+            boolean isUser = clientService.checkDNI(clientTentativeId);
+
+            if (!isCompany && !isUser) {
                 System.out.println(ERROR_DNI_INVALID);
                 return;
             }
@@ -53,7 +57,12 @@ public class ClientAddCommandHandler  implements CommandHandler {
                 return;
             }
 
-            ClientDTO client = clientService.addClient(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            ClientDTO client;
+            if (isCompany) {
+                client = clientService.addCompany(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            } else {
+                client = clientService.addUser(clientTentativeName, clientTentativeId, clientTentativeEmail, cashierTentativeId);
+            }
             System.out.println(client);
             System.out.println(OK_CLIENT_ADD);
         } catch (NoSuchElementException | IllegalArgumentException exception) {

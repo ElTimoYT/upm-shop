@@ -18,17 +18,18 @@ public class ProdRemoveCommandHandler implements CommandHandler {
 
     @Override
     public void runCommand(CommandTokens tokens) {
-        if (!tokens.hasNextInt()) {
+        if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_REMOVE);
             return;
         }
-        int productId = tokens.nextInt();
-        if (!productService.existsId(productId)) {
+
+        String productId = tokens.next();
+        if (!productService.existsId(String.valueOf(productId))) {
             System.out.println(ERROR_PRODUCT_NOT_FOUND);
             return;
         }
 
-        AbstractProductDTO product = productService.get(productId);
+        AbstractProductDTO product = productService.get(String.valueOf(productId));
 
         productService.remove(productId);
 

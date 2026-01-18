@@ -1,15 +1,18 @@
-package es.upm.iwsim22_01.service.dto.product;
+package es.upm.iwsim22_01.service.dto.product.category;
 
 /**
  * Enumeración que representa las categorías de productos disponibles en el sistema.
  * Cada categoría está asociada a un descuento específico.
  */
-public enum CategoryDTO {
+public enum ProductCategoryDTO implements Category {
     MERCH(0),
     STATIONARY(0.05),
     CLOTHES(0.07),
     BOOK(0.1),
-    ELECTRONICS(0.03);
+    ELECTRONICS(0.03),
+    INSURANCE(0.15),
+    SHOW(0.15),
+    TRANSPORT(0.15);
 
 
     private final double discount;
@@ -19,7 +22,7 @@ public enum CategoryDTO {
      *
      * @param discount Descuento asociado a la categoría.
      */
-    CategoryDTO(double discount) {
+    ProductCategoryDTO(double discount) {
         this.discount = discount;
     }
 
@@ -28,6 +31,7 @@ public enum CategoryDTO {
      *
      * @return El descuento asociado a la categoría.
      */
+    @Override
     public double getDiscount() {
         return this.discount;
     }

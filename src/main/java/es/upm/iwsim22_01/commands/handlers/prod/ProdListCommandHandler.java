@@ -24,7 +24,7 @@ public class ProdListCommandHandler implements CommandHandler {
         System.out.println(CATALOG);
 
         productService.getAll().stream()
-                .sorted(Comparator.comparingInt(AbstractProductDTO::getId))
+                .sorted(Comparator.comparing(AbstractProductDTO::getId))
                 .forEach(p -> System.out.println("\t" + p));
 
         System.out.println(PROD_LIST_OK);

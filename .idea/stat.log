@@ -4011,3 +4011,14 @@
 {"ts":1768701912720,"action":"FILE_OPENED","file":"/src/main/java/es/upm/iwsim22_01/service/dto/ticket/AbstractTicketDTO.java","tags":{"FILE_LINE_OF_CODE":"159"}}
 {"ts":1768701916201,"action":"IDE_DEACTIVATED"}
 {"ts":1768701920728,"action":"IDE_ACTIVATED"}
+{"ts":1768702191538,"action":"IDE_ACTIVATED"}
+{"ts":1768702194663,"action":"IDE_DEACTIVATED"}
+{"ts":1768702215546,"action":"IDE_ACTIVATED"}
+{"ts":1768702219777,"action":"IDE_DEACTIVATED"}
+{"ts":1768702250313,"action":"IDE_ACTIVATED"}
+{"ts":1768702253372,"action":"IDE_DEACTIVATED"}
+{"ts":1768702319648,"action":"IDE_ACTIVATED"}
+{"ts":1768702356562,"action":"IDE_DEACTIVATED"}
+{"ts":1768702496237,"action":"IDE_ACTIVATED"}
+{"ts":1768702497985,"action":"FILE_CLOSED","file":"/src/main/java/es/upm/iwsim22_01/service/printer/ProductTicketPrinter.java","tags":{"FILE_LINE_OF_CODE":"38"}}
+{"ts":1768702497985,"action":"FILE_OPENED","file":"/src/main/java/es/upm/iwsim22_01/commands/handlers/ticket/TicketNewCommandHandler.java","tags":{"FILE_LINE_OF_CODE":"137"}}

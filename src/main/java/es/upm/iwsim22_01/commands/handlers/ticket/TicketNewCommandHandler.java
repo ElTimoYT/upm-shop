@@ -103,8 +103,7 @@ public class TicketNewCommandHandler implements CommandHandler {
             client.addTicket(ticket);
             clientService.update(client);
 
-            TicketPrinter printer = resolvePrinter(flag);
-            System.out.println(printer.print(ticket));
+            System.out.println(ticket.printTicket());
             System.out.println(TICKET_NEW_OK);
 
         } catch (Exception e) {
@@ -115,14 +114,6 @@ public class TicketNewCommandHandler implements CommandHandler {
     private boolean isValidForClient(ClientDTO client, String flag) {
         if (flag.equals("-p")) return true;
         return client instanceof CompanyDTO;
-    }
-
-    private TicketPrinter resolvePrinter(String flag) {
-        return switch (flag) {
-            case "-c" -> new CombinedTicketPrinter();
-            case "-s" -> new ServiceTicketPrinter();
-            default -> new ProductTicketPrinter();
-        };
     }
 
     private boolean isNumeric(String value) {

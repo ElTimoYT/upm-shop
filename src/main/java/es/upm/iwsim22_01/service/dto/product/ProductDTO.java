@@ -10,6 +10,16 @@ import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
 public class ProductDTO extends AbstractProductDTO implements Categorizable {
     private ProductCategoryDTO category;
 
+
+    /**
+     * Crea un producto unitario con cantidad disponible y categoría asociada.
+     *
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param category categoría del producto
+     * @param price precio del producto
+     * @param amount cantidad disponible
+     */
     public ProductDTO(String id, String name, ProductCategoryDTO category, double price, int amount) {
         super(id,  name, price, amount);
 
@@ -17,12 +27,12 @@ public class ProductDTO extends AbstractProductDTO implements Categorizable {
     }
 
     /**
-     * Constructor de la clase UnitProduct.
+     * Crea un producto unitario sin control de cantidad disponible.
      *
-     * @param id Identificador único del producto.
-     * @param name Nombre del producto.
-     * @param category Categoría del producto.
-     * @param price Precio del producto.
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param category categoría del producto
+     * @param price precio del producto
      */
     public ProductDTO(String id, String name, ProductCategoryDTO category, double price) {
         super(id,  name, price);

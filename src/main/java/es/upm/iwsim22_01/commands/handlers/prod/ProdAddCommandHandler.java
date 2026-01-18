@@ -38,7 +38,6 @@ public class ProdAddCommandHandler implements CommandHandler {
     }
 
     private void addProduct(CommandTokens tokens) {
-        //id
         Integer productId = null;
         if (tokens.hasNextInt()) {
             productId = tokens.nextInt();
@@ -48,7 +47,6 @@ public class ProdAddCommandHandler implements CommandHandler {
             }
         }
 
-        //name
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADD);
             return;
@@ -59,7 +57,6 @@ public class ProdAddCommandHandler implements CommandHandler {
             return;
         }
 
-        //category
         if (!tokens.hasNextProductCategory()) {
             if (!tokens.hasNext()) {
                 System.out.println(ERROR_INCORRECT_USE_ADD);
@@ -70,7 +67,6 @@ public class ProdAddCommandHandler implements CommandHandler {
         }
         ProductCategoryDTO category = tokens.nextProductCategory();
 
-        //price
         if (!tokens.hasNextDouble()) {
             if (!tokens.hasNext()) {
                 System.out.println(ERROR_INCORRECT_USE_ADD);
@@ -81,7 +77,6 @@ public class ProdAddCommandHandler implements CommandHandler {
         }
         double price = tokens.nextDouble();
 
-        //crear producto
         AbstractProductDTO created;
 
         if (tokens.hasNext()) {
@@ -107,10 +102,8 @@ public class ProdAddCommandHandler implements CommandHandler {
     }
 
     private void addService(CommandTokens tokens) {
-        // expiration
         LocalDateTime expiration = tokens.nextDate();
 
-        // category
         if (!tokens.hasNextServiceCategory()) {
             if (!tokens.hasNext()) {
                 System.out.println(ERROR_INCORRECT_USE_ADD_SERVICE);
@@ -122,7 +115,6 @@ public class ProdAddCommandHandler implements CommandHandler {
 
         ServiceCategoryDTO category = tokens.nextServiceCategory();
 
-        // No deben sobrar tokens
         if (tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_ADD_SERVICE);
             return;

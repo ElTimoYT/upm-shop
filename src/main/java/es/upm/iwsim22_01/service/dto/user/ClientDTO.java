@@ -5,28 +5,36 @@ import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Clase que representa a un cliente en el sistema, especialización de AbstractUser.
- * Un cliente está asociado a un cajero que lo registró y puede tener múltiples tickets.
+ * Clase que representa a un cliente del sistema con tickets asociados y un cajero que lo registró.
  */
 public class ClientDTO extends AbstractUserDTO {
     private CashierDTO cashierWhoRegisters;
     private List<AbstractTicketDTO> tickets;
 
+    /**
+     * Crea un cliente con todos sus atributos inicializados.
+     *
+     * @param name nombre del cliente
+     * @param DNI identificador único del cliente
+     * @param email correo electrónico del cliente
+     * @param cashierWhoRegisters cajero que registró al cliente
+     * @param tickets lista inicial de tickets del cliente
+     */
     public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters, List<AbstractTicketDTO> tickets) {
         super(name, email, DNI);
         this.cashierWhoRegisters = cashierWhoRegisters;
         this.tickets = (tickets == null) ? new ArrayList<>() : new ArrayList<>(tickets);
     }
 
-
     /**
-     * Constructor de la clase Client.
+     * Crea un cliente sin tickets asociados inicialmente.
      *
-     * @param name Nombre del cliente.
-     * @param DNI Identificador único del cliente (DNI/NIE).
-     * @param email Correo electrónico del cliente.
-     * @param cashierWhoRegisters Cajero que registró al cliente.
+     * @param name nombre del cliente
+     * @param DNI identificador único del cliente
+     * @param email correo electrónico del cliente
+     * @param cashierWhoRegisters cajero que registró al cliente
      */
     public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters) {
         this(name, DNI, email, cashierWhoRegisters, new ArrayList<>());
@@ -50,9 +58,20 @@ public class ClientDTO extends AbstractUserDTO {
         tickets.add(ticket);
     }
 
+    /**
+     * Devuelve una copia de la lista de tickets del cliente.
+     *
+     * @return lista de tickets del cliente
+     */
     public List<AbstractTicketDTO> getTickets() {
         return new ArrayList<>(tickets);
     }
+
+    /**
+     * Devuelve una representación textual del cliente con sus datos básicos.
+     *
+     * @return representación textual del cliente
+     */
     public String toString() {
         return "ClientDTO{" +
                 "id='" + getId() + '\'' +
@@ -62,6 +81,4 @@ public class ClientDTO extends AbstractUserDTO {
                 ", cashierWhoRegisters=" + (cashierWhoRegisters != null ? cashierWhoRegisters.getId() : "null") +
                 '}';
     }
-
-
 }

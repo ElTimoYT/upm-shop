@@ -7,6 +7,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+
+/**
+ * Adaptador para la serialización y deserialización de objetos Date
+ * usando Gson.
+ *
+ * Convierte fechas a su representación en milisegundos desde epoch
+ * y viceversa, facilitando la interoperabilidad con formatos JSON.
+ */
 public class DateAdapter implements JsonSerializer<Date>, JsonDeserializer<Date> {
     @Override
     public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {

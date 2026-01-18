@@ -36,7 +36,7 @@ public class Cashier {
         return id;
     }
 
-    public void setId(String id) {
+    public void setDNI(String id) {
         this.id = id;
     }
 
@@ -44,7 +44,7 @@ public class Cashier {
         return tickets;
     }
 
-    public void setTickets(List<Integer> tickets) {
+    public void setTicketsId(List<Integer> tickets) {
         this.tickets = tickets;
     }
 

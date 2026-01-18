@@ -6,23 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Clase que representa a un cajero en el sistema, especialización de AbstractUser.
- * Un cajero puede gestionar múltiples tickets asociados a su cuenta.
+ * Clase que representa a un cajero del sistema con capacidad para gestionar múltiples tickets.
  */
 public class CashierDTO extends AbstractUserDTO {
     private List<AbstractTicketDTO> tickets;
 
+    /**
+     * Crea un cajero con una lista inicial de tickets.
+     *
+     * @param name nombre del cajero
+     * @param email correo electrónico del cajero
+     * @param id identificador único del cajero
+     * @param tickets lista inicial de tickets
+     */
     public CashierDTO(String name, String email, String id, List<AbstractTicketDTO> tickets) {
         super(name, email , id);
         this.tickets = tickets;
     }
 
     /**
-     * Constructor de la clase Cashier.
+     * Crea un cajero sin tickets asociados inicialmente.
      *
-     * @param name Nombre del cajero.
-     * @param email Correo electrónico del cajero.
-     * @param id Identificador único del cajero.
+     * @param name nombre del cajero
+     * @param email correo electrónico del cajero
+     * @param id identificador único del cajero
      */
     public CashierDTO(String name, String email, String id) {
         this(name, email , id, new ArrayList<>());
@@ -58,28 +65,5 @@ public class CashierDTO extends AbstractUserDTO {
                 ", name='" + getName() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 "}";
-    }
-
-    /**
-     * Compara este cajero con otro objeto para determinar si son iguales.
-     * Utiliza la implementación de la clase padre.
-     *
-     * @param object Objeto con el que comparar.
-     * @return true si los objetos son iguales, false en caso contrario.
-     */
-    @Override
-    public boolean equals(Object object) {
-        return super.equals(object);
-    }
-
-    /**
-     * Genera un código hash para el cajero.
-     * Utiliza la implementación de la clase padre.
-     *
-     * @return Código hash del cajero.
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 }

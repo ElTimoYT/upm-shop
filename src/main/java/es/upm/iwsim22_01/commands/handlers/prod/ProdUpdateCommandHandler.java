@@ -35,7 +35,6 @@ public class ProdUpdateCommandHandler implements CommandHandler {
         }
         AbstractProductDTO product = productService.get(String.valueOf(productId));
 
-       //param
         if (!tokens.hasNext()) {
             System.out.println(ERROR_INCORRECT_USE_UPDATE);
             return;

@@ -7,7 +7,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Impresor de tickets que muestra únicamente productos ordenados alfabéticamente.
+ */
 public class ProductTicketPrinter implements TicketPrinter {
+
+    /**
+     * Genera la representación textual de un ticket que contiene solo productos.
+     *
+     * @param ticket ticket a imprimir
+     * @return representación textual del ticket
+     */
     @Override
     public String print(AbstractTicketDTO ticket) {
         StringBuilder sb = new StringBuilder();

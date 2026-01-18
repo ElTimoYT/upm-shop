@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Gestor de cajeros, encargado de la creación, validación y eliminación de instancias de {@link CashierDTO}.
- * Extiende {@link AbstractService} para heredar funcionalidades básicas de gestión de entidades.
+ * Servicio encargado de la gestión de cajeros incluyendo creación, validación y conversión entre modelo y DTO.
  */
 public class CashierService extends AbstractService<Cashier, CashierDTO, String> {
     private static final int CASHIER_ID_LENGTH = 7;
@@ -19,12 +18,23 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
 
     private final TicketService ticketService;
 
+    /**
+     * Crea el servicio de cajeros utilizando el servicio de tickets.
+     *
+     * @param ticketService servicio de tickets asociado
+     */
     public CashierService(TicketService ticketService) {
         super(new CashierRepository());
 
         this.ticketService = ticketService;
     }
 
+    /**
+     * Convierte un modelo Cashier en su correspondiente DTO incluyendo los tickets asociados.
+     *
+     * @param model modelo de cajero
+     * @return DTO del cajero
+     */
     @Override
     protected CashierDTO toDto(Cashier model) {
         List<AbstractTicketDTO> tickets = new ArrayList<>();
@@ -45,6 +55,12 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
         );
     }
 
+    /**
+     * Convierte un DTO de cajero en su modelo de dominio correspondiente.
+     *
+     * @param dto DTO del cajero
+     * @return modelo de cajero
+     */
     @Override
     protected Cashier toModel(CashierDTO dto) {
         return new Cashier(

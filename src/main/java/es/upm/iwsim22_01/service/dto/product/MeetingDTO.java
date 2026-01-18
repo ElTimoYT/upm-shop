@@ -10,18 +10,30 @@ import java.time.LocalTime;
  * asegurando que se cumplan los plazos mínimos de reserva y cancelación.
  */
 public class MeetingDTO extends AbstractPeopleProductDTO {
+    /**
+     * Crea un producto de reunión con control de cantidad disponible.
+     *
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio por persona
+     * @param amount cantidad disponible
+     * @param maxPers número máximo de participantes
+     * @param expirationDate fecha y hora de la reunión
+     * @param participantsAmount número actual de participantes
+     */
     public MeetingDTO(String id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id, name, price, amount, maxPers, expirationDate, participantsAmount);
     }
 
     /**
-     * Constructor de la clase Meeting.
+     * Crea un producto de reunión sin control de cantidad disponible.
      *
-     * @param id               Identificador único del producto.
-     * @param name             Nombre del producto.
-     * @param price   Precio por persona.
-     * @param maxPers          Número máximo de participantes.
-     * @param expirationDate   Fecha y hora de caducidad/reserva del servicio.
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio por persona
+     * @param maxPers número máximo de participantes
+     * @param expirationDate fecha y hora de la reunión
+     * @param participantsAmount número actual de participantes
      */
     public MeetingDTO(String id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id, name, price, maxPers, expirationDate, participantsAmount);

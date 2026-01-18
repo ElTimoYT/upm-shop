@@ -20,8 +20,6 @@ public class ServiceTicketPrinter implements  TicketPrinter {
             return sb.toString();
         }
 
-        items.sort(Comparator.comparing(AbstractProductDTO::getName, String.CASE_INSENSITIVE_ORDER));
-
         sb.append("Services Included:\n");
         for (AbstractProductDTO product : items) {
             sb.append(product).append("\n");

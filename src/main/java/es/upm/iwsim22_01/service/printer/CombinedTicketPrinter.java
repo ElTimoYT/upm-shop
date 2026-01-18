@@ -27,7 +27,6 @@ public class CombinedTicketPrinter implements TicketPrinter {
             else products.add(p);
         }
 
-        services.sort(Comparator.comparing(AbstractProductDTO::getName, String.CASE_INSENSITIVE_ORDER));
         products.sort(Comparator.comparing(AbstractProductDTO::getName, String.CASE_INSENSITIVE_ORDER));
 
         sb.append("Services Included:\n");

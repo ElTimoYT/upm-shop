@@ -30,7 +30,7 @@
                 case PERSONALIZABLE_PRODUCT -> new PersonalizableDTO(model.getId(), model.getName(), ProductCategoryDTO.valueOf(model.getCategory()), model.getPrice(), model.getAmount(), model.getLines());
                 case CATERING -> new FoodDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
                 case MEETING -> new MeetingDTO(model.getId(), model.getName(), model.getPrice(), model.getAmount(), model.getMaxParticipant(), model.getExpirationDate(), model.getParticipantsAmount());
-                case SERVICE -> new ServiceDTO(model.getId(), model.getExpirationDate().toLocalDate(), ServiceCategoryDTO.valueOf(model.getCategory()));
+                case SERVICE -> new ServiceDTO(model.getId(), model.getAmount(), model.getExpirationDate().toLocalDate(), ServiceCategoryDTO.valueOf(model.getCategory()));
             };
         }
 
@@ -41,7 +41,7 @@
                 case ProductDTO productDTO -> Product.createUnit(productDTO.getId(), productDTO.getName(), productDTO.getCategory().toString(), productDTO.getPrice(), productDTO.getAmount());
                 case FoodDTO foodDTO -> Product.createCatering(foodDTO.getId(), foodDTO.getName(), foodDTO.getPrice(), foodDTO.getAmount(), foodDTO.getMaxParticipant(), foodDTO.getExpirationDate(), foodDTO.getParticipantsAmount());
                 case MeetingDTO meetingDTO -> Product.createMeeting(meetingDTO.getId(), meetingDTO.getName(), meetingDTO.getPrice(), meetingDTO.getAmount(), meetingDTO.getMaxParticipant(), meetingDTO.getExpirationDate(), meetingDTO.getParticipantsAmount());
-                case ServiceDTO serviceDTO -> Product.createService(serviceDTO.getId(), serviceDTO.getCategory().toString(), serviceDTO.getExpirationDate().atStartOfDay());
+                case ServiceDTO serviceDTO -> Product.createService(serviceDTO.getId(), serviceDTO.getAmount(), serviceDTO.getCategory().toString(), serviceDTO.getExpirationDate().atStartOfDay());
                 default -> throw new IllegalStateException("Unexpected product type: " + dto);
             };
         }
@@ -149,7 +149,7 @@
         public AbstractProductDTO addService(ServiceCategoryDTO category, LocalDateTime expirationDate) {
             if (isProductListFull()) throw new IllegalArgumentException("Product cannot be added, there are " + MAX_PRODUCTS + " or more products.");
 
-            return add(new ServiceDTO(productRepository.nextAutoincrementId() + "S", expirationDate.toLocalDate(), category));
+            return add(new ServiceDTO(productRepository.nextAutoincrementId() + "S", 0, expirationDate.toLocalDate(), category));
         }
 
         /**

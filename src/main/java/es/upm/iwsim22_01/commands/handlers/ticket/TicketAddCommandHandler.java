@@ -63,7 +63,7 @@ public class TicketAddCommandHandler implements CommandHandler {
                 return;
             }
 
-            int amount = tokens.nextInt();
+            int amount = tokens.hasNextInt() ? tokens.nextInt() : 1;
             if (amount <= 0 || amount > TicketDTO.MAX_PRODUCTS) {
                 System.out.println(ERROR_INVALID_AMOUNT);
                 return;

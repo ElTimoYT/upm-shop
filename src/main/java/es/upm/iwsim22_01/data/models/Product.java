@@ -50,8 +50,8 @@ public class Product {
         return new Product(ProductType.MEETING, id, name, price, amount, null, null, maxParticipant, expirationDate, participantsAmount);
     }
 
-    public static Product createService(String id, String category, LocalDateTime expirationDate) {
-        return new Product(ProductType.SERVICE, id, null, null, null, category, null, null, expirationDate, null);
+    public static Product createService(String id, int amount, String category, LocalDateTime expirationDate) {
+        return new Product(ProductType.SERVICE, id, null, null, amount, category, null, null, expirationDate, null);
     }
 
     public String getId() {

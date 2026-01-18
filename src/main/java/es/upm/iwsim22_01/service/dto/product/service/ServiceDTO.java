@@ -18,8 +18,8 @@ public class ServiceDTO extends AbstractProductDTO implements Validable, Categor
     private static final DateTimeFormatter EXP_FMT =
             DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
-    public ServiceDTO(String id, LocalDate expirationDate, ServiceCategoryDTO category) {
-        super(id, null, 0);
+    public ServiceDTO(String id, int amount, LocalDate expirationDate, ServiceCategoryDTO category) {
+        super(id, null, 0, amount);
         this.category = category;
         this.expirationDate = expirationDate;
     }

@@ -185,7 +185,7 @@ public class TicketDTO {
 
         if (productToAdd instanceof PersonalizableDTO personalizableDTO) {
             double basePrice = productToAdd.getPrice();
-            double newPrice = basePrice * (1 + 0.10 * personalizableDTO.getLines().length);
+            double newPrice = basePrice * (1 + 0.10 * Arrays.stream(personalizableDTO.getLines()).filter(l -> l != null && !l.isEmpty()).count());
             productToAdd.setPrice(newPrice);
         }
 
@@ -272,7 +272,7 @@ public class TicketDTO {
         Map<Category, Integer> counts = countCategories();
         List<AbstractProductDTO> sortedItems = new ArrayList<>(products);
         sortedItems.sort(Comparator.comparing(
-                AbstractProductDTO::getName,
+                product -> {return product.getName() == null ? "" : product.getName();},
                 String.CASE_INSENSITIVE_ORDER
         ));
 

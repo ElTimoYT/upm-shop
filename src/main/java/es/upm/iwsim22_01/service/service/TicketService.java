@@ -16,6 +16,8 @@ import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
 
+import java.util.ArrayList;
+
 import static es.upm.iwsim22_01.data.models.Product.ProductType.PERSONALIZABLE_PRODUCT;
 
 /**
@@ -36,24 +38,15 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
     @Override
     protected TicketDTO toDto(Ticket model) {
         return switch (model.getTicketType()) {
-            case ONLY_PRODUCTS -> new OnlyProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), model.getProducts().stream().map(productService::toDto).toList());
-            case ONLY_SERVICES -> new OnlyServicesTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), model.getProducts().stream().map(productService::toDto).toList());
-            case SERVICES_AND_PRODUCTS -> new ServicesAndProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), model.getProducts().stream().map(productService::toDto).toList());
+            case ONLY_PRODUCTS -> new OnlyProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case ONLY_SERVICES -> new OnlyServicesTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case SERVICES_AND_PRODUCTS -> new ServicesAndProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
         };
 
     }
 
     @Override
     protected Ticket toModel(TicketDTO dto) {
-        if (dto == null) throw new IllegalArgumentException("TicketDTO is null");
-        if (dto.getTicketType() == null) {
-            throw new IllegalStateException("TicketDTO.ticketType is null BEFORE saving, id=" + dto.getId());
-        }
-
-        if (dto.getTicketType() == null) {
-            throw new IllegalStateException("TicketDTO.ticketType is null for id=" + dto.getId());
-        }
-
         return new Ticket(
                 dto.getId(),
                 dto.getInitialDate(),

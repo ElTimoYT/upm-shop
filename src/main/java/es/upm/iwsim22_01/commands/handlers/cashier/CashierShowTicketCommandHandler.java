@@ -4,7 +4,7 @@ import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +35,7 @@ public class CashierShowTicketCommandHandler implements CommandHandler {
             CashierDTO cashier = cashierService.get(id);
 
             System.out.println("Tickets: ");
-            List<TicketDTO> tickets = cashier.getTickets();
+            List<AbstractTicketDTO> tickets = cashier.getTickets();
 
             if (tickets != null && !tickets.isEmpty()) {
                 tickets.stream()

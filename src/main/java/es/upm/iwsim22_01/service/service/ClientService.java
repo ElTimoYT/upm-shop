@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Client;
 import es.upm.iwsim22_01.data.repository.ClientRepository;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
@@ -64,7 +64,7 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
                 dto.getCashier().getId(),
                 dto.getTickets()
                         .stream()
-                        .map(TicketDTO::getId)
+                        .map(AbstractTicketDTO::getId)
                         .toList()
         );
     }

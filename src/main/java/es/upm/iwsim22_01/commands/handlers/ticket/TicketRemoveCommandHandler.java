@@ -7,7 +7,7 @@ import es.upm.iwsim22_01.service.service.ProductService;
 import es.upm.iwsim22_01.service.service.TicketService;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -53,7 +53,7 @@ public class TicketRemoveCommandHandler implements CommandHandler {
             }
 
             AbstractProductDTO product = productService.get(productId);
-            TicketDTO ticket = ticketService.get(ticketId);
+            AbstractTicketDTO ticket = ticketService.get(ticketId);
             CashierDTO cashier = cashierService.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);

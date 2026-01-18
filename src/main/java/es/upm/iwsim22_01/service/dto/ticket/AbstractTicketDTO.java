@@ -90,14 +90,30 @@ public abstract class AbstractTicketDTO {
         if (product instanceof Validable v && !v.isValid()) return false;
         if (quantity > MAX_PRODUCTS - totalUnits()) return false;
 
-        if (products.contains(product)) products.get(products.indexOf(product)).addAmount(quantity);
-        else { product.addAmount(quantity); products.add(product); }
-
         if (product instanceof PersonalizableDTO p) {
-            long lines = Arrays.stream(p.getLines())
-                    .filter(l -> l != null && !l.isEmpty())
-                    .count();
-            product.setPrice(product.getPrice() * (1 + 0.10 * lines));
+            boolean hasPersonalization = Arrays.stream(p.getLines())
+                    .anyMatch(l -> l != null && !l.isEmpty());
+
+            if (hasPersonalization) {
+                product.addAmount(quantity);
+                products.add(product);
+
+                long linesCount = Arrays.stream(p.getLines())
+                        .filter(l -> l != null && !l.isEmpty())
+                        .count();
+                product.setPrice(product.getPrice() * (1 + 0.10 * linesCount));
+
+                state = TicketState.OPEN;
+                return true;
+            }
+        }
+
+        int idx = products.indexOf(product);
+        if (idx >= 0) {
+            products.get(idx).addAmount(quantity);
+        } else {
+            product.addAmount(quantity);
+            products.add(product);
         }
 
         state = TicketState.OPEN;

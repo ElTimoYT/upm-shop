@@ -3,6 +3,7 @@ package es.upm.iwsim22_01.service.dto.product;
 import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Clase que representa un producto personalizable, especialización de UnitProduct.
@@ -60,15 +61,19 @@ public class PersonalizableDTO extends ProductDTO implements Cloneable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        String[] nonNullLines = Arrays.stream(lines)
+                .filter(Objects::nonNull)
+                .toArray(String[]::new);
+
         sb.append("Product{class:ProductPersonalized")
                 .append(", id:").append(getId())
                 .append(", name:'").append(getName()).append('\'')
                 .append(", category:").append(getCategory())
                 .append(", price:").append(getPrice())
                 .append(", maxPersonal:").append(getMaxPers())
-                .append(", personalizationList:").append(Arrays.toString(lines));
+                .append(", personalizationList:").append(Arrays.toString(nonNullLines))
+                .append("}");
 
-        sb.append("}");
         return sb.toString();
     }
 

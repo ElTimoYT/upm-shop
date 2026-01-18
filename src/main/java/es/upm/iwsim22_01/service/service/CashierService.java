@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Cashier;
 import es.upm.iwsim22_01.data.repository.CashierRepository;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
 
     @Override
     protected CashierDTO toDto(Cashier model) {
-        List<TicketDTO> tickets = new ArrayList<>();
+        List<AbstractTicketDTO> tickets = new ArrayList<>();
 
         if (model.getTicketsId() != null) {
             for (Integer tid : model.getTicketsId()) {
@@ -53,7 +53,7 @@ public class CashierService extends AbstractService<Cashier, CashierDTO, String>
                 dto.getId(),
                 dto.getTickets()
                         .stream()
-                        .map(TicketDTO::getId)
+                        .map(AbstractTicketDTO::getId)
                         .toList()
         );
     }

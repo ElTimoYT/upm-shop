@@ -5,7 +5,7 @@ import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.service.TicketService;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
 import java.util.NoSuchElementException;
 
@@ -42,7 +42,7 @@ public class TicketPrintCommandHandler implements CommandHandler {
                 return;
             }
 
-            TicketDTO ticket = ticketService.get(ticketId);
+            AbstractTicketDTO ticket = ticketService.get(ticketId);
             CashierDTO cashier = cashierService.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);

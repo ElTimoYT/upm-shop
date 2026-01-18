@@ -1,6 +1,6 @@
 package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
  * Un cajero puede gestionar múltiples tickets asociados a su cuenta.
  */
 public class CashierDTO extends AbstractUserDTO {
-    private List<TicketDTO> tickets;
+    private List<AbstractTicketDTO> tickets;
 
-    public CashierDTO(String name, String email, String id, List<TicketDTO> tickets) {
+    public CashierDTO(String name, String email, String id, List<AbstractTicketDTO> tickets) {
         super(name, email , id);
         this.tickets = tickets;
     }
@@ -33,7 +33,7 @@ public class CashierDTO extends AbstractUserDTO {
      *
      * @return Lista de tickets del cajero.
      */
-    public List<TicketDTO> getTickets() {
+    public List<AbstractTicketDTO> getTickets() {
         return tickets;
     }
 
@@ -42,7 +42,7 @@ public class CashierDTO extends AbstractUserDTO {
      *
      * @param ticket Ticket a añadir.
      */
-    public void addTicket(TicketDTO ticket) {
+    public void addTicket(AbstractTicketDTO ticket) {
         this.tickets.add(ticket);
     }
 

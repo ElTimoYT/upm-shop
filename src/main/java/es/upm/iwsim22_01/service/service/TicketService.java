@@ -2,29 +2,18 @@ package es.upm.iwsim22_01.service.service;
 
 import es.upm.iwsim22_01.data.models.Ticket;
 import es.upm.iwsim22_01.data.repository.TicketRepository;
-import es.upm.iwsim22_01.service.dto.product.FoodDTO;
-import es.upm.iwsim22_01.service.dto.product.MeetingDTO;
-import es.upm.iwsim22_01.service.dto.product.PersonalizableDTO;
-import es.upm.iwsim22_01.service.dto.product.ProductDTO;
-import es.upm.iwsim22_01.service.dto.product.category.ProductCategoryDTO;
-import es.upm.iwsim22_01.service.dto.product.category.ServiceCategoryDTO;
-import es.upm.iwsim22_01.service.dto.product.service.ServiceDTO;
 import es.upm.iwsim22_01.service.dto.ticket.OnlyProductsTicket;
 import es.upm.iwsim22_01.service.dto.ticket.OnlyServicesTicket;
 import es.upm.iwsim22_01.service.dto.ticket.ServicesAndProductsTicket;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
-import es.upm.iwsim22_01.service.dto.user.ClientDTO;
-import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
 import java.util.ArrayList;
 
-import static es.upm.iwsim22_01.data.models.Product.ProductType.PERSONALIZABLE_PRODUCT;
-
 /**
- * Gestor de tickets, encargado de la creación y validación de instancias de {@link TicketDTO}.
+ * Gestor de tickets, encargado de la creación y validación de instancias de {@link AbstractTicketDTO}.
  * Permite generar tickets con identificadores únicos y validar su formato.
  */
-public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
+public class TicketService extends AbstractService<Ticket, AbstractTicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
 
     private final ProductService productService;
@@ -36,17 +25,17 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
     }
 
     @Override
-    protected TicketDTO toDto(Ticket model) {
+    protected AbstractTicketDTO toDto(Ticket model) {
         return switch (model.getTicketType()) {
-            case ONLY_PRODUCTS -> new OnlyProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
-            case ONLY_SERVICES -> new OnlyServicesTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
-            case SERVICES_AND_PRODUCTS -> new ServicesAndProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), TicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case ONLY_PRODUCTS -> new OnlyProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), AbstractTicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case ONLY_SERVICES -> new OnlyServicesTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), AbstractTicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
+            case SERVICES_AND_PRODUCTS -> new ServicesAndProductsTicket(model.getId(), model.getInitialDate(), model.getFinalDate(), AbstractTicketDTO.TicketState.valueOf(model.getTicketState()), new ArrayList<>(model.getProducts().stream().map(productService::toDto).toList()));
         };
 
     }
 
     @Override
-    protected Ticket toModel(TicketDTO dto) {
+    protected Ticket toModel(AbstractTicketDTO dto) {
         return new Ticket(
                 dto.getId(),
                 dto.getInitialDate(),
@@ -61,33 +50,33 @@ public class TicketService extends AbstractService<Ticket, TicketDTO, Integer> {
         );
     }
 
-    public TicketDTO addOnlyProductsTicket(int id) {
+    public AbstractTicketDTO addOnlyProductsTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
         return add(new OnlyProductsTicket(id));
     }
 
-    public TicketDTO addOnlyProductsTicket() {
+    public AbstractTicketDTO addOnlyProductsTicket() {
         return addOnlyProductsTicket(createNewId());
     }
 
-    public TicketDTO addOnlyServicesTicket(int id) {
+    public AbstractTicketDTO addOnlyServicesTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
         return add(new OnlyServicesTicket(id));
     }
 
-    public TicketDTO addOnlyServicesTicket() {
+    public AbstractTicketDTO addOnlyServicesTicket() {
         return addOnlyServicesTicket(createNewId());
     }
 
-    public TicketDTO addServicesAndProductsTicket(int id) {
+    public AbstractTicketDTO addServicesAndProductsTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
         return add(new ServicesAndProductsTicket(id));
     }
 
-    public TicketDTO addServicesAndProductsTicket() {
+    public AbstractTicketDTO addServicesAndProductsTicket() {
         return addServicesAndProductsTicket(createNewId());
     }
 

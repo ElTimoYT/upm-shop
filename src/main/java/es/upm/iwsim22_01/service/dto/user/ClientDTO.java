@@ -1,7 +1,6 @@
 package es.upm.iwsim22_01.service.dto.user;
 
-import es.upm.iwsim22_01.data.models.Client;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,9 @@ import java.util.List;
  */
 public class ClientDTO extends AbstractUserDTO {
     private CashierDTO cashierWhoRegisters;
-    private List<TicketDTO> tickets;
+    private List<AbstractTicketDTO> tickets;
 
-    public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters, List<TicketDTO> tickets) {
+    public ClientDTO(String name, String DNI, String email, CashierDTO cashierWhoRegisters, List<AbstractTicketDTO> tickets) {
         super(name, email, DNI);
         this.cashierWhoRegisters = cashierWhoRegisters;
         this.tickets = (tickets == null) ? new ArrayList<>() : new ArrayList<>(tickets);
@@ -47,11 +46,11 @@ public class ClientDTO extends AbstractUserDTO {
      *
      * @param ticket Ticket a añadir.
      */
-    public void addTicket(TicketDTO ticket) {
+    public void addTicket(AbstractTicketDTO ticket) {
         tickets.add(ticket);
     }
 
-    public List<TicketDTO> getTickets() {
+    public List<AbstractTicketDTO> getTickets() {
         return new ArrayList<>(tickets);
     }
     public String toString() {

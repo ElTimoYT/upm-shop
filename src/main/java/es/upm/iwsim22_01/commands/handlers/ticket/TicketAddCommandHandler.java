@@ -5,7 +5,7 @@ import es.upm.iwsim22_01.commands.handlers.CommandHandler;
 import es.upm.iwsim22_01.service.service.CashierService;
 import es.upm.iwsim22_01.service.service.ProductService;
 import es.upm.iwsim22_01.service.service.TicketService;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 import es.upm.iwsim22_01.service.dto.product.PersonalizableDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractPeopleProductDTO;
@@ -64,20 +64,20 @@ public class TicketAddCommandHandler implements CommandHandler {
             }
 
             int amount = tokens.hasNextInt() ? tokens.nextInt() : 1;
-            if (amount <= 0 || amount > TicketDTO.MAX_PRODUCTS) {
+            if (amount <= 0 || amount > AbstractTicketDTO.MAX_PRODUCTS) {
                 System.out.println(ERROR_INVALID_AMOUNT);
                 return;
             }
 
             AbstractProductDTO product = productService.get(productId);
-            TicketDTO ticket = ticketService.get(ticketId);
+            AbstractTicketDTO ticket = ticketService.get(ticketId);
             CashierDTO cashier = cashierService.get(cashierId);
             if (!cashier.getTickets().contains(ticket)) {
                 System.out.println(ERROR_CASHIER_NOT_ASSIGNED);
                 return;
             }
 
-            if(ticket.getState() != TicketDTO.TicketState.CLOSED){
+            if(ticket.getState() != AbstractTicketDTO.TicketState.CLOSED){
                 boolean added;
                 if (product instanceof AbstractPeopleProductDTO peopleProduct) {
                     if (!peopleProduct.isValid()) {

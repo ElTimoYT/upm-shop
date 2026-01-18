@@ -2,7 +2,7 @@ package es.upm.iwsim22_01.commands.handlers.ticket;
 
 import es.upm.iwsim22_01.commands.CommandTokens;
 import es.upm.iwsim22_01.commands.handlers.CommandHandler;
-import es.upm.iwsim22_01.service.dto.ticket.TicketDTO;
+import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 import es.upm.iwsim22_01.service.dto.user.CashierDTO;
 import es.upm.iwsim22_01.service.dto.user.ClientDTO;
 import es.upm.iwsim22_01.service.dto.user.CompanyDTO;
@@ -81,7 +81,7 @@ public class TicketNewCommandHandler implements CommandHandler {
                 return;
             }
 
-            TicketDTO ticket;
+            AbstractTicketDTO ticket;
             switch (flag) {
                 case "-p":
                     ticket = ticketId == null ? ticketService.addOnlyProductsTicket() : ticketService.addOnlyProductsTicket(ticketId);

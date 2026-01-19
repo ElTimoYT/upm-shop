@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.service.printer;
 
+import es.upm.iwsim22_01.service.dto.product.AbstractPeopleProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 
@@ -28,8 +29,12 @@ public class ProductTicketPrinter implements TicketPrinter {
         items.sort(Comparator.comparing(AbstractProductDTO::getName, String.CASE_INSENSITIVE_ORDER));
 
         for (AbstractProductDTO product : items) {
-            for (int i = 0; i < product.getAmount(); i++) {
+            if (product instanceof AbstractPeopleProductDTO) {
                 sb.append(product).append("\n");
+            } else {
+                for (int i = 0; i < product.getAmount(); i++) {
+                    sb.append(product).append("\n");
+                }
             }
         }
 

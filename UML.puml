@@ -206,14 +206,22 @@ class ProdUpdateCommandHandler{
     + ProdUpdateCommandHandler(productService : ProductService)
     + runCommand(tokens : CommandTokens) : void
 }
-
-
 }
 
-
-
-
 package "commands.handlers.cashier" {
+
+    class CashierCommandHandler {
+    - REMOVE_SUBCOMMAND : String
+    - ADD_SUBCOMMAND : String
+    - LIST_SUBCOMMAND : String
+    - SHOW_TICKET_SUBCOMMAND : String
+    - ERROR_INCORRECT_USE : String
+
+    - cashierCommandDispatcher : CommandDispatcher
+
+    + CashierCommandHandler(cashierService : CashierService, clientService : ClientService, ticketService : TicketService)
+    + runCommand(tokens : CommandTokens) : void
+    }
   class CashierAddCommandHandler {
     -cashierService: CashierInventory
     +runCommand(CommandTokens)
@@ -397,13 +405,13 @@ class TicketRemoveCommandHandler{
     + TicketRemoveCommandHandler(ticketService : TicketService, productService : ProductService, cashierService : CashierService)
     + runCommand(tokens : CommandTokens) : void
 }
-
+}
 }
 
 
-package "data.models" {
+package "es.upm.iwsim22_01.data" {
 
-
+package "models" {
   class Cashier {
 
       - name : String
@@ -516,13 +524,9 @@ class Ticket {
       ONLY_SERVICES
       SERVICES_AND_PRODUCTS}
   }
+  }
 
 }
-
-
-
-
-
 
 
 package "data.repository" {
@@ -609,7 +613,8 @@ package "data.repository.adapters" {
 
 }
 
-package "service.printer" {
+package "es.upm.iwsim22_01.service" {
+package "printer" {
   interface TicketPrinter {
 
       + print(ticket : AbstractTicketDTO) : String
@@ -632,7 +637,7 @@ package "service.printer" {
 
 }
 
-package "service.service" {
+package "service" {
 
 abstract class AbstractService<M, D, K> {
     # repository : Repository<M, K>
@@ -719,7 +724,7 @@ class TicketService {
 }
 
 }
-package "service.dto" {
+package "dto" {
 interface Validable {
 
     + isValid() : boolean
@@ -929,6 +934,7 @@ class ServiceDTO {
     + isValid() : boolean
     + toString() : String
 }
+}
 
 package "category" {
 
@@ -953,15 +959,11 @@ enum ServiceCategoryDTO {
     SHOW
     TRANSPORT
 }
-
+}
+}
 }
 }
 
-}
-
-
-}
-}
 
 
 AbstractProductDTO <|-- ProductDTO
@@ -991,18 +993,18 @@ CommandHandler <|.. ClientCommandHandler
 CommandHandler <|.. CashierCommandHandler
 CommandHandler <|.. TicketCommandHandler
 
-CommandHandler <|.. ProdAddCommandHandler
-CommandHandler <|.. ProdListCommandHandler
-CommandHandler <|.. ProdRemoveCommandHandler
-CommandHandler <|.. ProdUpdateCommandHandler
-CommandHandler <|.. ProdAddFoodCommandHandler
-CommandHandler <|.. ProdAddMeetingCommandHandler
+ProdCommandHandler <|.. ProdAddCommandHandler
+ProdCommandHandler <|.. ProdListCommandHandler
+ProdCommandHandler<|.. ProdRemoveCommandHandler
+ProdCommandHandler <|.. ProdUpdateCommandHandler
+ProdCommandHandler <|.. ProdAddFoodCommandHandler
+ProdCommandHandler <|.. ProdAddMeetingCommandHandler
 
-CommandHandler <|.. TicketNewCommandHandler
-CommandHandler <|.. TicketAddCommandHandler
-CommandHandler <|.. TicketRemoveCommandHandler
-CommandHandler <|.. TicketPrintCommandHandler
-CommandHandler <|.. TicketListCommandHandler
+TicketCommandHandler <|.. TicketNewCommandHandler
+TicketCommandHandler <|.. TicketAddCommandHandler
+TicketCommandHandler <|.. TicketRemoveCommandHandler
+TicketCommandHandler <|.. TicketPrintCommandHandler
+TicketCommandHandler <|.. TicketListCommandHandler
 
 Validable <|.. ServiceDTO
 Validable <|.. FoodDTO
@@ -1104,16 +1106,16 @@ CashierShowTicketCommandHandler --> CashierService
 
 CashierCommandHandler *-- "dispatcher" CommandDispatcher
 
-CommandHandler <|.. ClientAddCommandHandler
-CommandHandler <|.. ClientRemoveCommandHandler
-CommandHandler <|.. ClientListCommandHandler
-CommandHandler <|.. ClientCommandHandler
+ClientCommandHandler <|.. ClientAddCommandHandler
+ClientCommandHandler <|.. ClientRemoveCommandHandler
+ClientCommandHandler <|.. ClientListCommandHandler
 
-CommandHandler <|.. CashierAddCommandHandler
-CommandHandler <|.. CashierRemoveCommandHandler
-CommandHandler <|.. CashierListCommandHandler
-CommandHandler <|.. CashierShowTicketCommandHandler
-CommandHandler <|.. CashierCommandHandler
+
+CashierCommandHandler <|.. CashierAddCommandHandler
+CashierCommandHandler <|.. CashierRemoveCommandHandler
+CashierCommandHandler <|.. CashierListCommandHandler
+CashierCommandHandler <|.. CashierShowTicketCommandHandler
+
 
 ClientCommandHandler --> ClientService
 ClientCommandHandler --> CashierService

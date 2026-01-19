@@ -13,7 +13,6 @@ public class Client {
     public Client(String name, String dni, String email, String cashierWhoRegisters, List<Integer> tickets) {
         this.name = name;
         this.email = email;
-        this.dni = dni;
         this.cashierWhoRegisters = cashierWhoRegisters;
         this.tickets = tickets == null ? new ArrayList<>() : tickets;
         this.dni=dni;
@@ -39,7 +38,7 @@ public class Client {
         return dni;
     }
 
-    public void setDni(String dni) {
+    public void setDNI(String dni) {
         this.dni = dni;
     }
 
@@ -55,10 +54,9 @@ public class Client {
         return tickets;
     }
 
-    public void setTickets(List<Integer> tickets) {
+    public void setTicketsId(List<Integer> tickets) {
         this.tickets = tickets;
     }
-
 
     @Override
     public boolean equals(Object o) {

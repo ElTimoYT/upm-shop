@@ -7,7 +7,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Impresor de tickets que muestra únicamente servicios incluidos en el ticket.
+ */
 public class ServiceTicketPrinter implements  TicketPrinter {
+
+    /**
+     * Genera la representación textual de un ticket que contiene solo servicios.
+     *
+     * @param ticket ticket a imprimir
+     * @return representación textual del ticket
+     */
     @Override
     public String print(AbstractTicketDTO ticket) {
         StringBuilder sb = new StringBuilder();

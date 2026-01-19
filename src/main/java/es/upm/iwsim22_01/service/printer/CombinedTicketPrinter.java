@@ -8,11 +8,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Impresor de tickets que muestra de forma combinada servicios y productos.
+ */
 public class CombinedTicketPrinter implements TicketPrinter {
+
+    /**
+     * Genera la representación textual de un ticket combinado con servicios y productos ordenados.
+     *
+     * @param ticket ticket a imprimir
+     * @return representación textual del ticket
+     */
     @Override
     public String print(AbstractTicketDTO ticket) {
         StringBuilder sb = new StringBuilder();
-        // Cabecera (no uso getFormattedCreationDate() porque no existe; uso initialDate)
         sb.append("Ticket: ")
                 .append(ticket.getId())
                 .append("-")

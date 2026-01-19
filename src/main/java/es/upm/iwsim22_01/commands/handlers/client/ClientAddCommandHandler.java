@@ -38,7 +38,7 @@ public class ClientAddCommandHandler  implements CommandHandler {
                 return;
             }
 
-            boolean isCompany = clientService.checkNIF(clientTentativeId); // 👈 nuevo
+            boolean isCompany = clientService.checkNIF(clientTentativeId);
             boolean isUser = clientService.checkDNI(clientTentativeId);
 
             if (!isCompany && !isUser) {

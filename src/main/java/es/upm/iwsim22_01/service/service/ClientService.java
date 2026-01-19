@@ -11,8 +11,7 @@ import es.upm.iwsim22_01.service.dto.user.UserDTO;
 import java.util.regex.Pattern;
 
 /**
- * Gestor de clientes, encargado de la creación, validación y registro de instancias de {@link ClientDTO}.
- * Valida el formato del DNI/NIE, el correo electrónico y la existencia del cajero que realiza el registro.
+ * Servicio encargado de la gestión de clientes incluyendo creación, validación y conversión entre modelo y DTO.
  */
 public class ClientService extends AbstractService<Client, ClientDTO, String> {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^\\w+@\\w+\\.\\w+$"),
@@ -24,9 +23,10 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
     private final TicketService ticketService;
 
     /**
-     * Constructor de la clase.
+     * Crea el servicio de clientes con dependencias de cajeros y tickets.
      *
-     * @param cashierInventory Gestor de cajeros necesario para validar la existencia del cajero que registra al cliente.
+     * @param cashierInventory servicio de cajeros
+     * @param ticketService servicio de tickets
      */
     public ClientService(CashierService cashierInventory, TicketService ticketService) {
         super(new ClientRepository());
@@ -34,6 +34,12 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
         this.ticketService = ticketService;
     }
 
+    /**
+     * Convierte un modelo Client en su correspondiente DTO determinando su tipo según el identificador.
+     *
+     * @param model modelo de cliente
+     * @return DTO del cliente
+     */
     @Override
     protected ClientDTO toDto(Client model) {
         CashierDTO cashier = cashierService.get(model.getCashierWhoRegisters());
@@ -55,6 +61,12 @@ public class ClientService extends AbstractService<Client, ClientDTO, String> {
         return dto;
     }
 
+    /**
+     * Convierte un DTO de cliente en su modelo de dominio correspondiente.
+     *
+     * @param dto DTO del cliente
+     * @return modelo del cliente
+     */
     @Override
     protected Client toModel(ClientDTO dto) {
         return new Client(

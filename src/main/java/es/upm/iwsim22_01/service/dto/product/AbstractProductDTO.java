@@ -12,6 +12,14 @@ public abstract class AbstractProductDTO implements Cloneable {
     protected double price;
     protected int amount;
 
+    /**
+     * Crea un producto con identificador, nombre, precio y cantidad inicial.
+     *
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio del producto
+     * @param amount cantidad inicial disponible
+     */
     public AbstractProductDTO(String id, String name, double price, int amount) {
         this.id = id;
         this.name = name;
@@ -20,29 +28,29 @@ public abstract class AbstractProductDTO implements Cloneable {
     }
 
     /**
-     * Constructor de la clase AbstractProduct.
+     * Crea un producto con identificador, nombre y precio sin cantidad inicial.
      *
-     * @param id Identificador único del producto.
-     * @param name Nombre del producto.
-     * @param price Precio del producto.
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio del producto
      */
     public AbstractProductDTO(String id, String name, double price) {
         this(id, name, price, 0);
     }
 
     /**
-     * Obtiene el identificador único del producto.
+     * Devuelve el identificador único del producto.
      *
-     * @return El identificador del producto.
+     * @return identificador del producto
      */
     public String getId() {
         return id;
     }
 
     /**
-     * Obtiene el nombre del producto.
+     * Devuelve el nombre del producto.
      *
-     * @return El nombre del producto.
+     * @return nombre del producto
      */
     public String getName() {
         return name;
@@ -51,7 +59,7 @@ public abstract class AbstractProductDTO implements Cloneable {
     /**
      * Establece el nombre del producto.
      *
-     * @param name Nuevo nombre para el producto.
+     * @param name nuevo nombre del producto
      */
     public void setName(String name) {
         this.name = name;
@@ -75,10 +83,20 @@ public abstract class AbstractProductDTO implements Cloneable {
         this.price = price;
     }
 
+    /**
+     * Devuelve la cantidad disponible del producto.
+     *
+     * @return cantidad disponible
+     */
     public int getAmount() {
         return amount;
     }
 
+    /**
+     * Incrementa la cantidad disponible del producto.
+     *
+     * @param amountToAdd cantidad a añadir
+     */
     public void addAmount(int amountToAdd) {
         amount += amountToAdd;
     }

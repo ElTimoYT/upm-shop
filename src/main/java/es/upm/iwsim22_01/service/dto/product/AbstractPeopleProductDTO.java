@@ -14,6 +14,17 @@ public abstract class AbstractPeopleProductDTO extends AbstractProductDTO implem
     private LocalDateTime expirationDate;
     private int participantsAmount;
 
+    /**
+     * Crea un producto con información completa incluyendo cantidad disponible.
+     *
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio unitario del producto
+     * @param amount cantidad disponible
+     * @param maxParticipant número máximo de participantes permitidos
+     * @param expirationDate fecha y hora de expiración del servicio
+     * @param participantsAmount número actual de participantes
+     */
     public AbstractPeopleProductDTO(String id, String name, double price, int amount, int maxParticipant, LocalDateTime expirationDate, int participantsAmount) {
         super(id, name, price, amount);
         this.maxParticipant = maxParticipant;
@@ -22,13 +33,14 @@ public abstract class AbstractPeopleProductDTO extends AbstractProductDTO implem
     }
 
     /**
-     * Constructor de la clase ProductService.
+     * Crea un producto sin control de cantidad disponible.
      *
-     * @param id Identificador único del producto.
-     * @param name Nombre del producto.
-     * @param price Precio del producto.
-     * @param maxParticipant Número máximo de participantes permitidos.
-     * @param expirationDate Fecha y hora de caducidad o realización del servicio.
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio unitario del producto
+     * @param maxParticipant número máximo de participantes permitidos
+     * @param expirationDate fecha y hora de expiración del servicio
+     * @param participantsAmount número actual de participantes
      */
     public AbstractPeopleProductDTO(String id, String name, double price, int maxParticipant, LocalDateTime expirationDate, int participantsAmount){
         super(id, name,price);
@@ -46,6 +58,11 @@ public abstract class AbstractPeopleProductDTO extends AbstractProductDTO implem
         return expirationDate;
     }
 
+    /**
+     * Devuelve el número máximo de participantes permitidos.
+     *
+     * @return número máximo de participantes
+     */
     public int getMaxParticipant() {
         return maxParticipant;
     }
@@ -97,22 +114,5 @@ public abstract class AbstractPeopleProductDTO extends AbstractProductDTO implem
                 ",max_participant:" + maxParticipant +
                 ",expiration:" + expirationDate +
                 '}';
-    }
-
-    /**
-     * Devuelve una representación en cadena del producto de servicio, enfocada en la impresión de tickets.
-     *
-     * @return Cadena que representa el producto, incluyendo detalles sobre el evento,
-     * como la fecha, el número máximo de personas permitidas y el número actual de personas apuntadas.
-     */
-    public String printTicketWithPeople(){
-        return "Product{" +
-            "class:" + this.getClass().getSimpleName() +
-            " ,id:" + getId() +
-            " ,name:'" + getName() + '\'' +
-            " ,price:" + (getPrice() * participantsAmount) +
-                " ,date of event: " + expirationDate +
-            " ,max people allowed:" + maxParticipant +
-                ",actual people in event; "+ participantsAmount +"}";
     }
 }

@@ -10,20 +10,30 @@ import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
 import java.util.ArrayList;
 
 /**
- * Gestor de tickets, encargado de la creación y validación de instancias de {@link AbstractTicketDTO}.
- * Permite generar tickets con identificadores únicos y validar su formato.
+ * Servicio encargado de la gestión de tickets incluyendo creación, validación y conversión entre modelo y DTO.
  */
 public class TicketService extends AbstractService<Ticket, AbstractTicketDTO, Integer> {
     private static final int TICKET_ID_LENGTH = 7;
 
     private final ProductService productService;
 
+    /**
+     * Crea el servicio de tickets utilizando el servicio de productos.
+     *
+     * @param productService servicio de productos asociado
+     */
     public TicketService(ProductService productService) {
         super(new TicketRepository());
 
         this.productService = productService;
     }
 
+    /**
+     * Convierte un modelo Ticket en su correspondiente DTO según el tipo de ticket.
+     *
+     * @param model modelo de ticket
+     * @return DTO del ticket
+     */
     @Override
     protected AbstractTicketDTO toDto(Ticket model) {
         return switch (model.getTicketType()) {
@@ -34,6 +44,12 @@ public class TicketService extends AbstractService<Ticket, AbstractTicketDTO, In
 
     }
 
+    /**
+     * Convierte un DTO de ticket en su modelo de dominio correspondiente.
+     *
+     * @param dto DTO del ticket
+     * @return modelo del ticket
+     */
     @Override
     protected Ticket toModel(AbstractTicketDTO dto) {
         return new Ticket(
@@ -50,32 +66,64 @@ public class TicketService extends AbstractService<Ticket, AbstractTicketDTO, In
         );
     }
 
+    /**
+     * Crea un ticket que solo admite productos.
+     *
+     * @param id identificador del ticket
+     * @return DTO del ticket creado
+     */
     public AbstractTicketDTO addOnlyProductsTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
         return add(new OnlyProductsTicket(id));
     }
 
+    /**
+     * Crea un ticket de solo productos con identificador generado automáticamente.
+     *
+     * @return DTO del ticket creado
+     */
     public AbstractTicketDTO addOnlyProductsTicket() {
         return addOnlyProductsTicket(createNewId());
     }
 
+    /**
+     * Crea un ticket que solo admite servicios.
+     *
+     * @param id identificador del ticket
+     */
     public AbstractTicketDTO addOnlyServicesTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
         return add(new OnlyServicesTicket(id));
     }
 
+    /**
+     * Crea un ticket de solo servicios con identificador generado automáticamente.
+     *
+     * @return DTO del ticket creado
+     */
     public AbstractTicketDTO addOnlyServicesTicket() {
         return addOnlyServicesTicket(createNewId());
     }
 
+    /**
+     * Crea un ticket que admite servicios y productos.
+     *
+     * @param id identificador del ticket
+     * @return DTO del ticket creado
+     */
     public AbstractTicketDTO addServicesAndProductsTicket(int id) {
         if (!checkId(id)) throw new IllegalArgumentException("Id format not valid");
 
         return add(new ServicesAndProductsTicket(id));
     }
 
+    /**
+     * Crea un ticket combinado con identificador generado automáticamente.
+     *
+     * @return DTO del ticket creado
+     */
     public AbstractTicketDTO addServicesAndProductsTicket() {
         return addServicesAndProductsTicket(createNewId());
     }
@@ -93,7 +141,6 @@ public class TicketService extends AbstractService<Ticket, AbstractTicketDTO, In
 
     /**
      * Genera un nuevo identificador único para un ticket.
-     * El identificador generado será un número aleatorio de hasta {@value #TICKET_ID_LENGTH} dígitos.
      *
      * @return Identificador único generado.
      */

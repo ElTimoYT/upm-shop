@@ -8,6 +8,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Adaptador para la serialización y deserialización de objetos LocalDateTime
+ * utilizando Gson.
+ *
+ * Las fechas se convierten a milisegundos desde epoch usando la zona UTC
+ * para garantizar consistencia entre sistemas.
+ */
 public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     private static final ZoneOffset ZONE_OFFSET = ZoneOffset.UTC;
 

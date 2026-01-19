@@ -10,19 +10,27 @@
     import java.time.LocalDateTime;
 
     /**
-     * Gestor de productos, encargado de la creación, validación y registro de instancias de {@link AbstractProductDTO}.
-     * Permite añadir diferentes tipos de productos al sistema, validando sus parámetros y restricciones.
+     * Servicio encargado de la gestión de productos incluyendo creación, validación y conversión entre modelo y DTO.
      */
     public class ProductService extends AbstractService<Product, AbstractProductDTO, String> {
         private final static int MAX_PRODUCTS = 200, MAX_NAME_LENGTH = 100, PRODUCT_RANDOM_ID_LENGTH = 3;
 
         private final ProductRepository productRepository;
 
+        /**
+         * Crea el servicio de productos inicializando el repositorio correspondiente.
+         */
         public ProductService() {
             super(new ProductRepository());
             this.productRepository = (ProductRepository) super.repository;
         }
 
+        /**
+         * Convierte un modelo Product en su correspondiente DTO según su tipo.
+         *
+         * @param model modelo de producto
+         * @return DTO del producto
+         */
         @Override
         protected AbstractProductDTO toDto(Product model) {
             return switch (model.getType()) {
@@ -34,6 +42,12 @@
             };
         }
 
+        /**
+         * Convierte un DTO de producto en su modelo de dominio correspondiente.
+         *
+         * @param dto DTO del producto
+         * @return modelo del producto
+         */
         @Override
         protected Product toModel(AbstractProductDTO dto) {
             return switch (dto) {

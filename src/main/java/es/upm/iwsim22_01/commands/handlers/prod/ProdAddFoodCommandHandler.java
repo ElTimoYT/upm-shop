@@ -29,7 +29,6 @@ public class ProdAddFoodCommandHandler implements CommandHandler {
             return;
         }
 
-        //id
         Integer productId = null;
         if (tokens.hasNextInt()) {
             productId = tokens.nextInt();

@@ -163,7 +163,7 @@ public class CommandTokens {
     }
 
     /**
-     * Intenta interpretar el token actual como categoría del enum Category.
+     * Intenta interpretar el token actual como categoría del enum ProductCategory.
      * El valor se normaliza a mayúsculas antes de comparar.
      *
      * @return Optional con la categoría válida, vacío si no coincide con ninguna
@@ -178,7 +178,7 @@ public class CommandTokens {
     }
 
     /**
-     * Devuelve el token actual como categoría del enum Category y avanza al siguiente.
+     * Devuelve el token actual como categoría del enum ProductCategory y avanza al siguiente.
      *
      * @return categoría representada por el token actual
      * @throws IllegalArgumentException si el token no es una categoría válida
@@ -198,14 +198,14 @@ public class CommandTokens {
     /**
      * Indica si el token actual es una categoría válida.
      *
-     * @return true si el token es una categoría del enum Category, false en caso contrario
+     * @return true si el token es una categoría del enum ProductCategory, false en caso contrario
      */
     public boolean hasNextProductCategory() {
         return hasNext() && tryParseProductCategory().isPresent();
     }
 
     /**
-     * Intenta interpretar el token actual como categoría del enum Category.
+     * Intenta interpretar el token actual como categoría del enum ServiceCategory.
      * El valor se normaliza a mayúsculas antes de comparar.
      *
      * @return Optional con la categoría válida, vacío si no coincide con ninguna
@@ -220,7 +220,7 @@ public class CommandTokens {
     }
 
     /**
-     * Devuelve el token actual como categoría del enum Category y avanza al siguiente.
+     * Devuelve el token actual como categoría del enum ServiceCategory y avanza al siguiente.
      *
      * @return categoría representada por el token actual
      * @throws IllegalArgumentException si el token no es una categoría válida
@@ -238,9 +238,9 @@ public class CommandTokens {
     }
 
     /**
-     * Indica si el token actual es una categoría válida.
+     * Indica si el token actual es una categoría de servicios válida.
      *
-     * @return true si el token es una categoría del enum Category, false en caso contrario
+     * @return true si el token es una categoría del enum ServiceCategory, false en caso contrario
      */
     public boolean hasNextServiceCategory() {
         return hasNext() && tryParseServiceCategory().isPresent();

@@ -8,18 +8,30 @@ import java.time.LocalDateTime;
  * sea al menos 3 días posterior a la fecha actual.
  */
 public class FoodDTO extends AbstractPeopleProductDTO {
+    /**
+     * Crea un producto de catering con control de cantidad disponible.
+     *
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio por persona
+     * @param amount cantidad disponible
+     * @param maxPers número máximo de personas
+     * @param expirationDate fecha de caducidad del producto
+     * @param participantsAmount número actual de participantes
+     */
     public FoodDTO(String id, String name, double price, int amount, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id,name, price, amount, maxPers, expirationDate, participantsAmount);
     }
 
     /**
-     * Constructor de la clase Catering.
+     * Crea un producto de catering sin control de cantidad disponible.
      *
-     * @param id               Identificador único del producto.
-     * @param name             Nombre del producto.
-     * @param price   Precio por persona.
-     * @param maxPers          Número máximo de personas.
-     * @param expirationDate   Fecha de caducidad del producto.
+     * @param id identificador único del producto
+     * @param name nombre del producto
+     * @param price precio por persona
+     * @param maxPers número máximo de personas
+     * @param expirationDate fecha de caducidad del producto
+     * @param participantsAmount número actual de participantes
      */
     public FoodDTO(String id, String name, double price, int maxPers, LocalDateTime expirationDate, int participantsAmount) {
         super(id,name, price, maxPers, expirationDate, participantsAmount);

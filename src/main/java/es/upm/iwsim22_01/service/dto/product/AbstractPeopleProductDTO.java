@@ -110,9 +110,10 @@ public abstract class AbstractPeopleProductDTO extends AbstractProductDTO implem
                 "class:" + this.getClass().getSimpleName() +
                 ",id:" + getId() +
                 ",name:'" + getName() + '\'' +
-                ",price:" + (getPrice() * participantsAmount) +
-                ",max_participant:" + maxParticipant +
-                ",expiration:" + expirationDate +
+                ",price:" + (getPrice() * getAmount()) +
+                ",participans:" + getAmount() +
+                ",max_participant:" + getMaxParticipant() +
+                ",expiration:" + getExpirationDate() +
                 '}';
     }
 }

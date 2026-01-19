@@ -1,5 +1,6 @@
 package es.upm.iwsim22_01.service.printer;
 
+import es.upm.iwsim22_01.service.dto.product.AbstractPeopleProductDTO;
 import es.upm.iwsim22_01.service.dto.product.AbstractProductDTO;
 import es.upm.iwsim22_01.service.dto.product.service.ServiceDTO;
 import es.upm.iwsim22_01.service.dto.ticket.AbstractTicketDTO;
@@ -50,8 +51,14 @@ public class CombinedTicketPrinter implements TicketPrinter {
         if (products.isEmpty()) {
             sb.append("  None\n");
         } else {
-            for (AbstractProductDTO p : products) {
-                sb.append("  ").append(p).append("\n");
+            for (AbstractProductDTO product : products) {
+                if (product instanceof AbstractPeopleProductDTO) {
+                    sb.append(product).append("\n");
+                } else {
+                    for (int i = 0; i < product.getAmount(); i++) {
+                        sb.append(product).append("\n");
+                    }
+                }
             }
         }
 

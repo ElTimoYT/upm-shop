@@ -1,7 +1,7 @@
 package es.upm.iwsim22_01.service.dto.product.category;
 
 /**
- * Enumeración que representa las categorías de productos disponibles en el sistema.
+ * Enumeración que representa las categorías de servicios disponibles en el sistema.
  * Cada categoría está asociada a un descuento específico.
  */
 public enum ServiceCategoryDTO implements Category {

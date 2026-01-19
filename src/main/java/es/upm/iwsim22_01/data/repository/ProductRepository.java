@@ -6,6 +6,11 @@ import es.upm.iwsim22_01.data.models.Product;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Repositorio concreto para la gestión y persistencia de objetos Product.
+ *
+ * Este repositorio utiliza un identificador autoincremental que se persiste junto con los productos en un fichero JSON.
+ */
 public class ProductRepository extends AbstractRepository<Product, String> {
 
     private int autoincrementId = 1;
@@ -75,11 +80,21 @@ public class ProductRepository extends AbstractRepository<Product, String> {
         }
     }
 
+    /**
+     * Devuelve el valor actual del identificador autoincremental.
+     *
+     * @return valor actual del autoincremento
+     */
     public int getAutoincrementId() {
         loadCacheIfNeeded();
         return autoincrementId;
     }
 
+    /**
+     * Incrementa y devuelve el siguiente identificador autoincremental disponible.
+     *
+     * @return siguiente identificador autoincremental
+     */
     public int nextAutoincrementId() {
         loadCacheIfNeeded();
         return autoincrementId++;

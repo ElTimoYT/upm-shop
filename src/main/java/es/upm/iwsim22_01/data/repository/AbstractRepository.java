@@ -10,6 +10,16 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Implementación base de un repositorio genérico persistido en fichero JSON.
+ *
+ * Gestiona automáticamente la carga, almacenamiento en caché y persistencia
+ * de los elementos, delegando en las subclases la definición del identificador,
+ * la ruta del fichero y el tipo de datos almacenados.
+ *
+ * @param <T> tipo de los elementos almacenados en el repositorio
+ * @param <K> tipo del identificador único de cada elemento
+ */
 public abstract class AbstractRepository<T, K> implements Repository<T, K> {
     protected static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
@@ -19,10 +29,39 @@ public abstract class AbstractRepository<T, K> implements Repository<T, K> {
 
     protected Map<K, T> cache;
 
+    /**
+     * Devuelve la ruta del fichero donde se almacenan los datos.
+     *
+     * @return ruta del fichero de persistencia
+     */
     protected abstract String getFilePath();
+
+    /**
+     * Obtiene el identificador único de un elemento.
+     *
+     * @param element elemento del repositorio
+     * @return identificador único del elemento
+     */
     protected abstract K getId(T element);
+
+    /**
+     * Devuelve el TypeToken necesario para la deserialización
+     * de la lista de elementos.
+     *
+     * @return TypeToken correspondiente a List<T>
+     */
     protected abstract TypeToken<List<T>> getTypeToken();
 
+    /**
+     * Obtiene el fichero de persistencia, creándolo junto con
+     * sus directorios padre si no existen.
+     *
+     * Si el fichero se crea por primera vez, se inicializa con
+     * una lista vacía en formato JSON.
+     *
+     * @return fichero de persistencia
+     * @throws IOException si ocurre un error de acceso al sistema de archivos
+     */
     protected File getFile() throws IOException {
         File file = new File(getFilePath());
         file.getParentFile().mkdirs();
@@ -36,6 +75,13 @@ public abstract class AbstractRepository<T, K> implements Repository<T, K> {
         return file;
     }
 
+    /**
+     * Carga los datos del fichero en memoria si la caché
+     * aún no ha sido inicializada.
+     *
+     * Convierte la lista deserializada en un mapa indexado
+     * por identificador para facilitar las operaciones.
+     */
     protected void loadCacheIfNeeded() {
         if (cache != null) return;
 

@@ -32,7 +32,7 @@ The application follows a layered structure and uses several design patterns:
 
 ## Main technologies
 
-- Java 11+ (Maven)
+- Java 21+ (Maven)
 - JUnit for tests
 - JSON files for persistence (folder: data/)
 

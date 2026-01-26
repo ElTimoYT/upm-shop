@@ -1,76 +1,115 @@
-# 🛒 UPM SHOP - Product & Ticket CLI
 
-Welcome to **UPM SHOP**, your simple and fast commandHandler-line tool to manage products and create tickets with automatic discounts! 🚀
+---
 
-## ✨ What can you do?
-- **Add, list, update, and remove products** from your in-memory catalog.
-- **Create a ticket (cart)**, add or remove products, and see your total with discounts applied.
-- **Enjoy automatic discounts** by category when you buy 2 or more items from the same category.
-- **All in-memory**: No installation, no database, just run and go!
+# UPM-Shop
 
-## 🏷️ Main Concepts
-- **Product**: Each has an id, name, category, and price.
-- **Category discounts** (if you add 2 or more items from the same category):
-  - 🛍️ MERCH: 0%
-  - ✏️ STATIONARY: 5%
-  - 👕 CLOTHES: 7%
-  - 📚 BOOK: 10%
-  - 💻 ELECTRONICS: 3%
-- **Ticket**: Your shopping cart, up to 100 items.
-- **Catalog**: Store up to 200 products.
+## Brief description
 
-## ⚡ Quick Commands
-```
-prod add <id> "<name>" <category> <price>
-prod list
-prod update <id> name|category|price <value>
-prod remove <id>
-ticket new
-ticket add <prodId> <quantity>
-ticket remove <prodId>
-ticket print
-help
-exit
-```
+UPM-Shop is a console-based Java application that simulates a point-of-sale (POS) system to manage cashiers, clients, products and tickets. It is designed as a learning and demonstration project with a layered architecture (commands, services, repositories, DTOs) and file-based JSON persistence.
 
-## 🚀 Example Session
-```
-prod add 1 "Blue T-Shirt" clothes 15.90
-prod add 2 "Sci-Fi Book" book 12.50
-ticket new
-ticket add 1 2
-ticket add 2 2
-ticket print
-```
+## Project objective
 
-## 🖥️ How to Run
-1. Build with Maven:
-   ```
-   mvn clean package
-   ```
-2. Run the app:
-   ```
-   java -jar target/<artifact>.jar
-   ```
+Provide a compact but realistic application to practice and demonstrate software design concepts: domain modeling, design patterns, layered architecture, persistence, unit testing and a command-line interface.
 
-## 🧾 What you'll see (ticket print)
-- Each product in your ticket
-- Total price
-- Total discount
-- Final price to pay
+## Key features
 
-## ℹ️ Good to Know
-- Product IDs must be unique.
-- Price must be greater than 0.
-- Product names can't be empty.
-- All data is in memory (no persistence).
-- Ticket stores repeated products (no quantity aggregation).
+- CRUD operations for cashiers, clients and products.
+- Creation, listing, printing and removal of tickets.
+- Support for different product/service types and category-based discounts.
+- Pluggable ticket printers (strategy pattern) and date adapters.
+- Input validation and business rules implemented in the service layer.
 
-## 💡 Ideas for the Future
-- Use `BigDecimal` for prices.
-- Save your catalog and tickets (JSON or database).
-- Aggregate product quantities in the ticket.
-- Customizable discounts.
+## Architecture and design patterns
+
+The application follows a layered structure and uses several design patterns:
+
+- Command: CLI commands are handled by dedicated handlers.
+- Service: business logic is encapsulated in service classes.
+- Repository: JSON file-based repositories for persistence.
+- DTO / Validable: data transfer objects and validation for input.
+- Strategy: interchangeable ticket printers.
+- Adapter: date serialization/adaptation.
+
+## Main technologies
+
+- Java 11+ (Maven)
+- JUnit for tests
+- JSON files for persistence (folder: data/)
+
+## Project structure (high level)
+
+- src/main/java/es/upm/iwsim22_01/commands: CLI commands and handlers.
+- src/main/java/es/upm/iwsim22_01/data/models: domain entities (Cashier, Client, Product, Ticket).
+- src/main/java/es/upm/iwsim22_01/data/repository: file-based repositories.
+- src/main/java/es/upm/iwsim22_01/service: services, DTOs and ticket printers.
+- data/: storage for JSON files (products, tickets, users).
+
+## Important business rules
+
+- Cashiers are registered only with a name and a corporate email.
+- A cashier cannot be a registered application user at the same time. If they want to use the application, they must register separately with a personal email.
+- Service-layer validations enforce these and other rules; failures throw controlled exceptions.
+
+## CLI commands (summary)
+
+- cash add [<id>] "<name>" <email>
+  - Adds a new cashier. If id is provided, an attempt is made to use it. Only name and corporate email are stored.
+
+- cash remove <id>
+  - Removes the cashier with the given id.
+
+- cash list
+  - Lists cashiers ordered by name. Tickets are not displayed.
+
+- cash tickets <id>
+  - Shows the tickets associated with the cashier ordered by ticket id. Only ticket ID and status are shown.
+
+- client add|remove|list ...
+- prod add|remove|list|update ...
+- ticket new|add|print|list|remove ...
+
+See command handlers in src/main/java/.../commands/handlers/ for parameter and validation details.
+
+## Services overview
+
+- ProductService: product creation, listing, category handling and discounts.
+- TicketService: ticket creation, status management, and totals calculation.
+- CashierService and ClientService: specific operations and registration rules for actors.
+- TicketPrinter implementations: ProductTicketPrinter, ServiceTicketPrinter, CombinedTicketPrinter.
+
+## Exception handling and verification
+
+- Business exceptions are raised by services when operations cannot be completed (validation errors, missing resources, business rule violations).
+- To verify correct behavior:
+  - Run invalid operations via the CLI and confirm readable error messages.
+  - Inspect JSON files in the data/ folder to check persistent state after operations.
+  - Run unit tests (mvn test) to validate critical paths: validation, repository operations and services.
+
+## Build and run
+
+Build the project with Maven and run the JAR:
+
+mvn clean package
+java -jar target/upm-shop-1.0-SNAPSHOT.jar
+
+Run unit tests:
+
+mvn test
+
+## Notes for developers
+
+- Extending the application is straightforward: add new printers (implement TicketPrinter), new repositories (e.g., database-backed), or new commands under commands/handlers.
+- Respect the cashier registration rule to avoid inconsistencies between users and cashiers.
+
+## Contributing
+
+1. Fork the repository and create a branch feature/your-change.
+2. Add unit tests covering your changes.
+3. Open a pull request describing the motivation and changes.
+
+## Authors and credits
+
+Project created as a learning exercise. Developed by the project author together with a team of 3 developers.
 
 ---
 Enjoy shopping with UPM SHOP! 🛍️
